@@ -16,11 +16,18 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
     "sqlite3": "^5.0.2",
     "typeorm": "0.3.10"
   },
   "scripts": {
+    "prebuild": "rimraf build",
+    "build": "npm run prebuild && tsc",
     "start": "ts-node src/index.ts",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "start:prod": "node ./build/src/index.js",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "typeorm:migration:run": "typeorm-ts-node-commonjs migration:run -d ./src/data-source.ts",
+    "typeorm:prod": "MIGRATIONS_PATH=./build/db/migrations typeorm",
+    "typeorm:prod:migration:run": "MIGRATIONS_PATH=./build/db/migrations typeorm migration:run -d ./build/src/data-source.js"
   }
 }

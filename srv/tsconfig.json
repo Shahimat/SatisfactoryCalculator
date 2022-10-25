@@ -12,6 +12,9 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "paths": {
+      "@db/*": ["./db/*"]
+    }
   }
 }
