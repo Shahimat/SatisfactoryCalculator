@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "useDefineForClassFields": false,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "declaration": true,
     "lib": [
       "ES2020"
@@ -11,6 +11,7 @@
     "moduleResolution": "node",
     "outDir": "./build",
     "strict": false,
+    "allowJs": true,
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -26,7 +27,9 @@
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": true,
     "paths": {
-      "@db/*": ["./db/*"]
+      "@db/*": ["./db/*"],
+      "@entity/*": ["./src/entity/*"],
+      "@src/*": ["./src/*"],
     },
     "typeRoots": [
       "./node_modules/@types",
@@ -35,6 +38,7 @@
   "ts-node": {
     "files": true
   },
+  "include": ["./src/**/*.ts", "./db/**/*.ts"],
   "exclude": [
     "node_modules",
     "build",
