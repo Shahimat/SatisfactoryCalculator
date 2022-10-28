@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import dotenv from 'dotenv';
 
 import { AppDataSource } from './data-source';
@@ -20,4 +20,4 @@ AppDataSource.initialize()
       console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
     });
   })
-  .catch((error) => console.log(error));
+  .catch((error) => console.error(error));
