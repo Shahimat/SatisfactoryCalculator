@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
+    "useDefineForClassFields": false,
+    "baseUrl": "./",
+    "declaration": true,
     "lib": [
-      "es5",
-      "es6"
+      "ES2020"
     ],
-    "target": "es2016",
+    "target": "esnext",
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "./build",
@@ -12,9 +14,29 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "skipDefaultLibCheck": true,
+    "incremental": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
     "sourceMap": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "isolatedModules": true,
     "paths": {
       "@db/*": ["./db/*"]
-    }
-  }
+    },
+    "typeRoots": [
+      "./node_modules/@types",
+    ]
+  },
+  "ts-node": {
+    "files": true
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+  ]
 }
