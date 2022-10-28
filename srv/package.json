@@ -25,6 +25,7 @@
     "build": "npm run prebuild && tsc",
     "start": "ts-node src/index.ts",
     "start:prod": "node ./build/src/index.js",
+    "tasks": "ts-node ./tasks/index.ts",
     "typeorm": "typeorm-ts-node-commonjs",
     "typeorm:migration:run": "typeorm-ts-node-commonjs migration:run -d ./src/data-source.ts",
     "typeorm:prod": "MIGRATIONS_PATH=./build/db/migrations typeorm",
