@@ -5,6 +5,6 @@ export class ItemCategory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 }

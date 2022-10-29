@@ -6,7 +6,7 @@ export class IconCategory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @OneToMany(() => Icon, (icon) => icon.iconCategory)
