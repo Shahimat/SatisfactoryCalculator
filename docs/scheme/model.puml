@@ -1,0 +1,143 @@
+@startuml
+
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+' skinparam linetype ortho
+
+entity item_type {
+  *id : number
+  ..
+  name: string
+}
+
+entity item_category {
+  *id : number
+  ..
+  name: string
+}
+
+entity icon_category {
+  *id : number
+  ..
+  name: string
+}
+
+entity icon {
+  *id : number
+  ..
+  name: string
+  path: string
+  +id_icon_category: number
+}
+
+entity item {
+  *id : number
+  ..
+  name: string
+  +id_icon: number
+  +id_item_type: number
+  +id_item_category: number
+  energy: number | null
+}
+
+entity factory {
+  *id : number
+  ..
+  name: string
+  +id_icon: number
+  consumption: number (>= 0)
+  generation: boolean
+  input_solid: number (0, 1, 2, 3, 4)
+  input_liquid: number (0, 1, 2, 3, 4)
+  output_solid: number (0, 1, 2, 3, 4)
+  output_liquid: number (0, 1, 2, 3, 4)
+}
+
+entity scheme {
+  *id : number
+  ..
+  name: string
+  +id_factory: number
+  generation: number (>= 0) | null
+}
+
+entity scheme_item_link {
+  *id : number
+  ..
+  +id_scheme: number
+  +id_item: number
+  production: number (+-) | null
+}
+
+entity plant {
+  *id : number
+  ..
+  name: string
+}
+
+entity chain {
+  *id : number
+  ..
+}
+
+entity calculation {
+  *id : number
+  ..
+  name: string
+}
+
+entity plant_scheme_link {
+  *id : number
+  ..
+  +id_plant: number
+  +id_scheme: number | null
+  +id_plant_different: number | null
+  +id_chain: number | null
+  acceleration: number (0.01...1...2.5)
+  num_factories: number (1, 2, ..., n)
+}
+
+entity chain_scheme_link {
+  *id : number
+  ..
+  +id_chain: number
+  +id_scheme: number | null
+  +id_plant: number | null
+  acceleration: number (0.01...1...2.5)
+  num_factories: number (1, 2, ..., n)
+}
+
+entity calculation_scheme_link {
+  *id : number
+  ..
+  +id_calculation: number
+  +id_scheme: number | null
+  +id_plant: number | null
+  +id_chain: number | null
+  acceleration: number (0.01...1...2.5)
+  num_factories: number (1, 2, ..., n)
+}
+
+icon_category ||..|| icon
+icon ||..|| item
+item_type ||..|| item
+item_category ||..|| item
+item ||..|| factory
+factory ||..|| scheme
+item ||..o{ scheme_item_link
+scheme ||..o{ scheme_item_link
+plant ||..o{ plant_scheme_link
+scheme |o..o{ plant_scheme_link
+plant_scheme_link |o..o| plant_scheme_link
+chain |o..o{ plant_scheme_link
+chain ||..o{ chain_scheme_link
+scheme |o..o{ chain_scheme_link
+plant |o..o{ chain_scheme_link
+calculation ||..o{ calculation_scheme_link
+scheme ||..o{ calculation_scheme_link
+plant ||..o{ calculation_scheme_link
+chain ||..o{ calculation_scheme_link
+
+@enduml
