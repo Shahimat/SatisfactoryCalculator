@@ -120,15 +120,15 @@ entity calculation_scheme_link {
   num_factories: number (1, 2, ..., n)
 }
 
-icon_category ||..|| icon
-icon ||..|| item
-item_type ||..|| item
-item_category ||..|| item
-item ||..|| factory
-factory ||..|| scheme
+icon_category ||..|{ icon
+icon ||..o{ item
+item_type ||..|{ item
+item_category ||..|{ item
+icon ||..o{ factory
+factory ||..|{ scheme
 item ||..o{ scheme_item_link
 scheme ||..o{ scheme_item_link
-plant ||..o{ plant_scheme_link
+plant ||..o{ plant_scheme_link  
 scheme |o..o{ plant_scheme_link
 plant_scheme_link |o..o| plant_scheme_link
 chain |o..o{ plant_scheme_link
@@ -136,8 +136,8 @@ chain ||..o{ chain_scheme_link
 scheme |o..o{ chain_scheme_link
 plant |o..o{ chain_scheme_link
 calculation ||..o{ calculation_scheme_link
-scheme ||..o{ calculation_scheme_link
-plant ||..o{ calculation_scheme_link
-chain ||..o{ calculation_scheme_link
+scheme |o..o{ calculation_scheme_link
+plant |o..o{ calculation_scheme_link
+chain |o..o{ calculation_scheme_link
 
 @enduml
