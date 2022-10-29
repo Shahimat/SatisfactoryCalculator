@@ -1,3 +1,4 @@
+import path from 'path';
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
 
@@ -12,6 +13,7 @@ const app: Express = express();
 const port = process.env.PORT ?? 3000;
 
 app.use(express.json());
+app.use('/assets', express.static(path.join(__dirname, '..', 'assets')));
 
 AppDataSource.initialize()
   .then(async () => {

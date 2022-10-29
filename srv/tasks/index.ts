@@ -3,6 +3,12 @@ import fs from 'fs';
 import { AppDataSource } from '../src/data-source';
 import fillDB from './fill-db-global';
 
+console.log('[tasks]: check assets');
+if (!fs.existsSync(path.join(__dirname, '..', 'assets'))) {
+  fs.mkdirSync(path.join(__dirname, '..', 'assets'));
+  console.log('[tasks]: mkdir assets');
+}
+
 console.log('[tasks]: connect to DB');
 AppDataSource.initialize()
   .then(async () => {
