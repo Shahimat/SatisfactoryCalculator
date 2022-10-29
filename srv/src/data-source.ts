@@ -1,13 +1,13 @@
 import { DataSource } from 'typeorm';
 import { ItemType } from './entity/ItemType';
-import { CategoryItem } from './entity/CategoryItem';
+import { ItemCategory } from './entity/ItemCategory';
 
 export const AppDataSource = new DataSource({
   type: 'sqlite',
   database: './db/DB.sqlite',
   synchronize: true,
   logging: false,
-  entities: [ItemType, CategoryItem],
+  entities: [ItemType, ItemCategory],
   migrationsRun: false,
   subscribers: [],
 });
