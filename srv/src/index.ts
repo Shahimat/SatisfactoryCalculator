@@ -7,6 +7,7 @@ import { AppDataSource } from './data-source';
 import itemTypeApi from './api/itemType';
 import itemCategoryApi from './api/ItemCategory';
 import IconCategoryApi from './api/IconCategory';
+import iconApi from './api/Icon';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ AppDataSource.initialize()
     itemTypeApi(app, AppDataSource);
     itemCategoryApi(app, AppDataSource);
     IconCategoryApi(app, AppDataSource);
+    iconApi(app, AppDataSource);
 
     app.listen(port, () => {
       console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
