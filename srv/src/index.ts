@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { AppDataSource } from './data-source';
 
 import itemTypeApi from './api/itemType';
+import itemCategoryApi from './api/ItemCategory';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 AppDataSource.initialize()
   .then(async () => {
     itemTypeApi(app, AppDataSource);
+    itemCategoryApi(app, AppDataSource);
 
     app.listen(port, () => {
       console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
