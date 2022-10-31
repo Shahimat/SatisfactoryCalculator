@@ -1,19 +1,26 @@
-import { Controller, Get, Post, Req } from '@nestjs/common';
-import { Request } from 'express';
-import { ItemTypesService } from './item-types.service';
+import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { ItemTypeService } from './item-type.service';
+import { ItemTypeDto } from './dto/item-type.dto';
+
 import { ItemType } from './interfaces/item-type.interface';
 
 @Controller('item-type')
 export class ItemTypeController {
-  constructor(private itemTypesServise: ItemTypesService) {}
-
-  @Post()
-  create(): string {
-    return 'This action adds a new cat';
-  }
+  constructor(private itemTypeService: ItemTypeService) {}
 
   @Get()
-  findAll(@Req() request: Request): ItemType[] {
-    return this.itemTypesServise.findAll();
+  findAll(): Promise<ItemType[]> {
+    return this.itemTypeService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param() params): Promise<ItemType | null> {
+    return this.itemTypeService.findOne(Number(params.id));
+  }
+
+  @Post()
+  create(@Body() itemTypeDto: ItemTypeDto): string {
+    console.log(itemTypeDto);
+    return 'da';
   }
 }
