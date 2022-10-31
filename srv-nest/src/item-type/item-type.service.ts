@@ -1,34 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { ItemTypeDto } from './dto/item-type.dto';
 
-import { ItemType } from './interfaces/item-type.interface';
+import { ItemType } from './entities/item-type.entity';
 
 @Injectable()
 export class ItemTypeService {
-  private readonly itemTypes: ItemType[] = [
-    {
-      id: 0,
-      name: 'wow',
-    },
-    {
-      id: 1,
-      name: 'da',
-    },
-  ];
+  constructor(
+    @InjectRepository(ItemType)
+    private itemTypesRepo: Repository<ItemType>,
+  ) {}
 
   findAll(): Promise<ItemType[]> {
-    return new Promise((res, rej) => {
-      res(this.itemTypes);
-    });
+    return this.itemTypesRepo.find();
   }
 
   findOne(id: number): Promise<ItemType | null> {
-    return new Promise((res, rej) => {
-      res(this.itemTypes[id]);
-    });
+    return this.itemTypesRepo.findOneBy({ id });
   }
 
-  // create(itemTypeDto: ItemTypeDto): Promise<void> {
-  //   this.itemTypeModel.create(itemTypeDto);
-  // }
+  async create(itemTypeDto: ItemTypeDto): Promise<ItemType> {
+    const itemTypes = await this.findAll();
+    const itemType = new ItemType();
+    itemType.id = (itemTypes[itemTypes.length - 1]?.id ?? -1) + 1;
+    itemType.name = itemTypeDto.name;
+    return this.itemTypesRepo.save(itemType);
+  }
+
+  async update(id: number, itemTypeDto: ItemTypeDto): Promise<ItemType | null> {
+    const itemType = await this.findOne(id);
+    if (itemType) {
+      itemType.name = itemTypeDto.name;
+      await this.itemTypesRepo.save(itemType);
+      return itemType;
+    } else {
+      return null;
+    }
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.itemTypesRepo.delete(id);
+  }
 }

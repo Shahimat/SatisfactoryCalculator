@@ -1,8 +1,16 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
 import { ItemTypeService } from './item-type.service';
 import { ItemTypeDto } from './dto/item-type.dto';
 
-import { ItemType } from './interfaces/item-type.interface';
+import { ItemType } from './entities/item-type.entity';
 
 @Controller('item-type')
 export class ItemTypeController {
@@ -19,8 +27,20 @@ export class ItemTypeController {
   }
 
   @Post()
-  create(@Body() itemTypeDto: ItemTypeDto): string {
-    console.log(itemTypeDto);
-    return 'da';
+  create(@Body() itemTypeDto: ItemTypeDto): Promise<ItemType> {
+    return this.itemTypeService.create(itemTypeDto);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() itemTypeDto: ItemTypeDto,
+  ): Promise<ItemType | null> {
+    return await this.itemTypeService.update(Number(id), itemTypeDto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string): Promise<void> {
+    await this.itemTypeService.remove(Number(id));
   }
 }
