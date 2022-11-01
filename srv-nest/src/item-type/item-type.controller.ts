@@ -8,7 +8,7 @@ import {
   Body,
 } from '@nestjs/common';
 import { ItemTypeService } from './item-type.service';
-import { ItemTypeDto } from './dto/item-type.dto';
+import { ItemTypeDto } from './item-type.dto';
 
 import { ItemType } from './item-type.entity';
 
