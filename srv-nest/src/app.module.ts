@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 
 import { ItemTypeModule } from './item-type/item-type.module';
 import { ItemCategoryModule } from './item-category/item-category.module';
+import { IconCategoryModule } from './icon-category/icon-category.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ItemCategoryModule } from './item-category/item-category.module';
     }),
     ItemTypeModule,
     ItemCategoryModule,
+    IconCategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

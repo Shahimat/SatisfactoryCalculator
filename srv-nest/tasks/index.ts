@@ -5,7 +5,7 @@ import fillDB from './fill-db-global';
 
 import { ItemType } from '../src/item-type/item-type.entity';
 import { ItemCategory } from '../src/item-category/item-category.entity';
-// import { IconCategory } from './entity/IconCategory';
+import { IconCategory } from '../src/icon-category/icon-category.entity';
 // import { Icon } from './entity/Icon';
 // import { Item } from './entity/Item';
 
@@ -16,7 +16,7 @@ const AppDataSource = new DataSource({
   database: './db/DB.sqlite',
   synchronize: true,
   logging: false,
-  entities: [ItemType, ItemCategory],
+  entities: [ItemType, ItemCategory, IconCategory],
   // migrations: ['../**/*.migration.{js.ts}'],
   migrationsRun: false,
   subscribers: [],
