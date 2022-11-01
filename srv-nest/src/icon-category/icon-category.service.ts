@@ -12,15 +12,15 @@ import { IconCategory } from './icon-category.entity';
 export class IconCategoryService {
   constructor(
     @InjectRepository(IconCategory)
-    private itemCategoryRepo: Repository<IconCategory>,
+    private iconCategoryRepo: Repository<IconCategory>,
   ) {}
 
   findAll(): Promise<IconCategory[]> {
-    return this.itemCategoryRepo.find();
+    return this.iconCategoryRepo.find();
   }
 
   findOne(id: number): Promise<IconCategory | null> {
-    return this.itemCategoryRepo.findOneBy({ id });
+    return this.iconCategoryRepo.findOneBy({ id });
   }
 
   async create(
@@ -30,7 +30,7 @@ export class IconCategoryService {
     const iconCategory = new IconCategory();
     iconCategory.id = (iconCategories[iconCategories.length - 1]?.id ?? -1) + 1;
     iconCategory.name = iconCategoryCreateDto.name;
-    return this.itemCategoryRepo.save(iconCategory);
+    return this.iconCategoryRepo.save(iconCategory);
   }
 
   async update(
@@ -40,7 +40,7 @@ export class IconCategoryService {
     const iconCategory = await this.findOne(id);
     if (iconCategory) {
       iconCategory.name = iconCategoryUpdateDto.name;
-      await this.itemCategoryRepo.save(iconCategory);
+      await this.iconCategoryRepo.save(iconCategory);
       return iconCategory;
     } else {
       return null;
@@ -48,6 +48,6 @@ export class IconCategoryService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.itemCategoryRepo.delete(id);
+    await this.iconCategoryRepo.delete(id);
   }
 }

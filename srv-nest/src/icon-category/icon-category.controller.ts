@@ -29,16 +29,21 @@ export class IconCategoryController {
   }
 
   @Post()
-  create(@Body() itemTypeDto: IconCategoryCreateDto): Promise<IconCategory> {
-    return this.iconCategoryService.create(itemTypeDto);
+  create(
+    @Body() iconCategoryCreateDto: IconCategoryCreateDto,
+  ): Promise<IconCategory> {
+    return this.iconCategoryService.create(iconCategoryCreateDto);
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() itemTypeDto: IconCategoryUpdateDto,
+    @Body() iconCategoryUpdateDto: IconCategoryUpdateDto,
   ): Promise<IconCategory | null> {
-    return await this.iconCategoryService.update(Number(id), itemTypeDto);
+    return await this.iconCategoryService.update(
+      Number(id),
+      iconCategoryUpdateDto,
+    );
   }
 
   @Delete(':id')
