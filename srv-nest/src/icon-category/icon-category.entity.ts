@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-// import { Icon } from './Icon';
+import { Icon } from '../icon/icon.entity';
 
 @Entity()
 export class IconCategory {
@@ -9,6 +9,6 @@ export class IconCategory {
   @Column({ unique: true })
   name: string;
 
-  // @OneToMany(() => Icon, (icon) => icon.iconCategory)
-  // icons: Icon[];
+  @OneToMany(() => Icon, (icon) => icon.iconCategory)
+  icons: Icon[];
 }

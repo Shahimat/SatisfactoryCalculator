@@ -9,5 +9,6 @@ import { IconCategory } from './icon-category.entity';
   imports: [TypeOrmModule.forFeature([IconCategory])],
   providers: [IconCategoryService],
   controllers: [IconCategoryController],
+  exports: [IconCategoryService],
 })
 export class IconCategoryModule {}
