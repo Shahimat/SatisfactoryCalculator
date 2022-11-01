@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 
 import { ItemType } from '../src/item-type/item-type.entity';
-// import { ItemCategory } from './../src/entity/ItemCategory';
+import { ItemCategory } from '../src/item-category/item-category.entity';
 // import { IconCategory } from './../src/entity/IconCategory';
 // import { Icon } from './../src/entity/Icon';
 // import { Item } from './../src/entity/Item';
@@ -10,7 +10,10 @@ const fillDB = async (AppDataSource: DataSource) => {
   // await AppDataSource.createQueryBuilder().delete().from(Item).execute();
   // await AppDataSource.createQueryBuilder().delete().from(Icon).execute();
   await AppDataSource.createQueryBuilder().delete().from(ItemType).execute();
-  // await AppDataSource.createQueryBuilder().delete().from(ItemCategory).execute();
+  await AppDataSource.createQueryBuilder()
+    .delete()
+    .from(ItemCategory)
+    .execute();
   // await AppDataSource.createQueryBuilder().delete().from(IconCategory).execute();
 
   await AppDataSource.createQueryBuilder()
@@ -22,16 +25,17 @@ const fillDB = async (AppDataSource: DataSource) => {
     ])
     .execute();
 
-  // await AppDataSource.createQueryBuilder()
-  //   .insert()
-  //   .into(ItemCategory)
-  //   .values([
-  //     { id: 0, name: 'Ресурс' },
-  //     { id: 1, name: 'Топливо' },
-  //     { id: 2, name: 'Предмет' },
-  //     { id: 3, name: 'Прочее' },
-  //   ])
-  //   .execute();
+  await AppDataSource.createQueryBuilder()
+    .insert()
+    .into(ItemCategory)
+    .values([
+      { id: 0, name: 'Ресурс' },
+      { id: 1, name: 'Топливо' },
+      { id: 2, name: 'Предмет' },
+      { id: 3, name: 'Прочее' },
+    ])
+    .execute();
+
   // await AppDataSource.createQueryBuilder()
   //   .insert()
   //   .into(IconCategory)

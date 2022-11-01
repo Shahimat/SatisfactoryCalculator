@@ -4,7 +4,7 @@ import { DataSource } from 'typeorm';
 import fillDB from './fill-db-global';
 
 import { ItemType } from '../src/item-type/item-type.entity';
-// import { ItemCategory } from './entity/ItemCategory';
+import { ItemCategory } from '../src/item-category/item-category.entity';
 // import { IconCategory } from './entity/IconCategory';
 // import { Icon } from './entity/Icon';
 // import { Item } from './entity/Item';
@@ -16,7 +16,7 @@ const AppDataSource = new DataSource({
   database: './db/DB.sqlite',
   synchronize: true,
   logging: false,
-  entities: [ItemType],
+  entities: [ItemType, ItemCategory],
   // migrations: ['../**/*.migration.{js.ts}'],
   migrationsRun: false,
   subscribers: [],

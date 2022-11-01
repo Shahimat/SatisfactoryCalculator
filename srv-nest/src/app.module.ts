@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { ItemTypeModule } from './item-type/item-type.module';
+import { ItemCategoryModule } from './item-category/item-category.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ItemTypeModule } from './item-type/item-type.module';
       autoLoadEntities: true,
     }),
     ItemTypeModule,
+    ItemCategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
