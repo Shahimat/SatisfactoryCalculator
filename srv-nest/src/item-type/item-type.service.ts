@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ItemTypeDto } from './item-type.dto';
+import { ItemTypeCreateDto, ItemTypeUpdateDto } from './item-type.dto';
 
 import { ItemType } from './item-type.entity';
 
@@ -20,18 +20,21 @@ export class ItemTypeService {
     return this.itemTypesRepo.findOneBy({ id });
   }
 
-  async create(itemTypeDto: ItemTypeDto): Promise<ItemType> {
+  async create(itemTypeCreateDto: ItemTypeCreateDto): Promise<ItemType> {
     const itemTypes = await this.findAll();
     const itemType = new ItemType();
     itemType.id = (itemTypes[itemTypes.length - 1]?.id ?? -1) + 1;
-    itemType.name = itemTypeDto.name;
+    itemType.name = itemTypeCreateDto.name;
     return this.itemTypesRepo.save(itemType);
   }
 
-  async update(id: number, itemTypeDto: ItemTypeDto): Promise<ItemType | null> {
+  async update(
+    id: number,
+    itemTypeUpdateDto: ItemTypeUpdateDto,
+  ): Promise<ItemType | null> {
     const itemType = await this.findOne(id);
     if (itemType) {
-      itemType.name = itemTypeDto.name;
+      itemType.name = itemTypeUpdateDto.name;
       await this.itemTypesRepo.save(itemType);
       return itemType;
     } else {

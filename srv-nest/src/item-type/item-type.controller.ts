@@ -8,7 +8,7 @@ import {
   Body,
 } from '@nestjs/common';
 import { ItemTypeService } from './item-type.service';
-import { ItemTypeDto } from './item-type.dto';
+import { ItemTypeCreateDto, ItemTypeUpdateDto } from './item-type.dto';
 
 import { ItemType } from './item-type.entity';
 
@@ -27,16 +27,16 @@ export class ItemTypeController {
   }
 
   @Post()
-  create(@Body() itemTypeDto: ItemTypeDto): Promise<ItemType> {
-    return this.itemTypeService.create(itemTypeDto);
+  create(@Body() itemTypeCreateDto: ItemTypeCreateDto): Promise<ItemType> {
+    return this.itemTypeService.create(itemTypeCreateDto);
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() itemTypeDto: ItemTypeDto,
+    @Body() itemTypeUpdateDto: ItemTypeUpdateDto,
   ): Promise<ItemType | null> {
-    return await this.itemTypeService.update(Number(id), itemTypeDto);
+    return await this.itemTypeService.update(Number(id), itemTypeUpdateDto);
   }
 
   @Delete(':id')
