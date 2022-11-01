@@ -29,16 +29,21 @@ export class ItemCategoryController {
   }
 
   @Post()
-  create(@Body() itemTypeDto: ItemCategoryCreateDto): Promise<ItemCategory> {
-    return this.itemCategoryService.create(itemTypeDto);
+  create(
+    @Body() itemCategoryCreateDto: ItemCategoryCreateDto,
+  ): Promise<ItemCategory> {
+    return this.itemCategoryService.create(itemCategoryCreateDto);
   }
 
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() itemTypeDto: ItemCategoryUpdateDto,
+    @Body() itemCategoryUpdateDto: ItemCategoryUpdateDto,
   ): Promise<ItemCategory | null> {
-    return await this.itemCategoryService.update(Number(id), itemTypeDto);
+    return await this.itemCategoryService.update(
+      Number(id),
+      itemCategoryUpdateDto,
+    );
   }
 
   @Delete(':id')
