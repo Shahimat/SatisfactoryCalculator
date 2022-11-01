@@ -23,23 +23,25 @@ export class ItemCategoryService {
     return this.itemCategoryRepo.findOneBy({ id });
   }
 
-  async create(itemTypeDto: ItemCategoryCreateDto): Promise<ItemCategory> {
-    const itemTypes = await this.findAll();
-    const itemType = new ItemCategory();
-    itemType.id = (itemTypes[itemTypes.length - 1]?.id ?? -1) + 1;
-    itemType.name = itemTypeDto.name;
-    return this.itemCategoryRepo.save(itemType);
+  async create(
+    itemCategoryCreateDto: ItemCategoryCreateDto,
+  ): Promise<ItemCategory> {
+    const itemCategories = await this.findAll();
+    const itemCategory = new ItemCategory();
+    itemCategory.id = (itemCategories[itemCategories.length - 1]?.id ?? -1) + 1;
+    itemCategory.name = itemCategoryCreateDto.name;
+    return this.itemCategoryRepo.save(itemCategory);
   }
 
   async update(
     id: number,
-    itemTypeDto: ItemCategoryUpdateDto,
+    itemCategoryUpdateDto: ItemCategoryUpdateDto,
   ): Promise<ItemCategory | null> {
-    const itemType = await this.findOne(id);
-    if (itemType) {
-      itemType.name = itemTypeDto.name;
-      await this.itemCategoryRepo.save(itemType);
-      return itemType;
+    const itemCategory = await this.findOne(id);
+    if (itemCategory) {
+      itemCategory.name = itemCategoryUpdateDto.name;
+      await this.itemCategoryRepo.save(itemCategory);
+      return itemCategory;
     } else {
       return null;
     }
