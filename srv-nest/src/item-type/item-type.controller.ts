@@ -10,7 +10,7 @@ import {
 import { ItemTypeService } from './item-type.service';
 import { ItemTypeDto } from './dto/item-type.dto';
 
-import { ItemType } from './entities/item-type.entity';
+import { ItemType } from './item-type.entity';
 
 @Controller('item-type')
 export class ItemTypeController {

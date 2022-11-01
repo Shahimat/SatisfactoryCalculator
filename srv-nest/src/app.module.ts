@@ -13,6 +13,8 @@ import { ItemTypeModule } from './item-type/item-type.module';
       database: path.join('db', 'DB.sqlite'),
       synchronize: true,
       migrationsRun: false,
+      entities: ['/build/**/*.entity.js'],
+      migrations: ['/build/migrations/*.js'],
       subscribers: [],
       autoLoadEntities: true,
     }),
