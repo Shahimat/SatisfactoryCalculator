@@ -1,6 +1,7 @@
 import path from 'path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -20,6 +21,10 @@ import { IconModule } from './icon/icon.module';
       migrations: ['/build/migrations/*.js'],
       subscribers: [],
       autoLoadEntities: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'assets'),
+      serveRoot: '/assets',
     }),
     ItemTypeModule,
     ItemCategoryModule,
