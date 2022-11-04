@@ -49,11 +49,16 @@ entity factory {
   name: string
   +id_icon: number
   consumption: number (>= 0)
-  generation: boolean
+  is_scheme_generation: boolean
+  is_scheme_consumption: boolean
+  is_acceleration: boolean
+  tier: number
   input_solid: number (0, 1, 2, 3, 4)
   input_liquid: number (0, 1, 2, 3, 4)
+  input_other: number (0, 1)
   output_solid: number (0, 1, 2, 3, 4)
   output_liquid: number (0, 1, 2, 3, 4)
+  output_other: number (0, 1)
 }
 
 entity scheme {
@@ -61,7 +66,7 @@ entity scheme {
   ..
   name: string
   +id_factory: number
-  generation: number (>= 0) | null
+  generation: number (+-) | null
 }
 
 entity scheme_item_link {
