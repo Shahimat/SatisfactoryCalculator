@@ -1,6 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { IconCategory } from '../icon-category/icon-category.entity';
-// import { Item } from './Item';
+import { Item } from '../item/item.entity';
 
 @Entity()
 export class Icon {
@@ -16,6 +22,6 @@ export class Icon {
   @ManyToOne(() => IconCategory, (iconCategory) => iconCategory.icons)
   iconCategory: IconCategory;
 
-  // @OneToMany(() => Item, (item) => item.icon)
-  // items: Item[];
+  @OneToMany(() => Item, (item) => item.icon)
+  items: Item[];
 }

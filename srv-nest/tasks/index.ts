@@ -9,7 +9,7 @@ import { ItemType } from '../src/item-type/item-type.entity';
 import { ItemCategory } from '../src/item-category/item-category.entity';
 import { IconCategory } from '../src/icon-category/icon-category.entity';
 import { Icon } from '../src/icon/icon.entity';
-// import { Item } from './entity/Item';
+import { Item } from '../src/item/item.entity';
 
 const srvNestPath = path.join(__dirname, '..');
 
@@ -18,7 +18,7 @@ const AppDataSource = new DataSource({
   database: './db/DB.sqlite',
   synchronize: true,
   logging: false,
-  entities: [ItemType, ItemCategory, IconCategory, Icon],
+  entities: [ItemType, ItemCategory, IconCategory, Icon, Item],
   // migrations: ['../**/*.migration.{js.ts}'],
   migrationsRun: false,
   subscribers: [],

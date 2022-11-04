@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-// import { Item } from './Item';
+import { Item } from '../item/item.entity';
 
 @Entity()
 export class ItemCategory {
@@ -11,4 +11,7 @@ export class ItemCategory {
 
   @Column()
   isInternalEnergy: boolean;
+
+  @OneToMany(() => Item, (item) => item.itemCategory)
+  items: Item[];
 }

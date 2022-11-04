@@ -9,6 +9,7 @@ import { ItemType } from './item-type.entity';
   imports: [TypeOrmModule.forFeature([ItemType])],
   providers: [ItemTypeService],
   controllers: [ItemTypeController],
+  exports: [ItemTypeService],
 })
 export class ItemTypeModule {
   // constructor(private itemTypeService: ItemTypeService) {}

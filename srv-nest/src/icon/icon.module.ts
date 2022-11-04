@@ -11,5 +11,6 @@ import { Icon } from './icon.entity';
   imports: [TypeOrmModule.forFeature([Icon]), IconCategoryModule],
   providers: [IconService],
   controllers: [IconController],
+  exports: [IconService],
 })
 export class IconModule {}
