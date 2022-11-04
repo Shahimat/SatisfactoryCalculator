@@ -3,6 +3,8 @@ import fs from 'fs';
 import { DataSource } from 'typeorm';
 import fillDB from './fill-db-global';
 
+import { env } from '../src/config';
+
 import { ItemType } from '../src/item-type/item-type.entity';
 import { ItemCategory } from '../src/item-category/item-category.entity';
 import { IconCategory } from '../src/icon-category/icon-category.entity';
@@ -23,8 +25,8 @@ const AppDataSource = new DataSource({
 });
 
 console.log('⚡️[tasks]: check assets');
-if (!fs.existsSync(path.join(srvNestPath, 'assets'))) {
-  fs.mkdirSync(path.join(srvNestPath, 'assets'));
+if (!fs.existsSync(path.join(srvNestPath, env.ASSETS_DIR_NAME))) {
+  fs.mkdirSync(path.join(srvNestPath, env.ASSETS_DIR_NAME));
   console.log('⚡️[tasks]: mkdir assets');
 }
 

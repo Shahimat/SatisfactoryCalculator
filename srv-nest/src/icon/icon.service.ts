@@ -1,7 +1,10 @@
+import path from 'path';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { IconCreateDto, IconUpdateDto } from './icon.dto';
+
+import { env } from '../config';
 
 import { IconCategoryService } from '@src/icon-category/icon-category.service';
 
@@ -15,19 +18,27 @@ export class IconService {
     private iconCategoryService: IconCategoryService,
   ) {}
 
-  findAll(): Promise<Icon[]> {
-    return this.iconRepo
+  async findAll(): Promise<Icon[]> {
+    const icons = await this.iconRepo
       .createQueryBuilder('icon')
       .innerJoinAndSelect('icon.iconCategory', 'category')
       .getMany();
+    return icons.map(({ path: iconPath, ...iconFiels }) => ({
+      path: path.join(`/${env.ASSETS_DIR_NAME}`, iconPath),
+      ...iconFiels,
+    }));
   }
 
-  findOne(id: number): Promise<Icon | null> {
-    return this.iconRepo
+  async findOne(id: number): Promise<Icon | null> {
+    const icon = await this.iconRepo
       .createQueryBuilder('icon')
       .innerJoinAndSelect('icon.iconCategory', 'category')
       .where('icon.id = :id', { id })
       .getOne();
+    if (icon) {
+      icon.path = path.join(`/${env.ASSETS_DIR_NAME}`, icon.path);
+    }
+    return icon;
   }
 
   async create(iconCreateDto: IconCreateDto): Promise<Icon | null> {
