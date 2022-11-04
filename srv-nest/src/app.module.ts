@@ -13,6 +13,7 @@ import { ItemModule } from './item/item.module';
 import { FactoryModule } from './factory/factory.module';
 import { ChainModule } from './chain/chain.module';
 import { PlantModule } from './plant/plant.module';
+import { CalculationModule } from './calculation/calculation.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { PlantModule } from './plant/plant.module';
     FactoryModule,
     ChainModule,
     PlantModule,
+    CalculationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
