@@ -15,6 +15,14 @@ export class IconCategoryService {
     private iconCategoryRepo: Repository<IconCategory>,
   ) {}
 
+  async getMaxId(): Promise<number> {
+    const result = await this.iconCategoryRepo
+      .createQueryBuilder('icon_category')
+      .select('MAX(icon_category.id)', 'max')
+      .getRawOne<{ max: number }>();
+    return result ? result.max : -1;
+  }
+
   findAll(): Promise<IconCategory[]> {
     return this.iconCategoryRepo.find();
   }
@@ -26,9 +34,9 @@ export class IconCategoryService {
   async create(
     iconCategoryCreateDto: IconCategoryCreateDto,
   ): Promise<IconCategory> {
-    const iconCategories = await this.findAll();
+    const id = await this.getMaxId();
     const iconCategory = new IconCategory();
-    iconCategory.id = (iconCategories[iconCategories.length - 1]?.id ?? -1) + 1;
+    iconCategory.id = id + 1;
     iconCategory.name = iconCategoryCreateDto.name;
     return this.iconCategoryRepo.save(iconCategory);
   }

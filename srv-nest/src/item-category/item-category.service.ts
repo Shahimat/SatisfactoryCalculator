@@ -15,6 +15,14 @@ export class ItemCategoryService {
     private itemCategoryRepo: Repository<ItemCategory>,
   ) {}
 
+  async getMaxId(): Promise<number> {
+    const result = await this.itemCategoryRepo
+      .createQueryBuilder('item_category')
+      .select('MAX(item_category.id)', 'max')
+      .getRawOne<{ max: number }>();
+    return result ? result.max : -1;
+  }
+
   findAll(): Promise<ItemCategory[]> {
     return this.itemCategoryRepo.find();
   }
@@ -26,9 +34,9 @@ export class ItemCategoryService {
   async create(
     itemCategoryCreateDto: ItemCategoryCreateDto,
   ): Promise<ItemCategory> {
-    const itemCategories = await this.findAll();
+    const id = await this.getMaxId();
     const itemCategory = new ItemCategory();
-    itemCategory.id = (itemCategories[itemCategories.length - 1]?.id ?? -1) + 1;
+    itemCategory.id = id + 1;
     itemCategory.name = itemCategoryCreateDto.name;
     itemCategory.isInternalEnergy =
       itemCategoryCreateDto.isInternalEnergy ?? false;

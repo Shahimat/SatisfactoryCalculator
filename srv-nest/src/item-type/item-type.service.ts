@@ -9,23 +9,31 @@ import { ItemType } from './item-type.entity';
 export class ItemTypeService {
   constructor(
     @InjectRepository(ItemType)
-    private itemTypesRepo: Repository<ItemType>,
+    private itemTypeRepo: Repository<ItemType>,
   ) {}
 
+  async getMaxId(): Promise<number> {
+    const result = await this.itemTypeRepo
+      .createQueryBuilder('item_type')
+      .select('MAX(item_type.id)', 'max')
+      .getRawOne<{ max: number }>();
+    return result ? result.max : -1;
+  }
+
   findAll(): Promise<ItemType[]> {
-    return this.itemTypesRepo.find();
+    return this.itemTypeRepo.find();
   }
 
   findOne(id: number): Promise<ItemType | null> {
-    return this.itemTypesRepo.findOneBy({ id });
+    return this.itemTypeRepo.findOneBy({ id });
   }
 
   async create(itemTypeCreateDto: ItemTypeCreateDto): Promise<ItemType> {
-    const itemTypes = await this.findAll();
     const itemType = new ItemType();
-    itemType.id = (itemTypes[itemTypes.length - 1]?.id ?? -1) + 1;
+    const id = await this.getMaxId();
+    itemType.id = id + 1;
     itemType.name = itemTypeCreateDto.name;
-    return this.itemTypesRepo.save(itemType);
+    return this.itemTypeRepo.save(itemType);
   }
 
   async update(
@@ -35,7 +43,7 @@ export class ItemTypeService {
     const itemType = await this.findOne(id);
     if (itemType) {
       itemType.name = itemTypeUpdateDto.name;
-      await this.itemTypesRepo.save(itemType);
+      await this.itemTypeRepo.save(itemType);
       return itemType;
     } else {
       return null;
@@ -43,6 +51,6 @@ export class ItemTypeService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.itemTypesRepo.delete(id);
+    await this.itemTypeRepo.delete(id);
   }
 }
