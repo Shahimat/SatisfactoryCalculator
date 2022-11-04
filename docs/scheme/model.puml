@@ -68,7 +68,7 @@ entity scheme_item_link {
   ..
   +id_scheme: number
   +id_item: number
-  production: number (+-) | null
+  production: number (+-)
 }
 
 entity plant {
