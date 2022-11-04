@@ -7,12 +7,14 @@ import { Icon } from '../src/icon/icon.entity';
 import { Item } from '../src/item/item.entity';
 import { Factory } from '../src/factory/factory.entity';
 import { Chain } from '../src/chain/chain.entity';
+import { Plant } from '../src/plant/plant.entity';
 
 import iconsData from './data/icons.json';
 import itemsData from './data/items.json';
 import factoriesData from './data/factories.json';
 
 const fillDB = async (AppDataSource: DataSource) => {
+  await AppDataSource.createQueryBuilder().delete().from(Plant).execute();
   await AppDataSource.createQueryBuilder().delete().from(Chain).execute();
   await AppDataSource.createQueryBuilder().delete().from(Factory).execute();
   await AppDataSource.createQueryBuilder().delete().from(Item).execute();
@@ -89,6 +91,17 @@ const fillDB = async (AppDataSource: DataSource) => {
         id: 0,
       },
       { id: 1 },
+    ])
+    .execute();
+
+  await AppDataSource.createQueryBuilder()
+    .insert()
+    .into(Plant)
+    .values([
+      {
+        id: 0,
+        name: 'завод',
+      },
     ])
     .execute();
 };

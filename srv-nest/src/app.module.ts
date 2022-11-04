@@ -12,6 +12,7 @@ import { IconModule } from './icon/icon.module';
 import { ItemModule } from './item/item.module';
 import { FactoryModule } from './factory/factory.module';
 import { ChainModule } from './chain/chain.module';
+import { PlantModule } from './plant/plant.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ChainModule } from './chain/chain.module';
     ItemModule,
     FactoryModule,
     ChainModule,
+    PlantModule,
   ],
   controllers: [AppController],
   providers: [AppService],
