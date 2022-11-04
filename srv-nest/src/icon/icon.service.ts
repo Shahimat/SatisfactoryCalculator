@@ -65,7 +65,7 @@ export class IconService {
   async create(iconCreateDto: IconCreateDto): Promise<Icon | null> {
     const id = await this.getMaxId();
     const iconCategory = await this.iconCategoryService.findOne(
-      iconCreateDto.id_icon_category,
+      iconCreateDto.idIconCategory,
     );
     if (iconCategory) {
       const icon = new Icon();
@@ -82,8 +82,8 @@ export class IconService {
   async update(id: number, iconUpdateDto: IconUpdateDto): Promise<Icon | null> {
     const icon = await this.findOneWithoutTransform(id);
     if (icon) {
-      const iconCategory = iconUpdateDto.id_icon_category
-        ? await this.iconCategoryService.findOne(iconUpdateDto.id_icon_category)
+      const iconCategory = iconUpdateDto.idIconCategory
+        ? await this.iconCategoryService.findOne(iconUpdateDto.idIconCategory)
         : icon.iconCategory;
       if (iconCategory) {
         icon.name = iconUpdateDto.name ?? icon.name;

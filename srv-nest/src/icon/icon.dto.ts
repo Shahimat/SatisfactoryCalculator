@@ -11,7 +11,7 @@ export class IconCreateDto {
 
   @IsNumber()
   @IsNotEmpty()
-  public id_icon_category: number;
+  public idIconCategory: number;
 }
 
 export class IconUpdateDto {
@@ -25,5 +25,5 @@ export class IconUpdateDto {
 
   @IsNumber()
   @ValidateIf((object, value) => value !== undefined)
-  public id_icon_category?: number;
+  public idIconCategory?: number;
 }
