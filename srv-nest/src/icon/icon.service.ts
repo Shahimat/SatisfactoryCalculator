@@ -18,6 +18,14 @@ export class IconService {
     private iconCategoryService: IconCategoryService,
   ) {}
 
+  async getMaxId(): Promise<number> {
+    const result = await this.iconRepo
+      .createQueryBuilder('icon')
+      .select('MAX(icon.id)', 'max')
+      .getRawOne<{ max: number }>();
+    return result ? result.max : -1;
+  }
+
   getActualPath(iconPath: string): string {
     return path.join(`/${env.ASSETS_DIR_NAME}`, iconPath);
   }
@@ -55,13 +63,13 @@ export class IconService {
   }
 
   async create(iconCreateDto: IconCreateDto): Promise<Icon | null> {
-    const icons = await this.findAll();
+    const id = await this.getMaxId();
     const iconCategory = await this.iconCategoryService.findOne(
       iconCreateDto.id_icon_category,
     );
     if (iconCategory) {
       const icon = new Icon();
-      icon.id = (icons[icons.length - 1]?.id ?? -1) + 1;
+      icon.id = id + 1;
       icon.name = iconCreateDto.name;
       icon.path = iconCreateDto.path;
       icon.iconCategory = iconCategory;
