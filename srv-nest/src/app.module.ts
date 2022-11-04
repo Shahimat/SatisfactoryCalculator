@@ -10,6 +10,7 @@ import { ItemCategoryModule } from './item-category/item-category.module';
 import { IconCategoryModule } from './icon-category/icon-category.module';
 import { IconModule } from './icon/icon.module';
 import { ItemModule } from './item/item.module';
+import { FactoryModule } from './factory/factory.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ItemModule } from './item/item.module';
     IconCategoryModule,
     IconModule,
     ItemModule,
+    FactoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

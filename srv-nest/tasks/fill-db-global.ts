@@ -5,11 +5,14 @@ import { ItemCategory } from '../src/item-category/item-category.entity';
 import { IconCategory } from '../src/icon-category/icon-category.entity';
 import { Icon } from '../src/icon/icon.entity';
 import { Item } from '../src/item/item.entity';
+import { Factory } from '../src/factory/factory.entity';
 
 import iconsData from './data/icons.json';
 import itemsData from './data/items.json';
+import factoriesData from './data/factories.json';
 
 const fillDB = async (AppDataSource: DataSource) => {
+  await AppDataSource.createQueryBuilder().delete().from(Factory).execute();
   await AppDataSource.createQueryBuilder().delete().from(Item).execute();
   await AppDataSource.createQueryBuilder().delete().from(Icon).execute();
   await AppDataSource.createQueryBuilder().delete().from(ItemType).execute();
@@ -68,6 +71,12 @@ const fillDB = async (AppDataSource: DataSource) => {
     .insert()
     .into(Item)
     .values(itemsData)
+    .execute();
+
+  await AppDataSource.createQueryBuilder()
+    .insert()
+    .into(Factory)
+    .values(factoriesData)
     .execute();
 };
 
