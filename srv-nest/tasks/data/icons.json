@@ -348,4 +348,11 @@
   "iconCategory": {
     "id": 5
   }
+}, {
+  "id": 50,
+  "name": "resource_well_extractor",
+  "path": "./miner/Resource_Well_Extractor.webp",
+  "iconCategory": {
+    "id": 4
+  }
 }]

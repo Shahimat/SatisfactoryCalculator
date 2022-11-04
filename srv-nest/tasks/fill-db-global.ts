@@ -28,6 +28,7 @@ const fillDB = async (AppDataSource: DataSource) => {
     .values([
       { id: 0, name: 'Твердое тело' },
       { id: 1, name: 'Жидкость' },
+      { id: 2, name: 'Прочее' },
     ])
     .execute();
 
