@@ -11,6 +11,7 @@ import { IconCategory } from '../src/icon-category/icon-category.entity';
 import { Icon } from '../src/icon/icon.entity';
 import { Item } from '../src/item/item.entity';
 import { Factory } from '../src/factory/factory.entity';
+import { Chain } from '../src/chain/chain.entity';
 
 const srvNestPath = path.join(__dirname, '..');
 
@@ -19,7 +20,7 @@ const AppDataSource = new DataSource({
   database: './db/DB.sqlite',
   synchronize: true,
   logging: false,
-  entities: [ItemType, ItemCategory, IconCategory, Icon, Item, Factory],
+  entities: [ItemType, ItemCategory, IconCategory, Icon, Item, Factory, Chain],
   // migrations: ['../**/*.migration.{js.ts}'],
   migrationsRun: false,
   subscribers: [],
