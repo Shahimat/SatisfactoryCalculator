@@ -30,6 +30,8 @@ export class ItemCategoryService {
     const itemCategory = new ItemCategory();
     itemCategory.id = (itemCategories[itemCategories.length - 1]?.id ?? -1) + 1;
     itemCategory.name = itemCategoryCreateDto.name;
+    itemCategory.isInternalEnergy =
+      itemCategoryCreateDto.isInternalEnergy ?? false;
     return this.itemCategoryRepo.save(itemCategory);
   }
 
@@ -40,6 +42,8 @@ export class ItemCategoryService {
     const itemCategory = await this.findOne(id);
     if (itemCategory) {
       itemCategory.name = itemCategoryUpdateDto.name;
+      itemCategory.isInternalEnergy =
+        itemCategoryUpdateDto.isInternalEnergy ?? itemCategory.isInternalEnergy;
       await this.itemCategoryRepo.save(itemCategory);
       return itemCategory;
     } else {

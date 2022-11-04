@@ -9,6 +9,6 @@ export class ItemCategory {
   @Column({ unique: true })
   name: string;
 
-  // @OneToMany(() => Item, (item) => item.itemCategory)
-  // items: Item[];
+  @Column()
+  isInternalEnergy: boolean;
 }

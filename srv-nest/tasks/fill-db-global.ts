@@ -34,10 +34,11 @@ const fillDB = async (AppDataSource: DataSource) => {
     .insert()
     .into(ItemCategory)
     .values([
-      { id: 0, name: 'Ресурс' },
-      { id: 1, name: 'Топливо' },
-      { id: 2, name: 'Предмет' },
-      { id: 3, name: 'Прочее' },
+      { id: 0, name: 'Ресурс', isInternalEnergy: false },
+      { id: 1, name: 'Топливо', isInternalEnergy: true },
+      { id: 2, name: 'Компонент', isInternalEnergy: false },
+      { id: 3, name: 'Предмет', isInternalEnergy: false },
+      { id: 4, name: 'Прочее', isInternalEnergy: false },
     ])
     .execute();
 
