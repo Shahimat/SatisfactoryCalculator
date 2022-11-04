@@ -18,25 +18,38 @@ export class IconService {
     private iconCategoryService: IconCategoryService,
   ) {}
 
-  async findAll(): Promise<Icon[]> {
-    const icons = await this.iconRepo
-      .createQueryBuilder('icon')
-      .innerJoinAndSelect('icon.iconCategory', 'category')
-      .getMany();
-    return icons.map(({ path: iconPath, ...iconFiels }) => ({
-      path: path.join(`/${env.ASSETS_DIR_NAME}`, iconPath),
-      ...iconFiels,
-    }));
+  getActualPath(iconPath: string): string {
+    return path.join(`/${env.ASSETS_DIR_NAME}`, iconPath);
   }
 
-  async findOne(id: number): Promise<Icon | null> {
+  async findOneWithoutTransform(id: number): Promise<Icon | null> {
     const icon = await this.iconRepo
       .createQueryBuilder('icon')
       .innerJoinAndSelect('icon.iconCategory', 'category')
       .where('icon.id = :id', { id })
       .getOne();
     if (icon) {
-      icon.path = path.join(`/${env.ASSETS_DIR_NAME}`, icon.path);
+      return icon;
+    } else {
+      return null;
+    }
+  }
+
+  async findAll(): Promise<Icon[]> {
+    const icons = await this.iconRepo
+      .createQueryBuilder('icon')
+      .innerJoinAndSelect('icon.iconCategory', 'category')
+      .getMany();
+    return icons.map(({ path: iconPath, ...iconFiels }) => ({
+      path: this.getActualPath(iconPath),
+      ...iconFiels,
+    }));
+  }
+
+  async findOne(id: number): Promise<Icon | null> {
+    const icon = await this.findOneWithoutTransform(id);
+    if (icon) {
+      icon.path = this.getActualPath(icon.path);
     }
     return icon;
   }
@@ -59,7 +72,7 @@ export class IconService {
   }
 
   async update(id: number, iconUpdateDto: IconUpdateDto): Promise<Icon | null> {
-    const icon = await this.findOne(id);
+    const icon = await this.findOneWithoutTransform(id);
     if (icon) {
       const iconCategory = iconUpdateDto.id_icon_category
         ? await this.iconCategoryService.findOne(iconUpdateDto.id_icon_category)
@@ -67,7 +80,9 @@ export class IconService {
       if (iconCategory) {
         icon.name = iconUpdateDto.name ?? icon.name;
         icon.path = iconUpdateDto.path ?? icon.path;
-        return await this.iconRepo.save(icon);
+        await this.iconRepo.save(icon);
+        icon.path = this.getActualPath(icon.path);
+        return icon;
       } else {
         return null;
       }
