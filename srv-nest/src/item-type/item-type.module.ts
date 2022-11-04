@@ -11,6 +11,4 @@ import { ItemType } from './item-type.entity';
   controllers: [ItemTypeController],
   exports: [ItemTypeService],
 })
-export class ItemTypeModule {
-  // constructor(private itemTypeService: ItemTypeService) {}
-}
+export class ItemTypeModule {}
