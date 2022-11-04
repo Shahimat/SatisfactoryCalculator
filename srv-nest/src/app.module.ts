@@ -14,6 +14,7 @@ import { FactoryModule } from './factory/factory.module';
 import { ChainModule } from './chain/chain.module';
 import { PlantModule } from './plant/plant.module';
 import { CalculationModule } from './calculation/calculation.module';
+import { SchemeModule } from './scheme/scheme.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { CalculationModule } from './calculation/calculation.module';
     ChainModule,
     PlantModule,
     CalculationModule,
+    SchemeModule,
   ],
   controllers: [AppController],
   providers: [AppService],

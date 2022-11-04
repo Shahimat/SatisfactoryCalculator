@@ -9,12 +9,15 @@ import { Factory } from '../src/factory/factory.entity';
 import { Chain } from '../src/chain/chain.entity';
 import { Plant } from '../src/plant/plant.entity';
 import { Calculation } from '../src/calculation/calculation.entity';
+import { Scheme } from '../src/scheme/scheme.entity';
 
 import iconsData from './data/icons.json';
 import itemsData from './data/items.json';
 import factoriesData from './data/factories.json';
+import schemesData from './data/schemes.json';
 
 const fillDB = async (AppDataSource: DataSource) => {
+  await AppDataSource.createQueryBuilder().delete().from(Scheme).execute();
   await AppDataSource.createQueryBuilder().delete().from(Calculation).execute();
   await AppDataSource.createQueryBuilder().delete().from(Plant).execute();
   await AppDataSource.createQueryBuilder().delete().from(Chain).execute();
@@ -116,6 +119,12 @@ const fillDB = async (AppDataSource: DataSource) => {
         name: 'расчет',
       },
     ])
+    .execute();
+
+  await AppDataSource.createQueryBuilder()
+    .insert()
+    .into(Scheme)
+    .values(schemesData)
     .execute();
 };
 

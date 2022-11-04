@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { Icon } from '../icon/icon.entity';
+import { Scheme } from '../scheme/scheme.entity';
 
 @Entity()
 export class Factory {
@@ -44,4 +51,7 @@ export class Factory {
 
   @ManyToOne(() => Icon, (icon) => icon.factories)
   icon: Icon;
+
+  @OneToMany(() => Scheme, (scheme) => scheme.factory)
+  schemes: Scheme[];
 }
