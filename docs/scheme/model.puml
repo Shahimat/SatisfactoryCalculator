@@ -39,7 +39,7 @@ entity item {
   +id_icon: number
   +id_item_type: number
   +id_item_category: number
-  energy: number | null
+  energy: number (>= 0) | null
 }
 
 entity factory {
