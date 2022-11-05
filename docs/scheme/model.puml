@@ -40,7 +40,7 @@ entity item {
   +id_icon: number
   +id_item_type: number
   +id_item_category: number
-  energy: number (>= 0) | null
+  energy: number (>= 0) | 0
 }
 
 entity factory {
@@ -66,7 +66,7 @@ entity scheme {
   ..
   name: string
   +id_factory: number
-  generation: number (+-) | null
+  generation: number (+-) | 0
 }
 
 entity scheme_item_link {
@@ -98,32 +98,67 @@ entity plant_scheme_link {
   *id : number
   ..
   +id_plant: number
-  +id_scheme: number | null
-  +id_plant_different: number | null
-  +id_chain: number | null
+  +id_scheme: number
   acceleration: number (0.01...1...2.5)
   num_factories: number (1, 2, ..., n)
+}
+
+entity plant_chain_link {
+  *id : number
+  ..
+  +id_plant: number
+  +id_chain: number
+  num_chains: number (1, 2, ..., n)
+}
+
+entity plant_plant_link {
+  *id : number
+  ..
+  +id_plant: number
+  +id_plant_wildcard: number
+  num_plants: number (1, 2, ..., n)
 }
 
 entity chain_scheme_link {
   *id : number
   ..
   +id_chain: number
-  +id_scheme: number | null
-  +id_plant: number | null
+  +id_scheme: number
   acceleration: number (0.01...1...2.5)
   num_factories: number (1, 2, ..., n)
+}
+
+entity chain_plant_link {
+  *id : number
+  ..
+  +id_chain: number
+  +id_plant: number
+  num_plants: number (1, 2, ..., n)
 }
 
 entity calculation_scheme_link {
   *id : number
   ..
   +id_calculation: number
-  +id_scheme: number | null
-  +id_plant: number | null
-  +id_chain: number | null
+  +id_scheme: number
   acceleration: number (0.01...1...2.5)
   num_factories: number (1, 2, ..., n)
+}
+
+entity calculation_chain_link {
+  *id : number
+  ..
+  +id_calculation: number
+  +id_chain: number
+  num_chains: number (1, 2, ..., n)
+}
+
+entity calculation_plant_link {
+  *id : number
+  ..
+  +id_calculation: number
+  +id_plant: number
+  num_plants: number (1, 2, ..., n)
 }
 
 icon_category ||..|{ icon
@@ -134,16 +169,24 @@ icon ||..o{ factory
 factory ||..|{ scheme
 item ||..o{ scheme_item_link
 scheme ||..o{ scheme_item_link
-plant ||..o{ plant_scheme_link  
-scheme |o..o{ plant_scheme_link
-plant_scheme_link |o..o| plant_scheme_link
-chain |o..o{ plant_scheme_link
-chain ||..o{ chain_scheme_link
-scheme |o..o{ chain_scheme_link
-plant |o..o{ chain_scheme_link
+
 calculation ||..o{ calculation_scheme_link
-scheme |o..o{ calculation_scheme_link
-plant |o..o{ calculation_scheme_link
-chain |o..o{ calculation_scheme_link
+scheme ||..o{ calculation_scheme_link
+calculation ||..o{ calculation_chain_link
+chain ||..o{ calculation_chain_link
+calculation ||..o{ calculation_plant_link
+plant ||..o{ calculation_plant_link
+
+chain ||..o{ chain_scheme_link
+scheme ||..o{ chain_scheme_link
+chain ||..o{ chain_plant_link
+plant ||..o{ chain_plant_link
+
+plant ||..o{ plant_scheme_link
+scheme ||..o{ plant_scheme_link
+plant ||..o{ plant_chain_link
+chain ||..o{ plant_chain_link
+plant ||..o{ plant_plant_link
+plant ||..o{ plant_plant_link
 
 @enduml
