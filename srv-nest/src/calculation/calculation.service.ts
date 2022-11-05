@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CalculationCreateDto, CalculationUpdateDto } from './calculation.dto';
@@ -33,14 +33,14 @@ export class CalculationService {
     const calculations = filterCategory
       ? await this.calculationRepo
           .createQueryBuilder('calc')
-          .innerJoinAndSelect('calc.calculationCategory', 'category')
+          .leftJoinAndSelect('calc.calculationCategory', 'category')
           .where('category.name = :name', {
             name: filterCategory,
           })
           .getMany()
       : await this.calculationRepo
           .createQueryBuilder('calc')
-          .innerJoinAndSelect('calc.calculationCategory', 'category')
+          .leftJoinAndSelect('calc.calculationCategory', 'category')
           .getMany();
     return calculations;
   }
@@ -83,41 +83,77 @@ export class CalculationService {
       .getOne();
   }
 
-  async findCategory(
-    id?: number,
-  ): Promise<CalculationCategory[] | CalculationCategory | null> {
-    return id
-      ? await this.calculationCategoryRepo.findOneBy({ id })
-      : await this.calculationCategoryRepo.find();
+  async findAllCategories(): Promise<CalculationCategory[]> {
+    console.log('daaa');
+    return await this.calculationCategoryRepo.find();
   }
 
-  async create(
-    calculationCreateDto: CalculationCreateDto,
-  ): Promise<Calculation | null> {
-    return null;
-    // const id = await this.getMaxId();
-    // const calculation = new Calculation();
-    // calculation.id = id + 1;
-    // calculation.name = calculationCreateDto.name;
-    // return this.calculationRepo.save(calculation);
+  async findCategoryById(id: number): Promise<CalculationCategory | null> {
+    console.log('some');
+    return await this.calculationCategoryRepo.findOneBy({ id });
   }
 
-  async update(
+  async findCategoryByName(name: string): Promise<CalculationCategory | null> {
+    return await this.calculationCategoryRepo.findOneBy({ name });
+  }
+
+  async createCalculation(
+    categoryName: string,
+    calculationName?: string,
+  ): Promise<Calculation> {
+    const category = await this.findCategoryByName(categoryName);
+    if (category) {
+      const id = await this.getMaxId();
+      const calculation = new Calculation();
+      calculation.id = id + 1;
+      calculation.name = calculationName ?? `${category.name}${id}`;
+      calculation.calculationCategory = category;
+      return await this.calculationRepo.save(calculation);
+    } else {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          message: `category not found by name = ${categoryName}`,
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  async updateCalculation(
     id: number,
     calculationUpdateDto: CalculationUpdateDto,
-  ): Promise<Calculation | null> {
-    return null;
-    // const calculation = await this.findOne(id);
-    // if (calculation) {
-    //   calculation.name = calculationUpdateDto.name;
-    //   await this.calculationRepo.save(calculation);
-    //   return calculation;
-    // } else {
-    //   return null;
-    // }
+  ): Promise<Calculation> {
+    const calculation = await this.calculationRepo.findOneBy({ id });
+    if (calculation) {
+      calculation.name = calculationUpdateDto.name ?? calculation.name;
+      const category = calculationUpdateDto.category
+        ? await this.findCategoryByName(calculationUpdateDto.category)
+        : calculation.calculationCategory;
+      if (category) {
+        calculation.calculationCategory = category;
+        return await this.calculationRepo.save(calculation);
+      } else {
+        throw new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+            message: `category not found by name = ${calculationUpdateDto.category}`,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+    } else {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          message: `calculation not found by id = ${id}`,
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 
-  async remove(id: number): Promise<void> {
+  async removeCalculation(id: number): Promise<void> {
     await this.calculationRepo.delete(id);
   }
 }

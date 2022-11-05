@@ -29,43 +29,41 @@ export class CalculationController {
     return this.calculationService.findAll(query.name);
   }
 
+  @Get('/category')
+  findAllCategories(): Promise<CalculationCategory[]> {
+    return this.calculationService.findAllCategories();
+  }
+
+  @Get('/category/:id')
+  findCategory(@Param('id') id: number): Promise<CalculationCategory | null> {
+    return this.calculationService.findCategoryById(id);
+  }
+
   @Get(':id')
   findOne(@Param() params): Promise<Calculation | null> {
     return this.calculationService.findOne(Number(params.id));
   }
 
-  @Get('/category')
-  findCategory(): Promise<CalculationCategory[] | CalculationCategory | any> {
-    return this.calculationService.findCategory();
+  @Post()
+  createCalculation(
+    @Query() query: CalculationCreateDto,
+  ): Promise<Calculation> {
+    return this.calculationService.createCalculation(query.category);
   }
 
-  @Get('/category/:id')
-  findCategoryById(
-    @Param() params,
-  ): Promise<CalculationCategory[] | CalculationCategory | any> {
-    return this.calculationService.findCategory(Number(params.id));
+  @Patch(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() calculationUpdateDto: CalculationUpdateDto,
+  ): Promise<Calculation | null> {
+    return await this.calculationService.updateCalculation(
+      id,
+      calculationUpdateDto,
+    );
   }
-
-  // @Post()
-  // create(
-  //   @Body() calculationCreateDto: CalculationCreateDto,
-  // ): Promise<Calculation> {
-  //   return this.calculationService.create(calculationCreateDto);
-  // }
-
-  // @Patch(':id')
-  // async update(
-  //   @Param('id') id: string,
-  //   @Body() calculationUpdateDto: CalculationUpdateDto,
-  // ): Promise<Calculation | null> {
-  //   return await this.calculationService.update(
-  //     Number(id),
-  //     calculationUpdateDto,
-  //   );
-  // }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<void> {
-    await this.calculationService.remove(Number(id));
+  async remove(@Param('id') id: number): Promise<void> {
+    await this.calculationService.removeCalculation(id);
   }
 }

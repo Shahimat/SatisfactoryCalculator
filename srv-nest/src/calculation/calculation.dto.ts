@@ -9,11 +9,15 @@ export class CalculationGetAllDto {
 export class CalculationCreateDto {
   @IsString()
   @IsNotEmpty()
-  public name: string;
+  public category: string;
 }
 
 export class CalculationUpdateDto {
   @IsString()
-  @IsNotEmpty()
-  public name: string;
+  @ValidateIf((object, value) => value !== undefined)
+  public name?: string;
+
+  @IsString()
+  @ValidateIf((object, value) => value !== undefined)
+  public category?: string;
 }
