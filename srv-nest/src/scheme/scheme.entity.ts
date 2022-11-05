@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Factory } from '../factory/factory.entity';
 import { SchemeItemLink } from '../scheme-item-link/scheme-item-link.entity';
+import { CalculationSchemeLink } from '../calculation/calculation-scheme-link.entity';
 
 @Entity()
 export class Scheme {
@@ -24,4 +25,10 @@ export class Scheme {
 
   @OneToMany(() => SchemeItemLink, (schemeItemLink) => schemeItemLink.scheme)
   schemeItemLinks: SchemeItemLink[];
+
+  @OneToMany(
+    () => CalculationSchemeLink,
+    (calculationSchemeLink) => calculationSchemeLink.scheme,
+  )
+  calculationSchemeLinks: CalculationSchemeLink[];
 }

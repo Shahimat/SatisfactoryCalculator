@@ -13,9 +13,12 @@ import { Item } from '../src/item/item.entity';
 import { Factory } from '../src/factory/factory.entity';
 import { Chain } from '../src/chain/chain.entity';
 import { Plant } from '../src/plant/plant.entity';
-import { Calculation } from '../src/calculation/calculation.entity';
 import { Scheme } from '../src/scheme/scheme.entity';
 import { SchemeItemLink } from '../src/scheme-item-link/scheme-item-link.entity';
+import { Calculation } from '../src/calculation/calculation.entity';
+import { CalculationCategory } from '../src/calculation/calculation-category.entity';
+import { CalculationLink } from '../src/calculation/calculation-link.entity';
+import { CalculationSchemeLink } from '../src/calculation/calculation-scheme-link.entity';
 
 const srvNestPath = path.join(__dirname, '..');
 
@@ -33,9 +36,12 @@ const AppDataSource = new DataSource({
     Factory,
     Chain,
     Plant,
-    Calculation,
     Scheme,
     SchemeItemLink,
+    Calculation,
+    CalculationCategory,
+    CalculationLink,
+    CalculationSchemeLink,
   ],
   // migrations: ['../**/*.migration.{js.ts}'],
   migrationsRun: false,
