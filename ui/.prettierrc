@@ -1,0 +1,11 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "endOfLine": "auto",
+  "overrides": [
+    {
+      "files": "**/*.json",
+      "options": { "parser": "json" }
+    }
+  ]
+}
