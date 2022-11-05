@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, ValidateIf } from 'class-validator';
+
+export class CalculationGetAllDto {
+  @IsString()
+  @ValidateIf((object, value) => value !== undefined)
+  public name: string;
+}
 
 export class CalculationCreateDto {
   @IsString()
