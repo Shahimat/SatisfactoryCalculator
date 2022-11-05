@@ -1,8 +1,38 @@
 [
   {
     "id": 0,
-    "production": 100,
-    "item": { "id": 0 },
+    "production": -30,
+    "item": { "id": 4 },
     "scheme": { "id": 0 }
+  },
+  {
+    "id": 1,
+    "production": 30,
+    "item": { "id": 20 },
+    "scheme": { "id": 0 }
+  },
+  {
+    "id": 2,
+    "production": -30,
+    "item": { "id": 20 },
+    "scheme": { "id": 1 }
+  },
+  {
+    "id": 3,
+    "production": 20,
+    "item": { "id": 21 },
+    "scheme": { "id": 1 }
+  },
+  {
+    "id": 4,
+    "production": -15,
+    "item": { "id": 20 },
+    "scheme": { "id": 2 }
+  },
+  {
+    "id": 5,
+    "production": 15,
+    "item": { "id": 22 },
+    "scheme": { "id": 2 }
   }
 ]
