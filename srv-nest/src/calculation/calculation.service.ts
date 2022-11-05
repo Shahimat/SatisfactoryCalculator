@@ -48,41 +48,35 @@ export class CalculationService {
   async findOne(id: number): Promise<Calculation | null> {
     return await this.calculationRepo
       .createQueryBuilder('calc')
-      .innerJoinAndSelect('calc.calculationSchemeLinks', 'calc_scheme')
-      .innerJoinAndSelect('calc_scheme.scheme', 'calc_scheme_in')
-      .innerJoinAndSelect('calc_scheme_in.factory', 'calc_scheme_factory')
-      .innerJoinAndSelect(
-        'calc_scheme_factory.icon',
-        'calc_scheme_factory_icon',
-      )
-      .innerJoinAndSelect(
+      .leftJoinAndSelect('calc.calculationSchemeLinks', 'calc_scheme')
+      .leftJoinAndSelect('calc_scheme.scheme', 'calc_scheme_in')
+      .leftJoinAndSelect('calc_scheme_in.factory', 'calc_scheme_factory')
+      .leftJoinAndSelect('calc_scheme_factory.icon', 'calc_scheme_factory_icon')
+      .leftJoinAndSelect(
         'calc_scheme_in.schemeItemLinks',
         'calc_scheme_item_link',
       )
-      .innerJoinAndSelect('calc_scheme_item_link.item', 'calc_item')
-      .innerJoinAndSelect('calc_item.icon', 'calc_item_icon')
-      .innerJoinAndSelect('calc.calculationAggregationLinks', 'calc_agg')
-      .innerJoinAndSelect('calc_agg.calculationLink', 'calc_link')
-      .innerJoinAndSelect('calc_link.calculationCategory', 'calc_link_category')
-      .innerJoinAndSelect(
-        'calc_link.calculationSchemeLinks',
-        'calc_link_scheme',
-      )
-      .innerJoinAndSelect('calc_link_scheme.scheme', 'calc_link_scheme_in')
-      .innerJoinAndSelect(
+      .leftJoinAndSelect('calc_scheme_item_link.item', 'calc_item')
+      .leftJoinAndSelect('calc_item.icon', 'calc_item_icon')
+      .leftJoinAndSelect('calc.calculationAggregationLinks', 'calc_agg')
+      .leftJoinAndSelect('calc_agg.calculationLink', 'calc_link')
+      .leftJoinAndSelect('calc_link.calculationCategory', 'calc_link_category')
+      .leftJoinAndSelect('calc_link.calculationSchemeLinks', 'calc_link_scheme')
+      .leftJoinAndSelect('calc_link_scheme.scheme', 'calc_link_scheme_in')
+      .leftJoinAndSelect(
         'calc_link_scheme_in.factory',
         'calc_link_scheme_factory',
       )
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         'calc_link_scheme_factory.icon',
         'calc_link_scheme_factory_icon',
       )
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         'calc_link_scheme_in.schemeItemLinks',
         'calc_link_scheme_item_link',
       )
-      .innerJoinAndSelect('calc_link_scheme_item_link.item', 'calc_link_item')
-      .innerJoinAndSelect('calc_link_item.icon', 'calc_link_item_icon')
+      .leftJoinAndSelect('calc_link_scheme_item_link.item', 'calc_link_item')
+      .leftJoinAndSelect('calc_link_item.icon', 'calc_link_item_icon')
       .where('calc.id = :id', {
         id,
       })
