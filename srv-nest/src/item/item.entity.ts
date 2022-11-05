@@ -18,7 +18,7 @@ export class Item {
   @Column({ unique: true })
   name: string;
 
-  @Column({ nullable: true })
+  @Column()
   energy: number;
 
   @ManyToOne(() => ItemCategory, (itemCategory) => itemCategory.items)

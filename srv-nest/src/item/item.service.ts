@@ -65,6 +65,8 @@ export class ItemService {
             `error: itemCategory requires internal energy but found ${itemCreateDto.energy}`,
           );
         }
+      } else {
+        item.energy = 0;
       }
       item.itemType = itemType;
       item.itemCategory = itemCategory;
@@ -114,6 +116,8 @@ export class ItemService {
               `error: itemCategory requires internal energy but found ${itemUpdateDto.energy}`,
             );
           }
+        } else {
+          item.energy = 0;
         }
         item.name = itemUpdateDto.name ?? item.name;
         item.itemType = itemType;
