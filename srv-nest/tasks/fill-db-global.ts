@@ -10,13 +10,19 @@ import { Chain } from '../src/chain/chain.entity';
 import { Plant } from '../src/plant/plant.entity';
 import { Calculation } from '../src/calculation/calculation.entity';
 import { Scheme } from '../src/scheme/scheme.entity';
+import { SchemeItemLink } from '../src/scheme-item-link/scheme-item-link.entity';
 
 import iconsData from './data/icons.json';
 import itemsData from './data/items.json';
 import factoriesData from './data/factories.json';
 import schemesData from './data/schemes.json';
+import schemeItemLinksData from './data/scheme-item-links.json';
 
 const fillDB = async (AppDataSource: DataSource) => {
+  await AppDataSource.createQueryBuilder()
+    .delete()
+    .from(SchemeItemLink)
+    .execute();
   await AppDataSource.createQueryBuilder().delete().from(Scheme).execute();
   await AppDataSource.createQueryBuilder().delete().from(Calculation).execute();
   await AppDataSource.createQueryBuilder().delete().from(Plant).execute();
@@ -125,6 +131,12 @@ const fillDB = async (AppDataSource: DataSource) => {
     .insert()
     .into(Scheme)
     .values(schemesData)
+    .execute();
+
+  await AppDataSource.createQueryBuilder()
+    .insert()
+    .into(SchemeItemLink)
+    .values(schemeItemLinksData)
     .execute();
 };
 

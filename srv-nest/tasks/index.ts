@@ -15,6 +15,7 @@ import { Chain } from '../src/chain/chain.entity';
 import { Plant } from '../src/plant/plant.entity';
 import { Calculation } from '../src/calculation/calculation.entity';
 import { Scheme } from '../src/scheme/scheme.entity';
+import { SchemeItemLink } from '../src/scheme-item-link/scheme-item-link.entity';
 
 const srvNestPath = path.join(__dirname, '..');
 
@@ -34,6 +35,7 @@ const AppDataSource = new DataSource({
     Plant,
     Calculation,
     Scheme,
+    SchemeItemLink,
   ],
   // migrations: ['../**/*.migration.{js.ts}'],
   migrationsRun: false,

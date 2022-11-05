@@ -18,5 +18,6 @@ import { IconModule } from '@src/icon/icon.module';
   ],
   providers: [ItemService],
   controllers: [ItemController],
+  exports: [ItemService],
 })
 export class ItemModule {}

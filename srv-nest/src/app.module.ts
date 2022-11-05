@@ -15,6 +15,7 @@ import { ChainModule } from './chain/chain.module';
 import { PlantModule } from './plant/plant.module';
 import { CalculationModule } from './calculation/calculation.module';
 import { SchemeModule } from './scheme/scheme.module';
+import { SchemeItemLinkModule } from './scheme-item-link/scheme-item-link.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { SchemeModule } from './scheme/scheme.module';
     PlantModule,
     CalculationModule,
     SchemeModule,
+    SchemeItemLinkModule,
   ],
   controllers: [AppController],
   providers: [AppService],

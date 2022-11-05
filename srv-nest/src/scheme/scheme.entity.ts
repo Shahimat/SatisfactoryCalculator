@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { Factory } from '../factory/factory.entity';
+import { SchemeItemLink } from '../scheme-item-link/scheme-item-link.entity';
 
 @Entity()
 export class Scheme {
@@ -14,4 +21,7 @@ export class Scheme {
 
   @ManyToOne(() => Factory, (factory) => factory.schemes)
   factory: Factory;
+
+  @OneToMany(() => SchemeItemLink, (schemeItemLink) => schemeItemLink.scheme)
+  schemeItemLinks: SchemeItemLink[];
 }
