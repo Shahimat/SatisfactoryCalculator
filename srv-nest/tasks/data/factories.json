@@ -1,358 +1,380 @@
-[{
-  "id": 0,
-  "name": "Буровая установка ур. 1",
-  "consumption": 5000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 0,
-  "inputSolid": 0,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 30
+[
+  {
+    "id": 0,
+    "name": "Буровая установка ур. 1",
+    "consumption": 5000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 0,
+    "inputSolid": 0,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 30
+    }
+  },
+  {
+    "id": 1,
+    "name": "Буровая установка ур. 2",
+    "consumption": 12000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 4,
+    "inputSolid": 0,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 31
+    }
+  },
+  {
+    "id": 2,
+    "name": "Буровая установка ур. 3",
+    "consumption": 30000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 8,
+    "inputSolid": 0,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 32
+    }
+  },
+  {
+    "id": 3,
+    "name": "Экстрактор нефти",
+    "consumption": 40000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 5,
+    "inputSolid": 0,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 0,
+    "outputLiquid": 1,
+    "outputOther": 0,
+    "icon": {
+      "id": 33
+    }
+  },
+  {
+    "id": 4,
+    "name": "Нагнетатель давления скважины",
+    "consumption": 150000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 8,
+    "inputSolid": 0,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 0,
+    "outputLiquid": 0,
+    "outputOther": 1,
+    "icon": {
+      "id": 34
+    }
+  },
+  {
+    "id": 5,
+    "name": "Экстрактор воды",
+    "consumption": 20000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 3,
+    "inputSolid": 0,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 0,
+    "outputLiquid": 1,
+    "outputOther": 0,
+    "icon": {
+      "id": 35
+    }
+  },
+  {
+    "id": 6,
+    "name": "Ассемблер",
+    "consumption": 15000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 2,
+    "inputSolid": 2,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 36
+    }
+  },
+  {
+    "id": 7,
+    "name": "Сжигатель биомассы",
+    "consumption": 0,
+    "isSchemeGeneration": true,
+    "isSchemeConsumption": false,
+    "isAcceleration": false,
+    "tier": 0,
+    "inputSolid": 0,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 0,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 37
+    }
+  },
+  {
+    "id": 8,
+    "name": "Смеситель",
+    "consumption": 75000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 7,
+    "inputSolid": 2,
+    "inputLiquid": 2,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 1,
+    "outputOther": 0,
+    "icon": {
+      "id": 38
+    }
+  },
+  {
+    "id": 9,
+    "name": "Угольный генератор",
+    "consumption": 0,
+    "isSchemeGeneration": true,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 3,
+    "inputSolid": 1,
+    "inputLiquid": 1,
+    "inputOther": 0,
+    "outputSolid": 0,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 39
+    }
+  },
+  {
+    "id": 10,
+    "name": "Конструктор",
+    "consumption": 4000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 0,
+    "inputSolid": 1,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 40
+    }
+  },
+  {
+    "id": 11,
+    "name": "Литейная",
+    "consumption": 16000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 3,
+    "inputSolid": 2,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 41
+    }
+  },
+  {
+    "id": 12,
+    "name": "Топливный генератор",
+    "consumption": 0,
+    "isSchemeGeneration": true,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 6,
+    "inputSolid": 0,
+    "inputLiquid": 1,
+    "inputOther": 0,
+    "outputSolid": 0,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 42
+    }
+  },
+  {
+    "id": 13,
+    "name": "Геотермальный генератор",
+    "consumption": 0,
+    "isSchemeGeneration": true,
+    "isSchemeConsumption": false,
+    "isAcceleration": false,
+    "tier": 8,
+    "inputSolid": 0,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 0,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 43
+    }
+  },
+  {
+    "id": 14,
+    "name": "Изготовитель",
+    "consumption": 55000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 5,
+    "inputSolid": 4,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 44
+    }
+  },
+  {
+    "id": 15,
+    "name": "Атомная электростанция",
+    "consumption": 0,
+    "isSchemeGeneration": true,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 8,
+    "inputSolid": 1,
+    "inputLiquid": 1,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 45
+    }
+  },
+  {
+    "id": 16,
+    "name": "Упаковщик",
+    "consumption": 10000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 5,
+    "inputSolid": 1,
+    "inputLiquid": 1,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 1,
+    "outputOther": 0,
+    "icon": {
+      "id": 46
+    }
+  },
+  {
+    "id": 17,
+    "name": "Ускоритель частиц",
+    "consumption": 0,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": true,
+    "isAcceleration": true,
+    "tier": 8,
+    "inputSolid": 0,
+    "inputLiquid": 1,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 47
+    }
+  },
+  {
+    "id": 18,
+    "name": "Очистительный завод",
+    "consumption": 30000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 5,
+    "inputSolid": 1,
+    "inputLiquid": 1,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 1,
+    "outputOther": 0,
+    "icon": {
+      "id": 48
+    }
+  },
+  {
+    "id": 19,
+    "name": "Плавильня",
+    "consumption": 4000000,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": true,
+    "tier": 0,
+    "inputSolid": 1,
+    "inputLiquid": 0,
+    "inputOther": 0,
+    "outputSolid": 1,
+    "outputLiquid": 0,
+    "outputOther": 0,
+    "icon": {
+      "id": 49
+    }
+  },
+  {
+    "id": 20,
+    "name": "Экстрактор скважины",
+    "consumption": 0,
+    "isSchemeGeneration": false,
+    "isSchemeConsumption": false,
+    "isAcceleration": false,
+    "tier": 8,
+    "inputSolid": 0,
+    "inputLiquid": 0,
+    "inputOther": 1,
+    "outputSolid": 0,
+    "outputLiquid": 1,
+    "outputOther": 0,
+    "icon": {
+      "id": 50
+    }
   }
-}, {
-  "id": 1,
-  "name": "Буровая установка ур. 2",
-  "consumption": 12000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 4,
-  "inputSolid": 0,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 31
-  }
-}, {
-  "id": 2,
-  "name": "Буровая установка ур. 3",
-  "consumption": 30000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 8,
-  "inputSolid": 0,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 32
-  }
-}, {
-  "id": 3,
-  "name": "Экстрактор нефти",
-  "consumption": 40000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 5,
-  "inputSolid": 0,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 0,
-  "outputLiquid": 1,
-  "outputOther": 0,
-  "icon": {
-    "id": 33
-  }
-}, {
-  "id": 4,
-  "name": "Нагнетатель давления скважины",
-  "consumption": 150000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 8,
-  "inputSolid": 0,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 0,
-  "outputLiquid": 0,
-  "outputOther": 1,
-  "icon": {
-    "id": 34
-  }
-}, {
-  "id": 5,
-  "name": "Экстрактор воды",
-  "consumption": 20000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 3,
-  "inputSolid": 0,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 0,
-  "outputLiquid": 1,
-  "outputOther": 0,
-  "icon": {
-    "id": 35
-  }
-}, {
-  "id": 6,
-  "name": "Ассемблер",
-  "consumption": 15000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 2,
-  "inputSolid": 2,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 36
-  }
-}, {
-  "id": 7,
-  "name": "Сжигатель биомассы",
-  "consumption": 0,
-  "isSchemeGeneration": true,
-  "isSchemeConsumption": false,
-  "isAcceleration": false,
-  "tier": 0,
-  "inputSolid": 0,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 0,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 37
-  }
-}, {
-  "id": 8,
-  "name": "Смеситель",
-  "consumption": 75000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 7,
-  "inputSolid": 2,
-  "inputLiquid": 2,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 1,
-  "outputOther": 0,
-  "icon": {
-    "id": 38
-  }
-}, {
-  "id": 9,
-  "name": "Угольный генератор",
-  "consumption": 0,
-  "isSchemeGeneration": true,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 3,
-  "inputSolid": 1,
-  "inputLiquid": 1,
-  "inputOther": 0,
-  "outputSolid": 0,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 39
-  }
-}, {
-  "id": 10,
-  "name": "Конструктор",
-  "consumption": 4000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 0,
-  "inputSolid": 1,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 40
-  }
-}, {
-  "id": 11,
-  "name": "Литейная",
-  "consumption": 16000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 3,
-  "inputSolid": 2,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 41
-  }
-}, {
-  "id": 12,
-  "name": "Топливный генератор",
-  "consumption": 0,
-  "isSchemeGeneration": true,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 6,
-  "inputSolid": 0,
-  "inputLiquid": 1,
-  "inputOther": 0,
-  "outputSolid": 0,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 42
-  }
-}, {
-  "id": 13,
-  "name": "Геотермальный генератор",
-  "consumption": 0,
-  "isSchemeGeneration": true,
-  "isSchemeConsumption": false,
-  "isAcceleration": false,
-  "tier": 8,
-  "inputSolid": 0,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 0,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 43
-  }
-}, {
-  "id": 14,
-  "name": "Изготовитель",
-  "consumption": 55000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 5,
-  "inputSolid": 4,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 44
-  }
-}, {
-  "id": 15,
-  "name": "Атомная электростанция",
-  "consumption": 0,
-  "isSchemeGeneration": true,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 8,
-  "inputSolid": 1,
-  "inputLiquid": 1,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 45
-  }
-}, {
-  "id": 16,
-  "name": "Упаковщик",
-  "consumption": 10000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 5,
-  "inputSolid": 1,
-  "inputLiquid": 1,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 1,
-  "outputOther": 0,
-  "icon": {
-    "id": 46
-  }
-}, {
-  "id": 17,
-  "name": "Ускоритель частиц",
-  "consumption": 0,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": true,
-  "isAcceleration": true,
-  "tier": 8,
-  "inputSolid": 0,
-  "inputLiquid": 1,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 47
-  }
-}, {
-  "id": 18,
-  "name": "Очистительный завод",
-  "consumption": 30000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 5,
-  "inputSolid": 1,
-  "inputLiquid": 1,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 1,
-  "outputOther": 0,
-  "icon": {
-    "id": 48
-  }
-}, {
-  "id": 19,
-  "name": "Плавильня",
-  "consumption": 4000000,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": true,
-  "tier": 0,
-  "inputSolid": 1,
-  "inputLiquid": 0,
-  "inputOther": 0,
-  "outputSolid": 1,
-  "outputLiquid": 0,
-  "outputOther": 0,
-  "icon": {
-    "id": 49
-  }
-}, {
-  "id": 20,
-  "name": "Экстрактор скважины",
-  "consumption": 0,
-  "isSchemeGeneration": false,
-  "isSchemeConsumption": false,
-  "isAcceleration": false,
-  "tier": 8,
-  "inputSolid": 0,
-  "inputLiquid": 0,
-  "inputOther": 1,
-  "outputSolid": 0,
-  "outputLiquid": 1,
-  "outputOther": 0,
-  "icon": {
-    "id": 50
-  }
-}]
+]

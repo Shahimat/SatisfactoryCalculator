@@ -1,358 +1,410 @@
-[{
-  "id": 0,
-  "name": "bauxite",
-  "path": "./resource/Bauxite.webp",
-  "iconCategory": {
-    "id": 0
+[
+  {
+    "id": 0,
+    "name": "bauxite",
+    "path": "./resource/Bauxite.webp",
+    "iconCategory": {
+      "id": 0
+    }
+  },
+  {
+    "id": 1,
+    "name": "caterium_ore",
+    "path": "./resource/Caterium_Ore.webp",
+    "iconCategory": {
+      "id": 0
+    }
+  },
+  {
+    "id": 2,
+    "name": "copper_ore",
+    "path": "./resource/Copper_ore.webp",
+    "iconCategory": {
+      "id": 0
+    }
+  },
+  {
+    "id": 3,
+    "name": "crude_oil",
+    "path": "./resource/Crude_Oil.webp",
+    "iconCategory": {
+      "id": 0
+    }
+  },
+  {
+    "id": 4,
+    "name": "iron_ore",
+    "path": "./resource/Iron_Ore.webp",
+    "iconCategory": {
+      "id": 0
+    }
+  },
+  {
+    "id": 5,
+    "name": "limestone",
+    "path": "./resource/Limestone.webp",
+    "iconCategory": {
+      "id": 0
+    }
+  },
+  {
+    "id": 6,
+    "name": "nitrogen_gas",
+    "path": "./resource/Nitrogen_Gas.webp",
+    "iconCategory": {
+      "id": 0
+    }
+  },
+  {
+    "id": 7,
+    "name": "raw_quartz",
+    "path": "./resource/Raw_Quartz.webp",
+    "iconCategory": {
+      "id": 0
+    }
+  },
+  {
+    "id": 8,
+    "name": "sulfur",
+    "path": "./resource/Sulfur.webp",
+    "iconCategory": {
+      "id": 0
+    }
+  },
+  {
+    "id": 9,
+    "name": "uranum",
+    "path": "./resource/Uranum.webp",
+    "iconCategory": {
+      "id": 0
+    }
+  },
+  {
+    "id": 10,
+    "name": "water",
+    "path": "./resource/Water.webp",
+    "iconCategory": {
+      "id": 0
+    }
+  },
+  {
+    "id": 11,
+    "name": "biomass",
+    "path": "./fuel/Biomass.webp",
+    "iconCategory": {
+      "id": 1
+    }
+  },
+  {
+    "id": 12,
+    "name": "coal",
+    "path": "./fuel/Coal.webp",
+    "iconCategory": {
+      "id": 1
+    }
+  },
+  {
+    "id": 13,
+    "name": "leaves",
+    "path": "./fuel/Leaves.webp",
+    "iconCategory": {
+      "id": 1
+    }
+  },
+  {
+    "id": 14,
+    "name": "solid_biofuel",
+    "path": "./fuel/Solid_Biofuel.webp",
+    "iconCategory": {
+      "id": 1
+    }
+  },
+  {
+    "id": 15,
+    "name": "wood",
+    "path": "./fuel/Wood.webp",
+    "iconCategory": {
+      "id": 1
+    }
+  },
+  {
+    "id": 16,
+    "name": "cable",
+    "path": "./component/Cable.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 17,
+    "name": "concrete",
+    "path": "./component/Concrete.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 18,
+    "name": "copper_ignot",
+    "path": "./component/Copper_Ignot.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 19,
+    "name": "copper_sheet",
+    "path": "./component/Copper_Sheet.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 20,
+    "name": "iron_ignot",
+    "path": "./component/Iron_Ignot.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 21,
+    "name": "iron_plate",
+    "path": "./component/Iron_Plate.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 22,
+    "name": "iron_rod",
+    "path": "./component/Iron_Rod.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 23,
+    "name": "modular_frame",
+    "path": "./component/Modular_Frame.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 24,
+    "name": "reinforced_iron_plate",
+    "path": "./component/Reinforced_Iron_Plate.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 25,
+    "name": "rotor",
+    "path": "./component/Rotor.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 26,
+    "name": "screw",
+    "path": "./component/Screw.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 27,
+    "name": "smart_plating",
+    "path": "./component/Smart_Plating.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 28,
+    "name": "wire",
+    "path": "./component/Wire.webp",
+    "iconCategory": {
+      "id": 2
+    }
+  },
+  {
+    "id": 29,
+    "name": "power_shard",
+    "path": "./thing/Power_Shard.webp",
+    "iconCategory": {
+      "id": 3
+    }
+  },
+  {
+    "id": 30,
+    "name": "miner_mk_1",
+    "path": "./miner/Miner_Mk.1.webp",
+    "iconCategory": {
+      "id": 4
+    }
+  },
+  {
+    "id": 31,
+    "name": "miner_mk_2",
+    "path": "./miner/Miner_Mk.2.webp",
+    "iconCategory": {
+      "id": 4
+    }
+  },
+  {
+    "id": 32,
+    "name": "miner_mk_3",
+    "path": "./miner/Miner_Mk.3.webp",
+    "iconCategory": {
+      "id": 4
+    }
+  },
+  {
+    "id": 33,
+    "name": "oil_extractor",
+    "path": "./miner/oil_extractor.webp",
+    "iconCategory": {
+      "id": 4
+    }
+  },
+  {
+    "id": 34,
+    "name": "resource_well_pressurizer",
+    "path": "./miner/Resource_Well_Pressurizer.webp",
+    "iconCategory": {
+      "id": 4
+    }
+  },
+  {
+    "id": 35,
+    "name": "water_extractor",
+    "path": "./miner/Water_Extractor.webp",
+    "iconCategory": {
+      "id": 4
+    }
+  },
+  {
+    "id": 36,
+    "name": "assembler",
+    "path": "./factory/Assembler.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 37,
+    "name": "biomass_burner",
+    "path": "./factory/Biomass_Burner.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 38,
+    "name": "blender",
+    "path": "./factory/Blender.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 39,
+    "name": "coal_generator",
+    "path": "./factory/Coal_Generator.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 40,
+    "name": "constructor",
+    "path": "./factory/Constructor.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 41,
+    "name": "foundry",
+    "path": "./factory/Foundry.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 42,
+    "name": "fuel_generator",
+    "path": "./factory/Fuel_Generator.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 43,
+    "name": "Geothermal_Generator",
+    "path": "./factory/Geothermal_Generator.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 44,
+    "name": "manufacturer",
+    "path": "./factory/Manufacturer.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 45,
+    "name": "nuclear_power_plant",
+    "path": "./factory/Nuclear_Power_Plant.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 46,
+    "name": "packager",
+    "path": "./factory/Packager.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 47,
+    "name": "particle_accelerator",
+    "path": "./factory/Particle_Accelerator.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 48,
+    "name": "refinery",
+    "path": "./factory/Refinery.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 49,
+    "name": "smelter",
+    "path": "./factory/Smelter.webp",
+    "iconCategory": {
+      "id": 5
+    }
+  },
+  {
+    "id": 50,
+    "name": "resource_well_extractor",
+    "path": "./miner/Resource_Well_Extractor.webp",
+    "iconCategory": {
+      "id": 4
+    }
   }
-}, {
-  "id": 1,
-  "name": "caterium_ore",
-  "path": "./resource/Caterium_Ore.webp",
-  "iconCategory": {
-    "id": 0
-  }
-}, {
-  "id": 2,
-  "name": "copper_ore",
-  "path": "./resource/Copper_ore.webp",
-  "iconCategory": {
-    "id": 0
-  }
-}, {
-  "id": 3,
-  "name": "crude_oil",
-  "path": "./resource/Crude_Oil.webp",
-  "iconCategory": {
-    "id": 0
-  }
-}, {
-  "id": 4,
-  "name": "iron_ore",
-  "path": "./resource/Iron_Ore.webp",
-  "iconCategory": {
-    "id": 0
-  }
-}, {
-  "id": 5,
-  "name": "limestone",
-  "path": "./resource/Limestone.webp",
-  "iconCategory": {
-    "id": 0
-  }
-}, {
-  "id": 6,
-  "name": "nitrogen_gas",
-  "path": "./resource/Nitrogen_Gas.webp",
-  "iconCategory": {
-    "id": 0
-  }
-}, {
-  "id": 7,
-  "name": "raw_quartz",
-  "path": "./resource/Raw_Quartz.webp",
-  "iconCategory": {
-    "id": 0
-  }
-}, {
-  "id": 8,
-  "name": "sulfur",
-  "path": "./resource/Sulfur.webp",
-  "iconCategory": {
-    "id": 0
-  }
-}, {
-  "id": 9,
-  "name": "uranum",
-  "path": "./resource/Uranum.webp",
-  "iconCategory": {
-    "id": 0
-  }
-}, {
-  "id": 10,
-  "name": "water",
-  "path": "./resource/Water.webp",
-  "iconCategory": {
-    "id": 0
-  }
-}, {
-  "id": 11,
-  "name": "biomass",
-  "path": "./fuel/Biomass.webp",
-  "iconCategory": {
-    "id": 1
-  }
-}, {
-  "id": 12,
-  "name": "coal",
-  "path": "./fuel/Coal.webp",
-  "iconCategory": {
-    "id": 1
-  }
-}, {
-  "id": 13,
-  "name": "leaves",
-  "path": "./fuel/Leaves.webp",
-  "iconCategory": {
-    "id": 1
-  }
-}, {
-  "id": 14,
-  "name": "solid_biofuel",
-  "path": "./fuel/Solid_Biofuel.webp",
-  "iconCategory": {
-    "id": 1
-  }
-}, {
-  "id": 15,
-  "name": "wood",
-  "path": "./fuel/Wood.webp",
-  "iconCategory": {
-    "id": 1
-  }
-}, {
-  "id": 16,
-  "name": "cable",
-  "path": "./component/Cable.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 17,
-  "name": "concrete",
-  "path": "./component/Concrete.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 18,
-  "name": "copper_ignot",
-  "path": "./component/Copper_Ignot.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 19,
-  "name": "copper_sheet",
-  "path": "./component/Copper_Sheet.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 20,
-  "name": "iron_ignot",
-  "path": "./component/Iron_Ignot.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 21,
-  "name": "iron_plate",
-  "path": "./component/Iron_Plate.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 22,
-  "name": "iron_rod",
-  "path": "./component/Iron_Rod.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 23,
-  "name": "modular_frame",
-  "path": "./component/Modular_Frame.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 24,
-  "name": "reinforced_iron_plate",
-  "path": "./component/Reinforced_Iron_Plate.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 25,
-  "name": "rotor",
-  "path": "./component/Rotor.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 26,
-  "name": "screw",
-  "path": "./component/Screw.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 27,
-  "name": "smart_plating",
-  "path": "./component/Smart_Plating.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 28,
-  "name": "wire",
-  "path": "./component/Wire.webp",
-  "iconCategory": {
-    "id": 2
-  }
-}, {
-  "id": 29,
-  "name": "power_shard",
-  "path": "./thing/Power_Shard.webp",
-  "iconCategory": {
-    "id": 3
-  }
-}, {
-  "id": 30,
-  "name": "miner_mk_1",
-  "path": "./miner/Miner_Mk.1.webp",
-  "iconCategory": {
-    "id": 4
-  }
-}, {
-  "id": 31,
-  "name": "miner_mk_2",
-  "path": "./miner/Miner_Mk.2.webp",
-  "iconCategory": {
-    "id": 4
-  }
-}, {
-  "id": 32,
-  "name": "miner_mk_3",
-  "path": "./miner/Miner_Mk.3.webp",
-  "iconCategory": {
-    "id": 4
-  }
-}, {
-  "id": 33,
-  "name": "oil_extractor",
-  "path": "./miner/oil_extractor.webp",
-  "iconCategory": {
-    "id": 4
-  }
-}, {
-  "id": 34,
-  "name": "resource_well_pressurizer",
-  "path": "./miner/Resource_Well_Pressurizer.webp",
-  "iconCategory": {
-    "id": 4
-  }
-}, {
-  "id": 35,
-  "name": "water_extractor",
-  "path": "./miner/Water_Extractor.webp",
-  "iconCategory": {
-    "id": 4
-  }
-}, {
-  "id": 36,
-  "name": "assembler",
-  "path": "./factory/Assembler.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 37,
-  "name": "biomass_burner",
-  "path": "./factory/Biomass_Burner.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 38,
-  "name": "blender",
-  "path": "./factory/Blender.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 39,
-  "name": "coal_generator",
-  "path": "./factory/Coal_Generator.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 40,
-  "name": "constructor",
-  "path": "./factory/Constructor.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 41,
-  "name": "foundry",
-  "path": "./factory/Foundry.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 42,
-  "name": "fuel_generator",
-  "path": "./factory/Fuel_Generator.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 43,
-  "name": "Geothermal_Generator",
-  "path": "./factory/Geothermal_Generator.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 44,
-  "name": "manufacturer",
-  "path": "./factory/Manufacturer.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 45,
-  "name": "nuclear_power_plant",
-  "path": "./factory/Nuclear_Power_Plant.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 46,
-  "name": "packager",
-  "path": "./factory/Packager.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 47,
-  "name": "particle_accelerator",
-  "path": "./factory/Particle_Accelerator.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 48,
-  "name": "refinery",
-  "path": "./factory/Refinery.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 49,
-  "name": "smelter",
-  "path": "./factory/Smelter.webp",
-  "iconCategory": {
-    "id": 5
-  }
-}, {
-  "id": 50,
-  "name": "resource_well_extractor",
-  "path": "./miner/Resource_Well_Extractor.webp",
-  "iconCategory": {
-    "id": 4
-  }
-}]
+]
