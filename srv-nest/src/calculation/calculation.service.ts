@@ -8,6 +8,8 @@ import { CalculationCategory } from './calculation-category.entity';
 import { CalculationLink } from './calculation-link.entity';
 import { CalculationSchemeLink } from './calculation-scheme-link.entity';
 
+import { SchemeService } from '../scheme/scheme.service';
+
 @Injectable()
 export class CalculationService {
   constructor(
@@ -19,12 +21,21 @@ export class CalculationService {
     private calculationLinkRepo: Repository<CalculationLink>,
     @InjectRepository(CalculationSchemeLink)
     private calculationSchemeLinkRepo: Repository<CalculationSchemeLink>,
+    private schemeService: SchemeService,
   ) {}
 
   async getMaxId(): Promise<number> {
     const result = await this.calculationRepo
       .createQueryBuilder('calculation')
       .select('MAX(calculation.id)', 'max')
+      .getRawOne<{ max: number }>();
+    return result ? result.max : -1;
+  }
+
+  async getMaxIdSchemeLink(): Promise<number> {
+    const result = await this.calculationSchemeLinkRepo
+      .createQueryBuilder('calculationSchemeLink')
+      .select('MAX(calculationSchemeLink.id)', 'max')
       .getRawOne<{ max: number }>();
     return result ? result.max : -1;
   }
@@ -155,5 +166,94 @@ export class CalculationService {
 
   async removeCalculation(id: number): Promise<void> {
     await this.calculationRepo.delete(id);
+  }
+
+  async getSchemesLinksByIds(ids: number[]): Promise<CalculationSchemeLink[]> {
+    return await this.calculationSchemeLinkRepo
+      .createQueryBuilder('scheme')
+      .where(`scheme.id in (${ids.map((id) => `${id}`).join(', ')})`)
+      .getMany();
+  }
+
+  async addSchemesToCalculation(
+    calculationId: number,
+    schemeIds: number[],
+  ): Promise<void> {
+    const calculation = await this.calculationRepo.findOneBy({
+      id: calculationId,
+    });
+    const schemes = await this.schemeService.getSchemesByIds(schemeIds);
+    let maxId = await this.getMaxIdSchemeLink();
+    if (calculation && schemes.length > 0) {
+      console.log(schemes);
+      for (const scheme of schemes) {
+        const calculationSchemeLink = new CalculationSchemeLink();
+        calculationSchemeLink.id = ++maxId;
+        calculationSchemeLink.calculation = calculation;
+        calculationSchemeLink.scheme = scheme;
+        calculationSchemeLink.acceleration = 1;
+        calculationSchemeLink.num_factories = 1;
+        await this.calculationSchemeLinkRepo.save(calculationSchemeLink);
+      }
+    } else {
+      if (!calculation) {
+        throw new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+            message: `calculation not found by id = ${calculationId}`,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      if (schemes.length === 0) {
+        throw new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+            message: `schemes not found by array of id = ${schemeIds.join(
+              ', ',
+            )}`,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+    }
+  }
+
+  async changeSchemesToTargetCalculation(
+    calculationIdSource: number,
+    calculationIdTarget: number,
+    schemeLinkIds: number[],
+  ): Promise<void> {
+    const calculationSource = await this.calculationRepo.findOneBy({
+      id: calculationIdSource,
+    });
+    const calculationTarget = await this.calculationRepo.findOneBy({
+      id: calculationIdTarget,
+    });
+    const schemes = await this.getSchemesLinksByIds(schemeLinkIds);
+    if (calculationSource && calculationTarget && schemes.length > 0) {
+      for (const scheme of schemes) {
+        scheme.calculation = calculationTarget;
+        await this.calculationSchemeLinkRepo.save(scheme);
+      }
+    } else {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          message: [
+            !calculationSource
+              ? `calculationSource not found by id = ${calculationIdSource}`
+              : '',
+            !calculationTarget
+              ? `calculationTarget not found by id = ${calculationIdTarget}`
+              : '',
+            schemes.length === 0
+              ? `schemes not found by array of id = ${schemeLinkIds.join(', ')}`
+              : '',
+          ].join('\n'),
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 }

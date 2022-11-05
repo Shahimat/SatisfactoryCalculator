@@ -7,6 +7,7 @@ import { Calculation } from './calculation.entity';
 import { CalculationCategory } from './calculation-category.entity';
 import { CalculationSchemeLink } from './calculation-scheme-link.entity';
 import { CalculationLink } from './calculation-link.entity';
+import { SchemeModule } from '../scheme/scheme.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CalculationLink } from './calculation-link.entity';
       CalculationSchemeLink,
       CalculationLink,
     ]),
+    SchemeModule,
   ],
   providers: [CalculationService],
   controllers: [CalculationController],

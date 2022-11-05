@@ -133,4 +133,11 @@ export class SchemeService {
   async remove(id: number): Promise<void> {
     await this.schemeRepo.delete(id);
   }
+
+  async getSchemesByIds(ids: number[]): Promise<Scheme[]> {
+    return await this.schemeRepo
+      .createQueryBuilder('scheme')
+      .where(`scheme.id in (${ids.map((id) => `${id}`).join(', ')})`)
+      .getMany();
+  }
 }

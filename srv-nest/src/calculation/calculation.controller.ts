@@ -13,6 +13,8 @@ import {
   CalculationGetAllDto,
   CalculationCreateDto,
   CalculationUpdateDto,
+  AddSchemesToCalculation,
+  ChangeSchemesToTargetCalculation,
 } from './calculation.dto';
 
 import { Calculation } from './calculation.entity';
@@ -37,6 +39,28 @@ export class CalculationController {
   @Get('/category/:id')
   findCategory(@Param('id') id: number): Promise<CalculationCategory | null> {
     return this.calculationService.findCategoryById(id);
+  }
+
+  @Post('/scheme')
+  addSchemesToCalculation(
+    @Body() body: AddSchemesToCalculation,
+  ): Promise<void> {
+    return this.calculationService.addSchemesToCalculation(
+      body.calculationId,
+      body.schemeIds,
+    );
+  }
+
+  @Patch('/scheme/:id')
+  changeSchemesToTargetCalculation(
+    @Param('id') id: number,
+    @Body() body: ChangeSchemesToTargetCalculation,
+  ): Promise<void> {
+    return this.calculationService.changeSchemesToTargetCalculation(
+      id,
+      body.calculationIdTarget,
+      body.schemeLinkIds,
+    );
   }
 
   @Get(':id')
