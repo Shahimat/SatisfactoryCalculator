@@ -24,7 +24,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "prebuild": "npx rimraf build",
+    "prebuild": "rimraf build",
     "build": "cross-env NODE_ENV=production && webpack",
     "start": "cross-env NODE_ENV=development && webpack-dev-server --color"
   },

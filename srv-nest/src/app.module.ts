@@ -30,6 +30,10 @@ import { SchemeItemLinkModule } from './scheme-item-link/scheme-item-link.module
       autoLoadEntities: true,
     }),
     ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'ui'),
+      serveRoot: '/',
+    }),
+    ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '..', 'assets'),
       serveRoot: '/assets',
     }),
