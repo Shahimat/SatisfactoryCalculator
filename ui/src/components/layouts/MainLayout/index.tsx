@@ -1,8 +1,15 @@
 import _ from 'lodash';
+import { useLocation } from 'react-router-dom';
 import { Outlet, Link } from 'react-router-dom';
+import { useAppSelector, useAppDispatch } from 'hooks/store';
+import { selectorRouter, RouterPage } from 'store/router';
+
 import { Typography, useTheme, Box, BoxProps } from '@mui/material';
 
+import logoIcon from 'assets/logo.webp';
+
 import './index.scss';
+import { FlexContainer, FlexItem } from 'components/core/Flex';
 
 const HEADER_HEIGHT = '4rem';
 const MASTER_WIDTH = '10rem';
@@ -10,20 +17,27 @@ const BODY_HEIGHT = `calc(100% - ${HEADER_HEIGHT})`;
 const DETAIL_WIDTH = `calc(100% - ${MASTER_WIDTH})`;
 
 const links = [
-  { label: 'Калькулятор', path: '/' },
-  { label: 'Заводы', path: '/plants' },
-  { label: 'Схемы и предметы', path: '/schemes_and_items' },
-  { label: 'Помощь', path: '/help' },
+  { label: 'Калькулятор', path: '/', group: 'Калькулятор' },
+  { label: 'Заводы', path: '/plants', group: 'Заводы' },
+  { label: 'Схемы', path: '/schemes', group: 'Схемы и предметы' },
+  { label: 'Фабрики', path: '/factories', group: 'Схемы и предметы' },
+  { label: 'Предметы', path: '/items', group: 'Схемы и предметы' },
+  { label: 'Иконки', path: '/icons', group: 'Схемы и предметы' },
+  { label: 'Помощь', path: '/help', group: 'Помощь' },
 ];
 
 interface MainLayoutProps extends BoxProps {}
 
 const MainLayout = (props: MainLayoutProps) => {
   const theme = useTheme();
+  const { pathname } = useLocation();
+  const currentRoute = useAppSelector(selectorRouter);
 
+  console.log('pathname', pathname, currentRoute);
   return (
     <Box id={'main-layout'} width={'100vw'} height={'100vh'}>
       <Box
+        display={'flex'}
         id={'header'}
         minWidth={'100%'}
         maxWidth={'100%'}
@@ -34,18 +48,51 @@ const MainLayout = (props: MainLayoutProps) => {
           backgroundColor: theme.palette.primary.main,
         }}
       >
-        <nav className={'nav-panel'}>
-          <ul className={'nav-panel__list'}>
-            {_.map(links, (link, index) => (
-              <li
-                key={`nav-list-item${index}`}
-                className={'nav-panel__list-item'}
-              >
-                <Link to={link.path}>{link.label}</Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <FlexContainer>
+          <FlexItem flex={'0 0 content'}>
+            <img
+              src={logoIcon}
+              alt={'wow'}
+              loading="lazy"
+              style={{ height: '64px' }}
+            />
+          </FlexItem>
+          <FlexItem boxSizing={'border-box'} flex={'1 0 0'} marginLeft={'4rem'}>
+            <nav className={'nav-panel'}>
+              <ul className={'nav-panel__list'}>
+                {_.uniqBy(links, 'group').map((link, index) => (
+                  <li
+                    key={`nav-list-item${index}`}
+                    className={'nav-panel__list-item'}
+                    style={{
+                      textDecoration: 'none',
+                      marginRight: '3rem',
+                      boxSizing: 'border-box',
+                      padding: '0.25rem',
+                      borderBottom: `2px solid ${
+                        currentRoute === link.path
+                          ? theme.palette.link.primary
+                          : 'transparent'
+                      }`,
+                    }}
+                  >
+                    <Link
+                      to={link.path}
+                      className={'nav-panel__list-item__link'}
+                    >
+                      <Typography
+                        variant={'h4'}
+                        color={theme.palette.link.primary}
+                      >
+                        {link.group}
+                      </Typography>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </FlexItem>
+        </FlexContainer>
       </Box>
       <Box
         id={'body'}
