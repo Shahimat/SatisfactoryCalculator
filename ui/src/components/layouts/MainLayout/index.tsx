@@ -36,8 +36,11 @@ const MainLayout = (props: MainLayoutProps) => {
       >
         <nav className={'nav-panel'}>
           <ul className={'nav-panel__list'}>
-            {_.map(links, (link) => (
-              <li className={'nav-panel__list-item'}>
+            {_.map(links, (link, index) => (
+              <li
+                key={`nav-list-item${index}`}
+                className={'nav-panel__list-item'}
+              >
                 <Link to={link.path}>{link.label}</Link>
               </li>
             ))}
