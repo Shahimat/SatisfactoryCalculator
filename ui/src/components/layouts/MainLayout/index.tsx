@@ -33,7 +33,6 @@ const MainLayout = (props: MainLayoutProps) => {
   const { pathname } = useLocation();
   const currentRoute = useAppSelector(selectorRouter);
 
-  console.log('pathname', pathname, currentRoute);
   return (
     <Box id={'main-layout'} width={'100vw'} height={'100vh'}>
       <Box
