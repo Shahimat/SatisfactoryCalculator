@@ -52,20 +52,21 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
-        test: /\.(png|jpg|gif)$/,
+        test: /\.(png|jpe?g|gif|webp?)$/,
+        include: path.resolve(__dirname, 'src/assets'),
         use: [
           {
             loader: 'file-loader',
             options: {
-              outputPath: 'img/',
-              name: '[name].[ext]'
+              outputPath: 'images',
+              name: '[path][name].[ext]',
             }
           }
         ]
       },
       {
         test: /\.svg$/i,
-        include: path.resolve(__dirname, 'src/assets/svg'),
+        include: path.resolve(__dirname, 'src/assets'),
         use: [
           {
             loader: '@svgr/webpack'
