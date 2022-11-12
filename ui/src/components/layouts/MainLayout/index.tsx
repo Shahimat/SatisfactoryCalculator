@@ -80,7 +80,7 @@ const MainLayout = (props: MainLayoutProps) => {
                       className={'nav-panel__list-item__link'}
                     >
                       <Typography
-                        variant={'h4'}
+                        variant={'h5'}
                         color={theme.palette.link.primary}
                       >
                         {link.group}
