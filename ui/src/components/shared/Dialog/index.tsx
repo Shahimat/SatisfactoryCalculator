@@ -39,6 +39,7 @@ interface SFDialogProps extends Omit<DialogProps, 'children'> {
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-container > .MuiPaper-root': {
     borderRadius: '0',
+    overflow: 'hidden',
   },
 }));
 
@@ -109,7 +110,7 @@ const SFDialog = ({
 
   return (
     <StyledDialog onClose={onClose} {...props}>
-      <FlexContainer flexWrap={'wrap'}>
+      <FlexContainer flexWrap={'wrap'} maxHeight={'80vh'}>
         <FlexItem flex={'0 1 100%'}>
           <FlexContainer>
             <FlexItem
@@ -161,9 +162,10 @@ const SFDialog = ({
         </FlexItem>
         <FlexItem
           flex={'0 1 100%'}
-          minHeight={'14rem'}
+          maxHeight={'50vh'}
           boxSizing={'border-box'}
           padding={'2rem'}
+          overflow={'auto'}
         >
           {actualContent}
         </FlexItem>
