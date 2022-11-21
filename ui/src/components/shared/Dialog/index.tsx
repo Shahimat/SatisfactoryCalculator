@@ -91,14 +91,18 @@ const SFDialog = ({
 
   const handleCloseButtonClick = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
-      onClose(event, 'backdropClick');
+      setTimeout(() => {
+        onClose(event, 'backdropClick');
+      }, 100);
     },
     [],
   );
 
   const handleAcceptButtonClick = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
-      onAccept(currentTab);
+      setTimeout(() => {
+        onAccept(currentTab);
+      }, 100);
     },
     [currentTab],
   );
