@@ -1,4 +1,4 @@
 declare module '*.svg' {
-  const ref: string;
+  const ref: any;
   export default ref;
 }
