@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+import calculationReducer from './calculation';
 import routerReducer from './router';
 
 export const store = configureStore({
   reducer: {
     router: routerReducer,
+    calculation: calculationReducer,
   },
 });
 
