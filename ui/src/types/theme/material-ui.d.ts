@@ -1,4 +1,4 @@
-import { PaletteOptions, Palette } from '@mui/material/styles/createPalette';
+import { Palette, PaletteOptions } from '@mui/material/styles/createPalette';
 
 declare module '@mui/material/styles/createPalette' {
   export interface Palette {

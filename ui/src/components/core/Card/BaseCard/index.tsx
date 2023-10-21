@@ -1,7 +1,8 @@
 import _, { isNil } from 'lodash';
 import { ReactNode, useMemo } from 'react';
-import { FlexContainer, FlexItem } from 'components/core/Flex';
 import { calcCardHeight, calcCardWidth } from 'utils/card.util';
+
+import { FlexContainer, FlexItem } from 'components/core/Flex';
 
 export interface BaseCardProps {
   size?: number;

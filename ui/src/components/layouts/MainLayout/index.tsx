@@ -1,15 +1,14 @@
+import { Box, BoxProps, Typography, useTheme } from '@mui/material';
+import logoIcon from 'assets/logo.webp';
+import { useAppDispatch, useAppSelector } from 'hooks/store';
 import _ from 'lodash';
 import { useLocation } from 'react-router-dom';
-import { Outlet, Link } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from 'hooks/store';
-import { selectorRouter, RouterPage } from 'store/router';
+import { Link, Outlet } from 'react-router-dom';
+import { RouterPage, selectorRouter } from 'store/router';
 
-import { Typography, useTheme, Box, BoxProps } from '@mui/material';
-
-import logoIcon from 'assets/logo.webp';
+import { FlexContainer, FlexItem } from 'components/core/Flex';
 
 import './index.scss';
-import { FlexContainer, FlexItem } from 'components/core/Flex';
 
 const HEADER_HEIGHT = '4rem';
 const MASTER_WIDTH = '10rem';

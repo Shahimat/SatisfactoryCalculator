@@ -1,10 +1,9 @@
-import { createTheme } from '@mui/material';
-import { ruRU } from '@mui/material/locale';
-
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import { createTheme } from '@mui/material';
+import { ruRU } from '@mui/material/locale';
 
 const theme = createTheme(
   {
@@ -94,6 +93,12 @@ const theme = createTheme(
       button: {
         primary: '#F2C800',
         secondary: '#FFFFFF',
+        card: '#d9d9d9',
+        disabled: '#9c9c9c',
+      },
+      card: {
+        background: '#837f82',
+        backgroundSelected: '#566269',
       },
       link: {
         primary: '#EAAE01',

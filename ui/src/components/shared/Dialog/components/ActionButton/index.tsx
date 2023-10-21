@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
 import { Button, ButtonProps, styled } from '@mui/material';
+import { ReactNode } from 'react';
 
 const StyledButton = styled(Button, {
   shouldForwardProp: (prop) => prop !== 'actionType',

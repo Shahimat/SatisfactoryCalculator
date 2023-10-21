@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
-import { Routes, Route, Outlet, Link, useLocation } from 'react-router-dom';
-import { useAppSelector, useAppDispatch } from 'hooks/store';
-import { setRoute, selectorRouter, RouterPage } from 'store/router';
-import { block } from '../lib/slf';
-
 import MainLayout from 'components/layouts/MainLayout';
+import { useAppDispatch, useAppSelector } from 'hooks/store';
+import HelpPage from 'pages/Help';
 import HomePage from 'pages/Home';
 import PlantsPage from 'pages/Plants';
 import SchemesAndItemsPage from 'pages/SchemesAndItems';
-import HelpPage from 'pages/Help';
+import { useEffect } from 'react';
+import { Link, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { RouterPage, selectorRouter, setRoute } from 'store/router';
+
+import { block } from '../lib/slf';
 
 const routerSet = block(
   (prev: RouterPage, current: RouterPage, dispatch: Function) => {
