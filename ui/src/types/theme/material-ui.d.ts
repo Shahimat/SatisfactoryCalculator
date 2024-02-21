@@ -5,6 +5,12 @@ declare module '@mui/material/styles/createPalette' {
     button: {
       primary: string;
       secondary: string;
+      card: string;
+      disabled: string;
+    };
+    card: {
+      background: string;
+      backgroundSelected: string;
     };
     link: {
       primary: string;
@@ -14,6 +20,12 @@ declare module '@mui/material/styles/createPalette' {
     button: {
       primary: string;
       secondary: string;
+      card: string;
+      disabled: string;
+    };
+    card: {
+      background: string;
+      backgroundSelected: string;
     };
     link: {
       primary: string;

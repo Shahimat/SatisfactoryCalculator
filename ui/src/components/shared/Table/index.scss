@@ -1,0 +1,23 @@
+.sf-table {
+  width: 100%;
+
+  &__head {
+    &_row {
+    }
+
+    &_cell {
+      color: white;
+      padding: 0;
+    }
+  }
+
+  &__body {
+    &_row {
+    }
+
+    &_cell {
+      color: white;
+      padding: 0;
+    }
+  }
+}
