@@ -9,7 +9,13 @@ module.exports = {
   ],
   plugins: ['react', '@typescript-eslint', 'unicorn', 'prettier'],
   parser: '@typescript-eslint/parser',
-  ignorePatterns: ['.eslintrc.js', 'babel.config.js', 'webpack.config.js'],
+  ignorePatterns: [
+    '.eslintrc.js',
+    'babel.config.js',
+    'webpack.config.js',
+    'dist/**/*.js',
+    'dist/**/*.d.ts',
+  ],
   parserOptions: {
     project: ['./tsconfig.json'],
     ecmaFeatures: {

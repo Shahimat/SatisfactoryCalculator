@@ -6,6 +6,7 @@
     "^components/shared/(.*)$",
     "^[./]"
   ],
+  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
   "endOfLine": "lf",
   "importOrderSeparation": true,
   "importOrderCaseInsensitive": true,
