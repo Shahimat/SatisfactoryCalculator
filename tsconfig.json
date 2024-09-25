@@ -8,6 +8,7 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
     "strictNullChecks": true,
     "allowJs": true,
     "skipLibCheck": true,
