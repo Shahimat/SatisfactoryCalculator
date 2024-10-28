@@ -1,25 +1,25 @@
 import { StreamMeasureType } from 'src/types/measure';
 
-export class Stream {
+export class Stream<TMeasure = StreamMeasureType> {
   static key(name: string, measure: StreamMeasureType) {
     return `${measure}:${name}`;
   }
 
-  static copy(stream: Stream) {
-    return new Stream(stream.name, stream.measure, stream.value);
+  static copy<TMeasure = StreamMeasureType>(stream: Stream<TMeasure>) {
+    return new Stream<TMeasure>(stream.name, stream.measure, stream.value);
   }
 
   public value: number;
   constructor(
     public readonly name: string,
-    public readonly measure: StreamMeasureType,
+    public readonly measure: TMeasure,
     value: number | null,
   ) {
     this.value = value ?? 0;
   }
 
   get key() {
-    return Stream.key(this.name, this.measure);
+    return Stream.key(this.name, this.measure as StreamMeasureType);
   }
 
   public like(stream: Stream): boolean {
@@ -48,5 +48,16 @@ export class Stream {
   public rev() {
     this.value *= -1;
     return this;
+  }
+
+  public get debug() {
+    return {
+      type: 'Stream',
+      content: {
+        name: this.name,
+        measure: this.measure,
+        value: this.value,
+      },
+    };
   }
 }

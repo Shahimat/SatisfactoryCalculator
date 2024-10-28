@@ -85,7 +85,8 @@ export class StreamSet {
   }
 
   public find(name: string, measure: StreamMeasureType) {
-    return this.map.get(Stream.key(name, measure)) ?? null;
+    const find = this.map.get(Stream.key(name, measure));
+    return find ? Stream.copy(find) : null;
   }
 
   public applyRecipe(
@@ -99,5 +100,12 @@ export class StreamSet {
       this.sum(StreamSet.copy(recipe).prod(recipe.ratio(target)));
     }
     return this;
+  }
+
+  public get debug() {
+    return {
+      type: 'StreamSet',
+      content: [...this.map.values()].map((stream) => stream.debug),
+    };
   }
 }
