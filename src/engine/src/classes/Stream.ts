@@ -1,6 +1,12 @@
+import { StreamType } from 'src/types/configuration';
 import { StreamMeasureType } from 'src/types/measure';
 
 export class Stream<TMeasure = StreamMeasureType> {
+  static from(stream: StreamType) {
+    const [name, measure, value] = stream;
+    return new Stream(name, measure, value);
+  }
+
   static key(name: string, measure: StreamMeasureType) {
     return `${measure}:${name}`;
   }

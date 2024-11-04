@@ -1,7 +1,9 @@
 import { StreamMeasureType } from 'src/types/measure';
 import { RestrictionType } from 'src/types/restriction';
 
+import { Factory } from './Factory';
 import { Recipe } from './Recipe';
+import { Stream } from './Stream';
 import { StreamSet } from './StreamSet';
 
 type FormulaFunction = (streamSet: StreamSet) => {
@@ -32,6 +34,7 @@ export class Formula {
     streamSet: StreamSet;
     recipe: Recipe;
     factoryIndex: number;
+    power: Stream<'MW'>;
   }[] {
     const { factoryIndex } = this.variant(streamSet);
     return [
@@ -39,6 +42,7 @@ export class Formula {
         streamSet: StreamSet.copy(streamSet),
         recipe: this.recipe,
         factoryIndex,
+        power: Factory.power(this.recipe.factory, factoryIndex),
       },
       ...this.chains.flatMap((chain) => chain.solve(streamSet)),
     ];
@@ -49,10 +53,11 @@ export class Formula {
       type: 'SolveDebug',
       input: streamSet.debug,
       output: this.solve(streamSet).map(
-        ({ streamSet, recipe, factoryIndex }) => ({
+        ({ streamSet, recipe, factoryIndex, power }) => ({
           streamSet: streamSet.debug,
           recipe: recipe.debug,
           factoryIndex,
+          power: power.debug,
         }),
       ),
     };
