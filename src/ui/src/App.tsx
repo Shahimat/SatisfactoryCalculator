@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import './App.css';
+import { GridExample } from './ag-grid';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       >
         EMotion
       </div>
+      <GridExample />
     </div>
   );
 };
