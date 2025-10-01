@@ -16,7 +16,7 @@ export class StreamSet {
 
   constructor(...streams: Stream[]) {
     streams.forEach((stream) => {
-      this.map.set(stream.key, stream);
+      this.map.set(stream.key, Stream.copy(stream));
     });
   }
 

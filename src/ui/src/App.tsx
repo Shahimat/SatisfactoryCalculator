@@ -1,48 +1,112 @@
 import { css } from '@emotion/react';
 import './App.css';
-import { GridExample } from './ag-grid';
-import { Factory, Formula, Recipe, Stream, type ContextType } from './classes';
+import { Formula, Stream, StreamSet, type ContextType } from './classes';
+import {
+  recipes,
+  recipesDictionary,
+  type RecipeName,
+} from './constants/recipes';
+import { StreamGrid } from './components/stream-grid';
+import { useState } from 'react';
+import { FormulaGrid } from './components/formula-grid';
+import { items, itemsDictionary } from './constants/items';
 
 const App = () => {
-  const factoryConstructor = new Factory(
-    'constructor',
-    new Stream('power', 'MW', 4),
-  );
-  const factorySmelter = new Factory('smelter', new Stream('power', 'MW', 4));
+  const [input, setInput] = useState<Stream[]>([
+    // items.iron_plate.with(90)
+    items.iron_ingot.with(90),
+  ]);
 
-  const recipeIronPlate = Recipe.from(
-    'IronPlate',
-    factoryConstructor,
-    new Stream('iron_ingot', 'ipm', -30),
-    new Stream('iron_plate', 'ipm', 20),
-  );
-  const recipeIronIngot = Recipe.from(
-    'IronIngot',
-    factorySmelter,
-    new Stream('iron_ore', 'ipm', -30),
-    new Stream('iron_ingot', 'ipm', 30),
-  );
+  const [formulaConfig, setFormulaConfig] = useState<
+    { recipeName: RecipeName; stream: Stream }[]
+  >([
+    // {
+    //   recipeName: 'ironPlate',
+    //   stream: new Stream('iron_plate', 'ipm'),
+    // },
+    {
+      recipeName: 'ironIngot',
+      stream: new Stream('iron_ingot', 'ipm'),
+    },
+  ]);
 
-  const formula = new Formula()
-    .fullDepletion(recipeIronPlate, new Stream('iron_plate', 'ipm'))
-    .fullDepletion(recipeIronIngot, new Stream('iron_ingot', 'ipm'));
+  const formula = new Formula();
+
+  for (const config of formulaConfig) {
+    formula.fullDepletion(recipes[config.recipeName], config.stream);
+  }
 
   const context: ContextType = new Map();
-  console.log(formula.solve(context, new Stream('iron_plate', 'ipm', 90)));
-  console.log(context);
+
+  const result = formula.solve(context, ...input);
+  const output: Stream[] =
+    result instanceof Error
+      ? []
+      : [...result.map.values()].filter((item) => item.value !== 0);
 
   return (
     <div className="content">
-      <h1>Rsbuild with React</h1>
-      <p>Start building amazing things with Rsbuild.</p>
       <div
         css={css`
           color: green;
         `}
       >
-        EMotion
+        Input
       </div>
-      <GridExample />
+      <StreamGrid
+        input={input}
+        dictionary={itemsDictionary}
+        onChangeItem={(rowIndex, value) => {
+          setInput((prev) =>
+            prev.map((item, ind) =>
+              ind === rowIndex ? items[value].with(item.value) : item,
+            ),
+          );
+        }}
+        onChangeValue={(rowIndex, value) => {
+          setInput((prev) =>
+            prev.map((item, ind) => {
+              if (ind === rowIndex) {
+                item.value = value;
+              }
+              return item;
+            }),
+          );
+        }}
+      />
+      <div>Formula</div>
+      <FormulaGrid
+        input={formulaConfig.map(({ recipeName, stream }) => {
+          const numberOfFactories = context.get(stream.key);
+          return {
+            recipe: recipeName,
+            itemName: stream.name,
+            measure: stream.measure,
+            factory: recipes[recipeName].factory.name,
+            numberOfFactories:
+              numberOfFactories === null ||
+              numberOfFactories === undefined ||
+              numberOfFactories instanceof StreamSet
+                ? 0
+                : numberOfFactories,
+          };
+        })}
+        dictionary={recipesDictionary}
+        onChangeRecipe={(rowIndex, value) => {
+          setFormulaConfig((prev) =>
+            prev.map((item, ind) =>
+              ind === rowIndex
+                ? {
+                    recipeName: value,
+                    stream: item.stream,
+                  }
+                : item,
+            ),
+          );
+        }}
+      />
+      <div>Output</div>
+      <StreamGrid input={output} />
     </div>
   );
 };

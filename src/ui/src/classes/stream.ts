@@ -7,7 +7,7 @@ export type StreamDebugType<TMeasure = StreamMeasureType> = {
   value: number;
 };
 
-export class Stream<TMeasure = StreamMeasureType> {
+export class Stream<TMeasure extends StreamMeasureType = StreamMeasureType> {
   static from(name: string, measure: StreamMeasureType, value?: number) {
     return new Stream(name, measure, value);
   }
@@ -16,8 +16,8 @@ export class Stream<TMeasure = StreamMeasureType> {
     return `${name}:${measure}`;
   }
 
-  static copy<TMeasure = StreamMeasureType>(stream: Stream<TMeasure>) {
-    return new Stream<TMeasure>(stream.name, stream.measure, stream.value);
+  static copy(stream: Stream) {
+    return new Stream(stream.name, stream.measure, stream.value);
   }
 
   public value: number;
@@ -31,6 +31,10 @@ export class Stream<TMeasure = StreamMeasureType> {
 
   get key() {
     return Stream.key(this.name, this.measure as StreamMeasureType);
+  }
+
+  public with(value?: number | null) {
+    return new Stream<TMeasure>(this.name, this.measure, value);
   }
 
   public like(stream: Stream): boolean {
