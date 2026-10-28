@@ -4,7 +4,9 @@ stack: [typescript, react, rsbuild, ag-grid, nestjs, typeorm, sqlite]
 reality: [this-repo]
 preset: operational
 namespaces: {}
-external: {}
+external:
+  penpot: дизайн UI — файл «Satisfactory», страница «Design System»; Page 1 — черновик из Figma, не источник
+  icons: satisfactory.wiki.gg, Special:FilePath/<Name>.png
 sync:
   index_source: https://raw.githubusercontent.com/Shahimat/ai-prompts/main/prompts/index.yml
   index_sha: feaa897830c2cf4a8ebc68f180c8b82324b460e1796fe373948096b06d888c3f

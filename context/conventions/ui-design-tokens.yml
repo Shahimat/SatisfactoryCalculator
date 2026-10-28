@@ -1,0 +1,12 @@
+key: ui-design-tokens
+summary: основа дизайн-системы — тёмная палитра из доски «Колористика», токены core и semantic, шрифты Roboto
+rule: |
+  Палитра — тёмная, из доски «Колористика» в Penpot. Цвета и отступы
+  разложены по токенам:
+    - core: примитивы color.*, space.*, radius.*;
+    - semantic: ui.bg.*, ui.text.*, ui.accent.*, ui.flow.in/out/fluid/power,
+      ui.status.*.
+  Шрифты: Roboto Condensed — заголовки и подписи, Roboto — текст,
+  Roboto Mono — числа.
+
+  reason: тёмная палитра взята за основу дизайна (решение пользователя, 2026-10-28)

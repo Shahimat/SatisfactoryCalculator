@@ -1,0 +1,70 @@
+summary: дизайн-система UI в Penpot, правила отображения расчёта, решения по цепи и заводу
+source: сессия 2026-10-28, намерения основной сессии; судья — противоречие ui-accent-yellow ↔ ui-flow-direction-colors
+items:
+  - op: add
+    kind: fact
+    target: context/project.yml → external
+    summary: дизайн UI живёт в Penpot (файл «Satisfactory», страница «Design System»), Page 1 — черновик из Figma
+    evidence: Penpot MCP — страница Design System создана 2026-10-28; Page 1 — импорт из Figma
+  - op: add
+    kind: fact
+    target: context/project.yml → external
+    summary: иконки предметов и зданий берутся с satisfactory.wiki.gg (Special:FilePath/<Name>.png)
+    evidence: слова пользователя в сессии; Penpot uploadMediaUrl Refinery.png и Water.png
+  - op: add
+    kind: decision
+    target: context/conventions/ui-design-tokens.yml
+    summary: основа дизайн-системы — тёмная палитра из доски «Колористика» в токенах core и semantic; шрифты Roboto Condensed, Roboto, Roboto Mono
+    evidence: Penpot token sets core/semantic, typographies type/*; src/ui-old/src/style/theme.ts
+  - op: add
+    kind: rule
+    target: context/conventions/ui-flow-direction-colors.yml
+    summary: направление потока кодируется цветом — вход красный, выход зелёный, жидкость синяя, энергия жёлтая молния
+    evidence: Penpot Design System → Foundations → «Правила»
+  - op: add
+    kind: rule
+    target: context/conventions/ui-number-sign.yml
+    summary: у числа всегда виден знак (−30 / +30)
+    evidence: Penpot Design System → Foundations → «Правила»
+  - op: add
+    kind: rule
+    target: context/conventions/ui-monospace-numbers.yml
+    summary: числа набираются моноширинным шрифтом
+    evidence: Penpot Design System → Foundations → «Правила»
+  - op: add
+    kind: rule
+    target: context/conventions/ui-column-widths.yml
+    summary: колонки Потребление, Производство и Энергия одной ширины во всех строках
+    evidence: Penpot Design System → Foundations → «Правила»
+  - op: add
+    kind: rule
+    target: context/conventions/ui-deviation-highlight.yml
+    summary: отклонения подсвечиваются — разгон ≠ 100% оранжевым, дефицит красной рамкой
+    evidence: Penpot Design System → Foundations → «Правила»
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-accent-yellow.yml
+    summary: жёлтый акцент — для действий и выделения; жёлтая молния энергии в потоке — исключение (семантика потока, не акцент)
+    evidence: Penpot Design System → Foundations → «Правила» (энергия — жёлтая молния; ui.flow.power)
+    was: summary «жёлтый акцент — только для действий и выделения»; тело «Для других элементов жёлтый не применяется.»
+    why: судья нашёл противоречие с ui-flow-direction-colors — энергия по правилам Penpot жёлтая; правило акцента сужено исключением, а не энергия перекрашена
+  - op: add
+    kind: decision
+    target: context/conventions/ui-calc-view-card.yml
+    summary: основной вид расчёта карточный — строка = рецепт | цепь | завод | итог, под итогом баланс по предметам (цель / излишек / добыча / дефицит)
+    evidence: Penpot Design System → Screen / Расчёт; Page 1 → «Карточка»; src/ui-old/src/models/card-table-notation/card-variant.enum.ts
+  - op: add
+    kind: decision
+    target: CHANGELOG.md
+    summary: stack — дизайн UI ведём в Penpot, Figma-макеты черновик
+    evidence: Penpot MCP — страница Design System
+  - op: add
+    kind: decision
+    target: CHANGELOG.md
+    summary: arch — цепь как переиспользуемая сущность с агрегатами входа, выхода и энергии
+    evidence: решение пользователя в сессии 2026-10-28
+  - op: add
+    kind: decision
+    target: CHANGELOG.md
+    summary: arch — завод как ссылка из расчёта на расчёт с множителем ×N
+    evidence: решение пользователя в сессии 2026-10-28; docs/scheme/model.puml → calculation_link.num_calculations

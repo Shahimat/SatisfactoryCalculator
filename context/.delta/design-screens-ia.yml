@@ -1,0 +1,28 @@
+summary: информационная архитектура экранов — разделы навигации, цех, заводы, добавление рецепта
+source: сессия 2026-10-28, намерения основной сессии; подтверждено Penpot → Design System, экраны 01–14
+items:
+  - op: refine
+    kind: decision
+    target: context/conventions/ui-navigation-sections.yml
+    summary: навигация — четыре раздела Расчёты, Цеха, Заводы, Справочник; «Справочник» заменил «Чертежи и предметы» (файл уже содержит, сверено)
+    evidence: Penpot Design System → экраны 01–14, topbar; решение пользователя «все экраны» в сессии 2026-10-28
+  - op: refine
+    kind: decision
+    target: context/conventions/ui-workshop-view.yml
+    summary: цех — библиотека карточек (вход → выход, энергия, где используется) и редактор с панелью «Интерфейс цеха» (файл уже содержит, сверено)
+    evidence: Penpot Design System → экраны 03 Цеха (библиотека), 04 Цех (редактор)
+  - op: refine
+    kind: decision
+    target: context/conventions/ui-calc-connect-workshop.yml
+    summary: цех в расчёт подключается модалкой «Подключить в расчёт» с множителем копий; строки цеха сворачиваются в один блок (файл уже содержит, сверено)
+    evidence: Penpot Design System → экраны 06 Расчёт (подключить цех или завод), 14 Расчёт (настройки вида)
+  - op: refine
+    kind: decision
+    target: context/conventions/ui-factories-view.yml
+    summary: раздел «Заводы» — «Построено ×N» или «Черновик» (черновик не в энергосети), сверху сводка энергосети и выпуск заводов (файл уже содержит, сверено)
+    evidence: Penpot Design System → экран 05 Заводы
+  - op: refine
+    kind: decision
+    target: context/conventions/ui-calc-add-recipe.yml
+    summary: рецепт добавляется от цели — предмет, выход, разгон; система предлагает рецепты (стандартные и ALT) с итогом (файл уже содержит, сверено)
+    evidence: Penpot Design System → экраны 02 Расчёт (добавить рецепт), 13 Расчёт (пустой)
