@@ -1,9 +1,5 @@
 # Порядок записи = приоритет цели. Правила — skill goals.
 goals:
-  - key: data-catalog
-    file: goal--data-catalog.yaml
-    status: planned
-    one_liner: каталог из файлов игры в data/raw/<версия>/ — нормализация в CI
   - key: data-icons
     file: goal--data-icons.yaml
     status: planned

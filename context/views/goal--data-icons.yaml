@@ -8,7 +8,7 @@ description: |
 tasks:
   blocker: []
   high:
-    - подтягивать иконки с satisfactory.wiki.gg с кешем и паузами, в CI вместе со сборкой каталога → feat → после data-catalog
+    - подтягивать иконки с satisfactory.wiki.gg с кешем и паузами, в CI вместе со сборкой каталога → feat → блокеров нет
   medium: []
   low: []
-depends_on: [data-catalog]
+depends_on: []

@@ -1,0 +1,39 @@
+id: game-catalog
+kind: entity
+namespace: catalog
+summary: каталог 1.2 — рецепты, здания, предметы и логистика из файлов игры; генерируется в data/catalog/<версия>.json, в git не хранится
+paths: [src/data/src/**]
+version: "1.2"
+game:
+  version: "1.2.4.1"
+  build: "513885"
+  branch: rel-main-anniversary-2026
+  source: data/raw/<версия>/ — en-US.json, ru.json, source.json; файлы копируются из CommunityResources/Docs/, где 55 языков, берутся два
+  raw_encoding: data/raw/** хранится в git без перекодировки (.gitattributes: -text); файлы игры — UTF-16LE с CRLF
+  version_from: Engine/Binaries/Win64/FactoryGameSteam-Win64-Shipping.version (GameVersion, BuildId)
+build:
+  command: npm run data:catalog
+  runtime: Node ≥24, TypeScript без сборки
+  tests: npm --prefix src/data test (node:test)
+  integrity: sha256 каждого файла из source.json; несовпадение — сборка падает
+  output: data/catalog/<версия>.json (schema 1), путь в .gitignore
+format:
+  sections: items, buildings, recipes, logistics
+  ids: ClassName из игры
+  amounts: количества за цикл; жидкости в м³
+  recipes: только производимые в зданиях
+  items: только упомянутые в рецептах, добыче и топливе, плюс все ресурсы
+  names: en/ru из en-US.json и ru.json; интерфейс берёт названия из каталога
+  logistics: ленты — шт/мин; трубы — м³/мин
+  counts_1_2: предметов 168, зданий 23, рецептов 291 (ALT 110)
+names_vs_penpot:
+  note: русские названия игры отличаются от макета Penpot — Manufacturer → «Изготовитель», Miner → «Буровая установка ур. N», конвейер → «Конвейерная лента ур. N»
+quirks_1_2:
+  - у плавильни mProductionShardSlotSize = 0, хотя слот петлевика есть — число слотов берётся как 1 / mProductionShardBoostMultiplier (см. building.somersloop)
+  - mPotentialShardSlots у всех зданий 0 — потолок разгона берётся из mCanChangePotential
+  - пропускная способность ленты = mSpeed / 2 шт/мин; трубы = mFlowLimit × 60 м³/мин
+  - жидкости в рецептах в файлах игры в литрах, в каталоге — м³
+features_enabled: []
+features_disabled: []
+manuals: [data-add-game-version]
+behaviors: [catalog-build]

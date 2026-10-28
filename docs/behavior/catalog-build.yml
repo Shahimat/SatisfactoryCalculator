@@ -1,0 +1,19 @@
+id: catalog-build
+kind: behavior
+namespace: catalog
+entities: [game-catalog]
+title: сборка каталога из data/raw/<версия> — рецепты, здания, предметы, логистика; падает при несовпадении sha256
+scenarios:
+  - given: data/raw/1.2 с en-US.json, ru.json и source.json, хеши совпадают
+    when: npm run data:catalog
+    then: создан data/catalog/1.2.json, schema 1, 168 предметов, 23 здания, 291 рецепт
+  - given: файл игры не совпадает с sha256 из source.json
+    when: сборка каталога
+    then: сборка падает с ошибкой «does not match source.json»
+  - given: исходники пакета src/data
+    when: npm --prefix src/data test
+    then: все 15 тестов проходят
+check: npm --prefix src/data test
+verified: true
+verified_at: 2026-10-28
+verified_note: "npm --prefix src/data test — 15/15 на Node 24.22.0; счётчики 168/23/291 сверены с data/catalog/1.2.json"

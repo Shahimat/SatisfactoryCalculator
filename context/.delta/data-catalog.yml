@@ -1,0 +1,35 @@
+summary: каталог собирается из data/raw/1.2 пакетом src/data — entity game-catalog, behavior catalog-build, manual добавления версии; convention data-game-sources уточняет состав файлов
+source: "задача пользователя 2026-10-28 — сборка каталога из файлов игры 1.2 (src/data), намерения основного агента"
+items:
+  - op: add
+    kind: fact
+    target: docs/entities/game-catalog.yml
+    summary: каталог 1.2 (data/catalog/1.2.json, schema 1) — items, buildings, recipes, logistics; генерируется пакетом src/data, в git не хранится; id — ClassName; имена en/ru; особенности файлов игры 1.2
+    evidence: src/data/src/build-catalog.ts, src/data/src/catalog.ts, src/data/src/catalog.types.ts, src/data/package.json, package.json (data:catalog), .gitignore (data/catalog/), data/catalog/1.2.json — 168 предметов, 23 здания, 291 рецепт (110 ALT); data/raw/1.2/source.json
+  - op: add
+    kind: fact
+    target: docs/entities/game-catalog.yml
+    summary: русские названия игры отличаются от макета Penpot — Manufacturer «Изготовитель», Miner «Буровая установка ур. N», конвейер «Конвейерная лента ур. N»; интерфейс берёт названия из каталога
+    evidence: data/catalog/1.2.json (name.ru); макет Penpot экраны 01, 08 («Производитель», «Бур Mk.1»)
+  - op: refine
+    kind: fact
+    target: docs/entities/game-catalog.yml
+    summary: game.raw_encoding — data/raw/** хранится в git без перекодировки (.gitattributes: -text); файлы игры — UTF-16LE с CRLF
+    evidence: .gitattributes (data/raw/** -text); file data/raw/1.2/en-US.json, data/raw/1.2/ru.json
+  - op: add
+    kind: behavior-change
+    target: docs/behavior/catalog-build.yml
+    summary: сборка каталога из data/raw/<версия> — проверяет sha256 из source.json и падает при несовпадении
+    evidence: npm --prefix src/data test — 15/15 (Node 24.22.0), test «rejects raw files that do not match source.json»
+  - op: add
+    kind: manual
+    target: docs/manuals/data-add-game-version.md
+    summary: добавление новой версии игры — копирование en-US.json и ru.json, source.json, npm run data:catalog, тесты src/data
+    evidence: сессия 2026-10-28, путь Steam …/steamapps/common/Satisfactory; src/data/src/build-catalog.ts readManifest (gameVersion, gameBuild, branch, files)
+  - op: revise
+    kind: rule
+    target: context/conventions/data-game-sources.yml
+    summary: в data/raw/<версия>/ кладутся en-US.json и ru.json из CommunityResources/Docs/ и source.json (версия, сборка, ветка, sha256 файлов); состав и правила сборки — entity game-catalog
+    evidence: data/raw/1.2/source.json, data/raw/1.2/ (en-US.json, ru.json), src/data/src/build-catalog.ts (readGameDocs для en-US.json и ru.json)
+    was: "Исходные файлы игры (CommunityResources/Docs/*.json) кладутся вручную в data/raw/<версия>/"
+    why: сборка читает только en-US.json и ru.json, остальные из 55 языков не нужны; добавлен source.json с sha256, по которому сборка проверяет файлы

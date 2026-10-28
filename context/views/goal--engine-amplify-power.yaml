@@ -11,4 +11,4 @@ tasks:
     - учесть петлевики в мощности и выходе здания по docs/entities/building.yml; решить расхождение engine.status → feat → ждёт ответа пользователя на вопрос engine.status
   medium: []
   low: []
-depends_on: [data-catalog]
+depends_on: []

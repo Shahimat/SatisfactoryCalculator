@@ -1,0 +1,9 @@
+{
+  "gameVersion": "1.2.4.1",
+  "gameBuild": "513885",
+  "branch": "rel-main-anniversary-2026",
+  "files": {
+    "en-US.json": "a81d250e96aa13db3c0bf8c332c199ad930b2f15323e2c1a069afa4c07f971bb",
+    "ru.json": "451933842bcf91745d95bd514a4c6fdcab5f8f892c90df72e76a39dad40b2f09"
+  }
+}

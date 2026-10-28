@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "deploy": "cd ./srv-nest && npm run deploy",
+    "data:catalog": "npm --prefix src/data run catalog",
     "format": "prettier --write ."
   },
   "author": "",
