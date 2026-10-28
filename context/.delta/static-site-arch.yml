@@ -1,0 +1,108 @@
+summary: статический сайт без сервера, данные игры гибридно, расчёты в браузере с uuid и импорт/экспорт, справочник только для чтения, петлевики группами, цели переработки
+source: намерения основной сессии 2026-10-28; ответы пользователя по плану переработки (тикеты 2–6)
+items:
+  - op: add
+    kind: decision
+    target: CHANGELOG.md
+    summary: калькулятор — статический сайт на GitHub Pages без сервера; src/srv и src/srv-nest удаляются, src/ui-old остаётся до повтора возможностей
+    evidence: ответы пользователя 2026-10-28 («давай оставим satisfactory-calculator», «1 - да»)
+  - op: add
+    kind: decision
+    target: CHANGELOG.md
+    summary: данные игры гибридно — файлы игры кладутся вручную в data/raw/<версия>/, CI нормализует и публикует, иконки с вики
+    evidence: ответ пользователя 2026-10-28 («1 - давай 3»); satisfactory-calculator.com не даёт API и условий повторного использования
+  - op: add
+    kind: decision
+    target: CHANGELOG.md
+    summary: расчёты, цеха и заводы в браузере, обмен JSON; идентификаторы сущностей — uuid
+    evidence: ответы пользователя 2026-10-28 («сайт и возможность обменяться расчетами через импорт/экспорт», «Нужно тогда сделать id -> uuid»)
+  - op: add
+    kind: decision
+    target: CHANGELOG.md
+    summary: справочник только для чтения — данные меняются только вместе с версией игры
+    evidence: план переработки, одобренный пользователем 2026-10-28
+  - op: add
+    kind: fact
+    target: context/project.yml → external
+    summary: GitHub Pages — публикация статического сайта по пути /satisfactory-calculator/; исходные файлы игры — data/raw/<версия>/, сторонний калькулятор не источник
+    evidence: ответы пользователя 2026-10-28; план переработки тикетов 2–6
+  - op: add
+    kind: rule
+    target: context/conventions/data-game-sources.yml
+    summary: исходные файлы игры кладутся вручную в data/raw/<версия>/; CI нормализует их в каталог, подтягивает иконки с вики с кешем и паузами, собирает и публикует сайт
+    evidence: ответ пользователя 2026-10-28 («1 - давай 3»); satisfactory.wiki.gg (Special:FilePath)
+  - op: add
+    kind: rule
+    target: context/conventions/data-browser-storage.yml
+    summary: расчёты, цеха и заводы хранятся в браузере; обмен — файлом JSON через экспорт и импорт, сервера нет
+    evidence: ответ пользователя 2026-10-28 («сайт и возможность обменяться расчетами через импорт/экспорт»)
+  - op: add
+    kind: rule
+    target: context/conventions/data-entity-id.yml
+    summary: сущности пользователя (расчёты, цеха, заводы) получают uuid; импорт сопоставляет по uuid, копия получает новый uuid
+    evidence: ответ пользователя 2026-10-28 («Нужно тогда сделать id -> uuid»)
+  - op: add
+    kind: rule
+    target: context/conventions/ui-export-selection.yml
+    summary: экспорт выборочный — чеклист расчётов, цехов и заводов и «Выбрать всё — полный бэкап»; зависимости включаются автоматически с пометкой «нужен для …»
+    evidence: ответ пользователя 2026-10-28 («выборочно, что хотим, то и экспортируем, включая все»); Penpot экран 15
+  - op: add
+    kind: rule
+    target: context/conventions/ui-import-conflicts.yml
+    summary: импорт показывает содержимое со статусами «Новый» / «Уже есть» (по uuid); для совпадений одно решение на весь импорт — «Добавить копией» (по умолчанию) или «Заменить существующие»
+    evidence: ответ пользователя 2026-10-28 («Один выбор из пункта 2»); Penpot экран 16
+  - op: add
+    kind: rule
+    target: context/conventions/data-version-update.yml
+    summary: "расчёт из файла или сохранённый на другой версии игры пересчитывается по новым данным; плашка «Данные игры обновились: X → Y», изменённые рецепты — оранжевая рамка, удалённые — красная, «замените»"
+    evidence: ответ пользователя 2026-10-28 («1. Предупредить и подсветить»); Penpot экраны 16, 17
+  - op: add
+    kind: rule
+    target: context/conventions/ui-calc-amplify-groups.yml
+    summary: петлевики в строке расчёта — группы зданий в одной фишке (например ×8 без и ×2 с ◆1/1), в шапке расчёта — число использованных петлевиков; токен ui.flow.amplify
+    evidence: ответ пользователя 2026-10-28 («1. Группы в строке»); Penpot экраны 01, 02, компонент factory-chip/amplified
+  - op: refine
+    kind: rule
+    target: context/conventions/ui-calc-add-recipe.yml
+    summary: в «Добавить рецепт» — поле «Петлевики» (число усиленных зданий)
+    evidence: ответ пользователя 2026-10-28; Penpot экраны 01, 02
+  - op: refine
+    kind: fact
+    target: context/conventions/ui-design-tokens.yml
+    summary: в semantic добавлены ui.flow.amplify (#C49BFF) и ui.flow.amplify-bg (#2C2340) для петлевиков
+    evidence: Penpot файл «Satisfactory», страница «Design System», 2026-10-28
+  - op: add
+    kind: rule
+    target: context/conventions/ui-reference-readonly.yml
+    summary: справочник (рецепты, здания, предметы) только для чтения — редакторов рецепта, здания и предмета нет; в шапке версия данных игры и дата сборки; у зданий колонка «Петлевики» (слоты)
+    evidence: план переработки, одобренный пользователем 2026-10-28; Penpot экраны 07–09, экраны 10–12 удалены
+  - op: add
+    kind: task
+    target: context/views/goals.yaml
+    summary: пять целей переработки — data-catalog, data-icons, engine-amplify-power, ui-static-storage, ci-pages-cleanup — в начале индекса
+    evidence: план тикетов 2–6, одобренный пользователем 2026-10-28; skill goals, раздел «Устройство»
+  - op: add
+    kind: task
+    target: context/views/goal--data-catalog.yaml
+    summary: цель каталога из файлов игры (feat data)
+    evidence: план тикета 2 (2026-10-28)
+  - op: add
+    kind: task
+    target: context/views/goal--data-icons.yaml
+    summary: цель иконок с вики (feat data), после data-catalog
+    evidence: план тикета 3 (2026-10-28)
+  - op: add
+    kind: task
+    target: context/views/goal--engine-amplify-power.yaml
+    summary: петлевики и энергия здания в движке (feat engine), после data-catalog
+    evidence: план тикета 4 (2026-10-28); docs/entities/building.yml, engine.status
+  - op: add
+    kind: task
+    target: context/views/goal--ui-static-storage.yaml
+    summary: статика, хранение в браузере, экспорт/импорт, пересчёт при смене версии (feat ui), после data-catalog, engine-amplify-power, data-icons
+    evidence: план тикета 5 (2026-10-28); «вначале экраны дорабатываем + документация»
+  - op: add
+    kind: task
+    target: context/views/goal--ci-pages-cleanup.yaml
+    summary: CI публикации на Pages и удаление src/srv, src/srv-nest (chore ci), после ui-static-storage
+    evidence: план тикета 6 (2026-10-28)

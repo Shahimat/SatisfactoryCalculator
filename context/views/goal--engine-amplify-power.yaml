@@ -1,0 +1,14 @@
+key: engine-amplify-power
+title: Петлевики и энергия здания в движке
+status: planned
+why: |
+  Мощность и выход здания зависят от разгона и петлевиков (docs/entities/building.yml). Сейчас движок (src/engine/src/classes/Factory.ts) учитывает только разгон — расхождение зафиксировано в building.yml, engine.status.
+description: |
+  Движок считает мощность здания по формуле из power.formula (петлевики, разгон, энергоосколки) и выход с учётом петлевиков; энергия принадлежит зданию, не рецепту (CHANGELOG, arch 2026-10-28). Открытый вопрос — ответ пользователя по расхождению engine.status.
+tasks:
+  blocker: []
+  high:
+    - учесть петлевики в мощности и выходе здания по docs/entities/building.yml; решить расхождение engine.status → feat → ждёт ответа пользователя на вопрос engine.status
+  medium: []
+  low: []
+depends_on: [data-catalog]

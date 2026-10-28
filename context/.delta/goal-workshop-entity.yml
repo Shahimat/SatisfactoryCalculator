@@ -1,0 +1,13 @@
+summary: "заводим цель «цех как сущность» — описать в model.puml и подключить в модель расчёта"
+source: "задача пользователя 2026-10-28 — вопрос «завести задачу на сущность цех в model.puml?», ответ «4 - давай»"
+items:
+  - op: add
+    kind: task
+    target: context/views/goals.yaml
+    summary: "новая цель workshop-entity в индексе очереди, статус planned, вверху списка"
+    evidence: "ответ пользователя 2026-10-28 («4 - давай»); context/views/goals.yaml — было goals: []; skill goals, раздел «Устройство»"
+  - op: add
+    kind: task
+    target: context/views/goal--workshop-entity.yaml
+    summary: "цель с задачами на model.puml и модель расчёта; описание ссылается на ui-workshop-view и ui-calc-connect-workshop"
+    evidence: "ответ пользователя 2026-10-28; context/conventions/ui-workshop-view.yml; context/conventions/ui-calc-connect-workshop.yml; Penpot Design System, экраны 03, 04, 06; CHANGELOG 2026-10-28 arch «Цепь — переиспользуемый набор рецептов»"

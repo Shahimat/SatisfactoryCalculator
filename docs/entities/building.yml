@@ -1,0 +1,33 @@
+id: building
+kind: entity
+namespace: catalog
+summary: производственное здание — мощность от разгона и усиления петлевиками; энергия принадлежит зданию, не рецепту
+paths: [src/engine/src/classes/Factory.ts]
+version: "1.2"
+power:
+  formula: базовая × (1 + заполненные слоты петлевиков / всего слотов)^2 × (разгон / 100)^1.321928
+  idle_min_mw: 0.1
+  generators: масштабируются линейно от разгона
+clock:
+  range_percent: 1–250
+  power_shard: +50% к потолку разгона за каждый энергоосколок, до 3
+somersloop:
+  effect: выход × (1 + заполненные слоты / всего слотов), вход не растёт
+  slots:
+    smelter: 1
+    constructor: 1
+    assembler: 2
+    foundry: 2
+    oil_refinery: 2
+    converter: 2
+    manufacturer: 4
+    blender: 4
+    particle_accelerator: 4
+    quantum_encoder: 4
+engine:
+  status: движок считает мощность только от разгона (powerFactor), петлевики не учитываются — расходится с power.formula, вопрос пользователю
+  evidence: src/engine/src/classes/Factory.ts — powerFactor = (clockSpeed/100)^1.321928
+features_enabled: []
+features_disabled: []
+manuals: []
+behaviors: []

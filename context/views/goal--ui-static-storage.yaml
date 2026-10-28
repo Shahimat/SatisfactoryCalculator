@@ -1,0 +1,21 @@
+key: ui-static-storage
+title: Статический интерфейс — хранение в браузере, экспорт и импорт
+status: planned
+why: |
+  Калькулятор становится статическим сайтом на GitHub Pages без сервера (CHANGELOG, stack 2026-10-28). Пользователь обменивается расчётами файлами, поэтому нужны экспорт, импорт и uuid.
+description: |
+  Новый интерфейс по Penpot-экранам 01–17. Расчёты, цеха и заводы в браузере (data-browser-storage), uuid (data-entity-id), выборочный экспорт (ui-export-selection), импорт с одним решением на весь файл (ui-import-conflicts), пересчёт при смене версии (data-version-update), петлевики группами (ui-calc-amplify-groups), справочник только для чтения (ui-reference-readonly).
+  src/ui-old остаётся, пока новый интерфейс не повторит его возможности; удаляется отдельно.
+tasks:
+  blocker:
+    - доработать экраны Penpot и документацию до кода (вначале экраны, затем реализация) → docs → блокеров нет
+  high:
+    - статическая сборка под /satisfactory-calculator/ без сервера → feat → после data-catalog, engine-amplify-power, data-icons
+    - хранение расчётов, цехов и заводов в браузере с uuid → feat → после задачи статической сборки
+    - экспорт выборочный и импорт со статусами «Новый» / «Уже есть» → feat → после хранения
+  medium:
+    - пересчёт при смене версии данных с плашкой и подсветкой → feat → после каталога
+    - петлевики группами в строке расчёта и поле «Петлевики» в «Добавить рецепт» → feat → после engine-amplify-power
+    - повторить возможности src/ui-old и только потом удалить src/ui-old → refactor → после ui-static-storage
+  low: []
+depends_on: [data-catalog, engine-amplify-power, data-icons]

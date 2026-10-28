@@ -5,6 +5,7 @@ rule: |
   разложены по токенам:
     - core: примитивы color.*, space.*, radius.*;
     - semantic: ui.bg.*, ui.text.*, ui.accent.*, ui.flow.in/out/fluid/power,
+      ui.flow.amplify (#C49BFF) и ui.flow.amplify-bg (#2C2340) — петлевики,
       ui.status.*.
   Шрифты: Roboto Condensed — заголовки и подписи, Roboto — текст,
   Roboto Mono — числа.
