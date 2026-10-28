@@ -1,0 +1,24 @@
+name: satisfactory-calculator
+summary: калькулятор производственных цепочек Satisfactory
+stack: [typescript, react, rsbuild, ag-grid, nestjs, typeorm, sqlite]
+reality: [this-repo]
+preset: operational
+namespaces: {}
+external: {}
+sync:
+  index_source: https://raw.githubusercontent.com/Shahimat/ai-prompts/main/prompts/index.yml
+  index_sha: feaa897830c2cf4a8ebc68f180c8b82324b460e1796fe373948096b06d888c3f
+  contract:
+    key: agent-operational-contract-v3
+    synced_sha: 5b8d9932dde0c1472dcbe95707b6b2efe3663bf13a86b37a4e2e067f5a4c0306
+    parts:
+      skills:
+        contract-setup: a47699dbe9991cfde4465060d96cb9e0c6380ba0835ffbc2fc1d928cf51d8f78
+        workflow: 2730e53737accb44f01d3b736586e81abd476b669cb396cc6791ac1cb14ef637
+        docs-keeper: 09cefc23d61856ab25c1b067e1142e610f6c703044e14119f75e6abaef6b0ebc
+        source-sync: 0a782aa2daf72475635d9df12eb454e7782acbd76944feb4541441ed8ae931e1
+        source-feedback: 21f947ef089d50e86785afe98a867ee79aa09b9ff11ad1e1f470e32ebd577bae
+        cli: 22e7117c6ce3252cb582965688b4f02beffa561fabb3d81a33e60d3b45657101
+      agents:
+        docs-keeper: e07463e44e6de4fab695972855cd0d384b3fd5c8e1f1db6a73ffdb887aba0dda
+        judge: 9106b2c03e0f4e9b51bd43a7d93d77ab05fd663609e197944ff63b866762b6ba

@@ -1,0 +1,12 @@
+key: harness
+source: https://raw.githubusercontent.com/Shahimat/ai-prompts/main/prompts/modules/harness.md
+synced_sha: 544914f532a6211c55b91e14f578d00ca278dc549644896d4ff05427f82f355e
+synced_at: 2026-10-28
+answers: {}
+provides:
+  layers: []
+  files: [package.json]
+  skills: []
+  agents_md_block: true
+  harness_checks: []
+parts: {}

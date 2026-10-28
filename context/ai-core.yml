@@ -1,0 +1,9 @@
+adapters: [claude-code]
+hooks: [docs-guard]
+checks:
+  changelog:
+    max_line: 120
+    tags: [arch, stack, dep, milestone]
+  context-index: {}
+  adapters: {}
+  secrets: {}

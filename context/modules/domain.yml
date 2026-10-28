@@ -1,0 +1,14 @@
+key: domain
+source: https://raw.githubusercontent.com/Shahimat/ai-prompts/main/prompts/modules/domain.md
+synced_sha: e034c25487e2d304d0f9f31782899797b8ca3f854069596e61690df709fab30c
+synced_at: 2026-10-28
+answers: {}
+provides:
+  layers: [docs/entities/, docs/behavior/]
+  files: []
+  skills: [domain]
+  agents_md_block: true
+  harness_checks: []
+parts:
+  skills:
+    domain: 0c78da93b52466c85381f859b29514fe3674539e313c12053e1f239c79885950

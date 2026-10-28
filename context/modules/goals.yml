@@ -1,0 +1,14 @@
+key: goals
+source: https://raw.githubusercontent.com/Shahimat/ai-prompts/main/prompts/modules/goals.md
+synced_sha: 0ff291a3d16d954fb169e39344f0640ed905c9b8559dea8b7726a0853e23f4b7
+synced_at: 2026-10-28
+answers: {}
+provides:
+  layers: [context/views/]
+  files: [context/views/goals.yaml]
+  skills: [goals]
+  agents_md_block: true
+  harness_checks: []
+parts:
+  skills:
+    goals: 753c190d194c90546505e475f58503ea0f7c2ebe0ded773518a0fc547677927d
