@@ -1,0 +1,70 @@
+name: Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install
+        run: |
+          npm ci --prefix src/data
+          npm ci --prefix src/engine
+          npm ci --prefix src/ui
+
+      - name: Test
+        run: |
+          npm --prefix src/data test
+          npm --prefix src/data run typecheck
+          npm --prefix src/engine test
+          npm --prefix src/ui test -- --run
+
+      - name: Game catalog
+        run: npm run data:catalog
+
+      # wiki.gg rate-limits downloads; icons survive between runs and only new ones are fetched.
+      - uses: actions/cache@v4
+        with:
+          path: data/icons
+          key: icons-${{ hashFiles('data/raw/*/source.json') }}
+          restore-keys: icons-
+
+      - name: Icons
+        run: npm run data:icons
+
+      - name: Build site
+        env:
+          PAGES_BASE: /${{ github.event.repository.name }}/
+        run: npm --prefix src/ui run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: src/ui/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

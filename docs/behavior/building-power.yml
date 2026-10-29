@@ -1,0 +1,25 @@
+id: building-power
+kind: behavior
+namespace: catalog
+entities: [building]
+title: мощность здания по power.formula — разгон и петлевики; выход множится на петлевики, вход не растёт
+scenarios:
+  - given: конструктор, базовая мощность 4 МВт, разгон 100 %, без петлевиков
+    when: buildingPowerMW(4, constructor, 1, 0)
+    then: 4 МВт
+  - given: конструктор, один заполненный петлевик в одном слоте
+    when: buildingPowerMW(4, constructor, 1, 1)
+    then: 16 МВт — мощность растёт квадратично от усиления
+  - given: конструктор, разгон 250 %
+    when: buildingPowerMW(4, constructor, 2.5, 1) / 4
+    then: ≈ 13.43 — разгон в степени 1.32
+  - given: группа из 2.5 конструкторов на 100 %
+    when: "groupPowerMW(4, constructor, { count: 2.5, clock: 1, somersloops: 0 })"
+    then: 9.6 МВт — дробное здание работает с пониженным разгоном
+  - given: один петлевик в двух слотах
+    when: amplification(1, 2)
+    then: 1.5 — выход множится на долю заполненных слотов
+check: npm --prefix src/engine test
+verified: true
+verified_at: 2026-10-28
+verified_note: "npm --prefix src/engine test — 17/17 (jest), в т.ч. «scales power by Somersloops squared and clock^1.32» и «amplifies output by filled share of slots» (2026-10-28)"

@@ -1,0 +1,8 @@
+summary: выделение текста в интерфейсе отключено — экран из карточек; в полях ввода выделение работает
+source: намерения основной сессии 2026-10-28 — просьба пользователя «уберем выделение контента, тут все равно нечего выделять, кругом одни карточки»
+items:
+  - op: add
+    kind: rule
+    target: context/conventions/ui-no-text-selection.yml
+    summary: выделение текста в интерфейсе отключено; в полях ввода (input, textarea) выделение и редактирование работают
+    evidence: "src/ui/src/styles.css:51-61 (body — user-select: none; input, textarea — user-select: text); просьба пользователя 2026-10-28"

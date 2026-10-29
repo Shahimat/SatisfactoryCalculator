@@ -1,0 +1,65 @@
+summary: закреп выхода вводится прямо в чипе — окна «Выход строки» и «Нужно на выходе» не нужны; закреп на продукте строки (output), замок на чипе; тег «закреплено» — только у строки, закреплённой числом зданий; чип выхода отмечает цель на продукт, очистка чипа снимает закреп и цель
+source: намерения основной сессии 2026-10-29 — просьба пользователя «очень много кнопок… давай проще», «дополнительных кнопок здесь не нужно», «рецепт может производить много элементов, лучше видеть, какой конкретно закреплён»; пересмотр 2026-10-29 — «чищу строку, жму энтер и возвращается как было» (очистка чипа снимает цель на продукт)
+items:
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-row-output.yml
+    summary: выход строки рецепта или добычи закрепляется прямо в чипе выхода — число и Enter закрепляют строку на этом продукте, пустое поле и Enter или уход из поля возвращают «авто» и снимают цель плана на этот продукт, Esc отменяет; чип отмечает цель мишенью; окон и кнопок нет
+    evidence: src/ui/src/components/chips.tsx (AmountField finish, onBlur, Enter/Escape), rows.tsx (lockEdit — mark goal, onCommit undefined → onLock auto + onGoals без item); браузер 2026-10-29 — разъём 5 → замок на чипе, пусто → авто ×3.2, стереть 7 и кликнуть мимо → авто; цели автопроводка 60 и разъём 34, очистка чипа разъёма → цель снята, разъём 49 → 15
+    was: клик по чипу выхода открывает окно «Выход строки» с полем «Строка производит», «Закрепить» и «Вернуть в авто»; очистка снимает только закреп, цель на продукт не трогает
+    why: пользователь 2026-10-29 — «очень много кнопок… давай проще»; очистка поля по уходу из него возвращает «авто» (пользователь 2026-10-29, «в авто не переводится после удаления»); очистка снимает цель на этот продукт, иначе строка возвращается к прежнему выходу (пользователь 2026-10-29, «чищу строку, жму энтер и возвращается как было»)
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-goals.yml
+    summary: цель вводится прямо в чипе выхода «Итого» или положительном чипе баланса — число и Enter задают цель, пустое поле и Enter или уход из поля снимают; число при уходе не применяется; цель отмечена значком мишени; чип выхода строки рецепта или добычи того же продукта тоже отмечает цель мишенью, и его очистка снимает закреп строки и цель; окна «Нужно на выходе» нет
+    evidence: src/ui/src/components/rows.tsx (goalEdit; lockEdit — mark goal при goals.some(g.item === item), onCommit undefined → onGoals filter), chips.tsx (AmountField finish, onBlur; BalanceChip edit, иконка target); браузер 2026-10-29
+    was: цель задаётся окном «Нужно на выходе» с «Убрать из целей»; окно открывается и по выходу строки цеха или завода; чип выхода строки цель не отмечал и не снимал
+    why: тот же простой ввод, что у выхода строки (ui-calc-row-output); пользователь 2026-10-29; очистка по уходу из поля снимает цель так же, как закреп выхода строки; тот же продукт — тот же признак цели, иначе очистка чипа выхода возвращала строку к прежнему выходу (пользователь 2026-10-29)
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-row-order.yml
+    summary: у строки цеха и завода выход не редактируется в чипе — копии задаются в окне правки; выход строки рецепта или добычи — закрепление (ui-calc-row-output)
+    evidence: src/ui/src/components/rows.tsx (lockEdit только для recipe и extractor), edit-row.tsx (editBuildings, segmented)
+    was: выход цеха или завода открывал «Нужно на выходе»; в окне правки поле «Строка производит»
+    why: окно цели убрано; копии цеха и завода задаются в окне правки, выход строки рецепта или добычи — закреп
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-fixed-row-highlight.yml
+    summary: строка, закреплённая числом зданий, — тег «закреплено» в чипе зданий; строка, закреплённая выходом продукта, — замок на чипе этого продукта
+    evidence: src/ui/src/components/chips.tsx (FactoryChip fixed tag), rows.tsx (fixed={fixed && !locked}); пользователь 2026-10-29
+    was: тег «закреплено» у любой зафиксированной строки
+    why: рецепт может производить много продуктов — важно видеть, какой закреплён; закреп выходом — на чипе продукта
+  - op: revise
+    kind: rule
+    target: context/conventions/data-calc-goals-storage.yml
+    summary: строка рецепта или добычи хранит output {item, perMinute} — закреплённый выход одного продукта; строка с output не «авто», здания под него считает движок
+    evidence: src/engine/src/calc/types.ts (LockedOutput, RecipeRow.output, ExtractorRow.output), src/ui/src/calc.ts (isAutoRow)
+    was: закрепление хранилось только числом зданий (sizing)
+    why: закреп на уровне продукта — выход продукта задаёт здания, а не число зданий
+  - op: revise
+    kind: behavior-change
+    target: docs/behavior/calc-plan-solver.yml
+    summary: строка с output {item, perMinute} перед решением получает здания ровно под этот выход (rowForOutput) и считается fixed в обоих режимах; закреп возможен и на побочном продукте
+    evidence: src/engine/src/calc/sizing.ts (lockOutputs); npm --prefix src/engine test — 30/30, «locks a row at an exact output of one of its products»
+    was: выход задавался числом зданий в окне; строка с заданным выходом — выход равен числу без прибавки потребления
+    why: закреп переехал на продукт строки (output); поведение без прибавки то же
+  - op: add
+    kind: behavior-change
+    target: docs/behavior/calc-plan-solver.yml
+    summary: в окне правки строки число зданий снимает закреп выхода (строка — по зданиям, разгон и петлевики сохраняются); «Авто» снимает закреп и возвращает строку решателю
+    evidence: src/ui/src/components/edit-row.tsx (editBuildings, segmented); поле «Строка производит» в окне правки убрано
+  - op: add
+    kind: fact
+    target: docs/scheme/model.puml
+    summary: строки рецепта и добычи хранят sizing auto | fixed и output {item, perMinute} — закреплённый выход продукта
+    evidence: src/engine/src/calc/types.ts (RecipeRow, ExtractorRow)
+  - op: add
+    kind: decision
+    target: CHANGELOG.md
+    summary: закреп выхода — на продукте строки, ввод прямо в чипе; окна выхода и цели убраны
+    evidence: просьба пользователя 2026-10-29 («дополнительных кнопок здесь не нужно»); src/ui/src/components/chips.tsx
+  - op: add
+    kind: behavior-change
+    target: docs/behavior/calc-plan-solver.yml
+    summary: очистка чипа выхода строки — output снимается, строка auto, цель плана на этот продукт снимается; сценарий без теста движка, проверен в браузере
+    evidence: src/ui/src/components/rows.tsx (lockEdit onCommit undefined); браузер 2026-10-29, seed автопроводка + разъём; verified_note в docs/behavior/calc-plan-solver.yml

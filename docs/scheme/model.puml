@@ -1,123 +1,140 @@
 @startuml
 
-' hide the spot
+' Модель хранения в браузере: сервера нет.
+' Каталог игры — только чтение, id из игры; сущности пользователя — uuid.
 hide circle
 
-' avoid problems with angled crows feet
-' skinparam linetype ortho
+package "каталог игры — только чтение (id из игры)" {
+  entity Item {
+    *id : string (ClassName)
+    ..
+    name : string
+    energyMJ : number
+    kind : string
+  }
 
-entity item_type {
-  *id : number
-  ..
-  name: string
+  entity Building {
+    *id : string (ClassName)
+    ..
+    name : string
+    powerMW : number
+    powerExponent : number
+    somersloopSlots : number
+    somersloopPowerExponent : number
+    extraction : cycleSeconds, amountPerCycle | нет
+    generation : powerMW, fuels | нет
+  }
+
+  entity Recipe {
+    *id : string (ClassName)
+    ..
+    building : string
+    cycleSeconds : number
+    inputs : [item, amount за цикл]
+    outputs : [item, amount за цикл]
+    variablePowerMW : constant, factor | нет
+  }
 }
 
-entity item_category {
-  *id : number
-  is_internal_energy: boolean
-  ..
-  name: string
+package "данные пользователя — uuid" {
+  entity Calculation {
+    *id : uuid
+    ..
+    name : string
+    goals : [{item id, perMinute}]
+    solver : sequential | matrix
+    built : number (0 = черновик)
+    gameVersion : string
+    recipeSignatures : map recipe id → signature
+    rows : [Row]
+  }
+
+  entity Workshop {
+    *id : uuid
+    ..
+    name : string
+    goals : [{item id, perMinute}]
+    solver : sequential | matrix
+    gameVersion : string
+    recipeSignatures : map recipe id → signature
+    rows : [Row]
+  }
+
+  entity BuildingGroup {
+    ..
+    count : number (решатель даёт целое — ровный разгон у всех зданий)
+    clock : number (0.01–2.5)
+    somersloops : number
+  }
+
+  entity RecipeRow {
+    *id : string
+    ..
+    recipe : string
+    sizing : auto | fixed
+    output : {item, perMinute} | нет
+    groups : [BuildingGroup]
+  }
+
+  entity ExtractorRow {
+    *id : string
+    ..
+    building : string
+    resource : string
+    purity : impure | normal | pure
+    sizing : auto | fixed
+    output : {item, perMinute} | нет
+    groups : [BuildingGroup]
+  }
+
+  entity GeneratorRow {
+    *id : string
+    ..
+    building : string
+    fuel : string
+    groups : [BuildingGroup]
+  }
+
+  entity WorkshopRow {
+    *id : string
+    ..
+    workshop : uuid
+    copies : number
+  }
+
+  entity PlantRow {
+    *id : string
+    ..
+    calculation : uuid
+    copies : number
+  }
 }
 
-entity icon_category {
-  *id : number
-  ..
-  name: string
-}
+note as Storage
+  localStorage: 'satisfactory-calculator/state', schema: 1
+  AppState: calculations, workshops, units (ipm | 1–6)
+  Экспорт: format 'satisfactory-calculator', schema 1,
+  gameVersion, exportedAt, calculations, workshops
+  Импорт сопоставляет по uuid; копия получает новый uuid
+end note
 
-entity icon {
-  *id : number
-  ..
-  name: string
-  path: string
-  +id_icon_category: number
-}
-
-entity item {
-  *id : number
-  ..
-  name: string
-  +id_icon: number
-  +id_item_type: number
-  +id_item_category: number
-  energy: number (>= 0) | 0
-}
-
-entity factory {
-  *id : number
-  ..
-  name: string
-  +id_icon: number
-  consumption: number (>= 0)
-  is_scheme_generation: boolean
-  is_scheme_consumption: boolean
-  is_acceleration: boolean
-  tier: number
-  input_solid: number (0, 1, 2, 3, 4)
-  input_liquid: number (0, 1, 2, 3, 4)
-  input_other: number (0, 1)
-  output_solid: number (0, 1, 2, 3, 4)
-  output_liquid: number (0, 1, 2, 3, 4)
-  output_other: number (0, 1)
-}
-
-entity scheme {
-  *id : number
-  ..
-  name: string
-  +id_factory: number
-  generation: number (+-) | 0
-}
-
-entity scheme_item_link {
-  *id : number
-  ..
-  +id_scheme: number
-  +id_item: number
-  production: number (+-)
-}
-
-entity calculation {
-  *id : number
-  ..
-  name: string
-}
-
-entity calculation_category {
-  *id : number
-  ..
-  name: string
-}
-
-entity calculation_link {
-  *id : number
-  ..
-  +id_calculation: number
-  +id_calculation_different: number
-  num_calculations: number (1, 2, ..., n)
-}
-
-entity calculation_scheme_link {
-  *id : number
-  ..
-  +id_calculation: number
-  +id_scheme: number
-  acceleration: number (0.01...1...2.5)
-  num_factories: number (1, 2, ..., n)
-}
-
-icon_category ||..|{ icon
-icon ||..o{ item
-item_type ||..|{ item
-item_category ||..|{ item
-icon ||..o{ factory
-factory ||..|{ scheme
-item ||..o{ scheme_item_link
-scheme ||..o{ scheme_item_link
-
-scheme ||..o{ calculation_scheme_link
-calculation ||..o{ calculation_scheme_link
-calculation ||..o{ calculation_link
-calculation_category ||..|{ calculation
+Recipe }o--|| Building : building
+RecipeRow }o--|| Recipe : recipe
+ExtractorRow }o--|| Item : resource
+GeneratorRow }o--|| Item : fuel
+Calculation ||--o{ RecipeRow
+Calculation ||--o{ ExtractorRow
+Calculation ||--o{ GeneratorRow
+Calculation ||--o{ WorkshopRow
+Calculation ||--o{ PlantRow
+Workshop ||--o{ RecipeRow
+Workshop ||--o{ ExtractorRow
+Workshop ||--o{ GeneratorRow
+Workshop ||--o{ WorkshopRow
+WorkshopRow }o--|| Workshop : workshop
+PlantRow }o--|| Calculation : calculation
+RecipeRow ||--|{ BuildingGroup
+ExtractorRow ||--|{ BuildingGroup
+GeneratorRow ||--|{ BuildingGroup
 
 @enduml

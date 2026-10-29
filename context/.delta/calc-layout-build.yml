@@ -1,0 +1,61 @@
+summary: раскладка расчёта — «Итого» первой карточкой с полосой «Построить», баланс убран, карточка строки без чекбокса, окно «Здание», ресурсы на постройку
+source: намерения пользователя 2026-10-29; браузер 2026-10-29; npm --prefix src/data test — 19/19
+items:
+  - op: add
+    kind: rule
+    target: context/conventions/ui-calc-build-strip.yml
+    summary: «Итого» стоит первой карточкой над строками; вместо «N зданий · N строк» — полоса «Построить» — здания по типам с иконкой и ×целых, цеха и заводы с именем, копиями и ссылкой
+    evidence: src/ui/src/components/rows.tsx (TotalRow, BuildStrip); src/ui/src/calc.ts (buildList; дробная группа — целое здание)
+  - op: add
+    kind: rule
+    target: context/conventions/ui-calc-build-cost.yml
+    summary: внизу расчёта — «Ресурсы на постройку» — buildCost всех целых зданий плана, включая здания цехов × копии; заводы не входят
+    evidence: src/ui/src/calc.ts (buildList.cost; plants — continue до physicalBuildings), rows.tsx (BuildCost); браузер 2026-10-29 — 22 изготовителя → пластик 1100, кабель 1100, каркас 440, мотор 220
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-row-card.yml
+    summary: карточка строки без чекбокса — клик выделяет и снимает выделение; название переносится, подписи здания и выхода нет; клик по названию открывает настройки строки, которые показывают число решателя; клик по чипу зданий — окно «Здание»
+    evidence: src/ui/src/components/rows.tsx (onClick карточки, title-button → onEdit с result.row, FactoryChip → onInspect); пользователь 2026-10-29
+    was: карточка с чекбоксом; под названием подпись «Изготовитель · N шт/мин на здание»; название с многоточием; клик по чипу зданий открывал настройки строки с введённым числом
+    why: пользователь 2026-10-29 — чекбокс и подпись мешают читать название; чип зданий должен показывать, что получил решатель
+  - op: add
+    kind: rule
+    target: context/conventions/ui-calc-building-modal.yml
+    summary: окно «Здание» — здание и рецепт, построить целых и загрузка, энергия; потоки одного здания по группам, потоки строки, стоимость постройки одного здания и всех
+    evidence: src/ui/src/components/building-modal.tsx; браузер 2026-10-29 — Скоростной разъём ×13.067, построить 14, мотор 10 / 140
+  - op: refine
+    kind: rule
+    target: context/conventions/ui-calc-amplify-groups.yml
+    summary: в настройках строки — кнопка «Группа с другим разгоном»; группа — часть зданий строки со своим разгоном и петлевиками, например 8 на 100 % и 2 с петлевиками
+    evidence: src/ui/src/components/edit-row.tsx (GroupsEditor); вопрос пользователя 2026-10-29
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-view-card.yml
+    summary: основной вид расчёта карточный — «Итого» первой карточкой; баланс по предметам отдельным блоком не показывается
+    evidence: src/ui/src/components/rows.tsx (TotalRow; блока баланса нет); пользователь 2026-10-29
+    was: строка = рецепт | цепь | завод | итог, под итогом баланс по каждому предмету (цель, излишек, добыча, дефицит)
+    why: пользователь 2026-10-29 — «пишет то же самое, что и Итого, давай уберём»
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-goals.yml
+    summary: цель задаётся по выходу «Итого» в чипе; положительного чипа баланса, задающего цель, нет
+    evidence: src/ui/src/components/rows.tsx (TotalRow, goalEdit; блока баланса нет); пользователь 2026-10-29
+    was: цель вводится в чипе выхода «Итого» или в положительном чипе баланса предметов (цель, излишек)
+    why: пользователь 2026-10-29 — «пишет то же самое, что и Итого, давай уберём»
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-pick-consumption.yml
+    summary: подбор рецепта — по входу «Итого» или строки; клик по чипу потребления открывает «Добавить» с предметом и количеством; сырьё — во вкладке «Добыча»; подобранный рецепт не становится целью
+    evidence: src/ui/src/components/rows.tsx (баланс убран); пользователь 2026-10-29
+    was: клик по чипу потребления и по отрицательному чипу баланса (дефицит, добыча) открывает «Добавить»; положительный чип баланса — ввод цели
+    why: пользователь 2026-10-29 — «пишет то же самое, что и Итого, давай уберём»
+  - op: refine
+    kind: fact
+    target: docs/entities/game-catalog.yml
+    summary: у здания в каталоге есть buildCost [{item, amount}] — стоимость постройки из рецептов BP_BuildGun_C; есть у всех 23 зданий, предметы стоимости входят в items
+    evidence: src/data/src/catalog.ts, catalog.types.ts (CatalogBuilding.buildCost); npm --prefix src/data test — 19/19 (2026-10-29), «has the build gun cost of every building»
+  - op: refine
+    kind: behavior-change
+    target: docs/behavior/catalog-build.yml
+    summary: у каждого здания есть buildCost; конструктор — 2 усиленные пластины + 8 кабелей; предметы стоимости есть в items; verified по npm --prefix src/data test
+    evidence: npm --prefix src/data test — 19/19 (2026-10-29), тест «has the build gun cost of every building»; data/catalog/1.2.json, Build_ConstructorMk1_C

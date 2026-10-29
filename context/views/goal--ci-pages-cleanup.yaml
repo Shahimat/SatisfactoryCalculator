@@ -1,15 +1,14 @@
 key: ci-pages-cleanup
-title: CI публикации на Pages и удаление src/srv, src/srv-nest
+title: Удаление src/srv и src/srv-nest
 status: planned
 why: |
   Сайт без сервера публикуется на GitHub Pages по пути /satisfactory-calculator/ (CHANGELOG, stack 2026-10-28). Серверные src/srv и src/srv-nest тогда не нужны.
 description: |
-  CI собирает и публикует статический сайт, затем удаляются src/srv и src/srv-nest. src/ui-old сюда не входит — он удаляется отдельно, после повтора его возможностей (цель ui-static-storage).
+  CI публикации уже в .github/workflows/pages.yml (push в master). Осталось удалить src/srv и src/srv-nest — команду выполняет пользователь. src/ui-old сюда не входит — он удаляется отдельно, после повтора его возможностей (цель ui-static-storage).
 tasks:
   blocker: []
   high:
-    - CI публикации на GitHub Pages по пути /satisfactory-calculator/ → chore ci → после ui-static-storage
-    - удалить src/srv и src/srv-nest → chore ci → после публикации из CI
+    - удалить src/srv и src/srv-nest → chore ci → блокеров нет; команду выполняет пользователь
   medium: []
   low: []
-depends_on: [ui-static-storage]
+depends_on: []

@@ -1,22 +1,10 @@
 # Порядок записи = приоритет цели. Правила — skill goals.
 goals:
-  - key: data-icons
-    file: goal--data-icons.yaml
-    status: planned
-    one_liner: иконки с вики — кеш и паузы, в CI вместе с каталогом
-  - key: engine-amplify-power
-    file: goal--engine-amplify-power.yaml
-    status: planned
-    one_liner: петлевики и энергия здания в движке — мощность и выход от слотов
-  - key: workshop-entity
-    file: goal--workshop-entity.yaml
-    status: planned
-    one_liner: цех как сущность — описать в model.puml и подключить в модель расчёта
   - key: ui-static-storage
     file: goal--ui-static-storage.yaml
     status: planned
-    one_liner: статический интерфейс — хранение в браузере, экспорт и импорт, петлевики группами
+    one_liner: интерфейс построен — осталось повторить возможности src/ui-old и удалить его
   - key: ci-pages-cleanup
     file: goal--ci-pages-cleanup.yaml
     status: planned
-    one_liner: CI публикации на Pages и удаление src/srv, src/srv-nest
+    one_liner: удалить src/srv и src/srv-nest (команду выполняет пользователь)

@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "deploy": "cd ./srv-nest && npm run deploy",
     "data:catalog": "npm --prefix src/data run catalog",
+    "data:icons": "npm --prefix src/data run icons",
     "format": "prettier --write ."
   },
   "author": "",

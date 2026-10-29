@@ -1,0 +1,13 @@
+key: ui-brand-logo
+summary: в шапке — логотип Satisfactory со ссылкой на расчёт; фавиконка — значок «S»; оба взяты из макета Penpot
+rule: |
+  В шапке интерфейса — логотип Satisfactory (src/ui/src/assets/logo.webp,
+  407×80), ведёт на раздел расчёта (#/calc).
+
+  Фавиконка вкладки — значок «S» (src/ui/src/assets/favicon.png, 64×64),
+  подключён через html.favicon в src/ui/rsbuild.config.ts.
+
+  Оба ассета — из макета Penpot (файл «Satisfactory»); при смене бренда
+  меняются файлы в assets/, не разметка.
+
+  reason: логотип и фавиконка должны совпадать с дизайном (просьба пользователя, 2026-10-28)

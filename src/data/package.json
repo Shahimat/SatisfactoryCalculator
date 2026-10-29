@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "catalog": "node src/build-catalog.ts",
+    "icons": "node src/fetch-icons.ts",
     "test": "node --test 'test/**/*.test.ts'",
     "typecheck": "tsc"
   },

@@ -169,6 +169,20 @@ export const buildCatalog = (
     },
   );
 
+  // Build gun recipes make a building descriptor Desc_X_C for building Build_X_C.
+  const buildCosts = new Map<string, ItemAmount[]>();
+  for (const docsClass of group(en, 'FGRecipe')) {
+    if (
+      !parseClassList(field(docsClass, 'mProducedIn')).includes('BP_BuildGun_C')
+    )
+      continue;
+    const [product] = parseItemAmounts(field(docsClass, 'mProduct'));
+    if (!product?.item.startsWith('Desc_')) continue;
+    const building = product.item.replace(/^Desc_/, 'Build_');
+    if (!buildCosts.has(building))
+      buildCosts.set(building, amounts(field(docsClass, 'mIngredients')));
+  }
+
   const buildings: CatalogBuilding[] = buildingClasses.map((docsClass) => {
     const kind = buildingKind.get(docsClass.ClassName) ?? 'support';
     const building: CatalogBuilding = {
@@ -191,6 +205,8 @@ export const buildCatalog = (
         max: numberField(docsClass, 'mEstimatedMaximumPowerConsumption'),
       };
     }
+    const buildCost = buildCosts.get(docsClass.ClassName);
+    if (buildCost) building.buildCost = buildCost;
     if (kind === 'extractor')
       building.extraction = extraction(docsClass, normalizeAmount);
     if (kind === 'generator') building.generation = generation(docsClass);
@@ -203,6 +219,7 @@ export const buildCatalog = (
       referenced.add(item);
   }
   for (const building of buildings) {
+    for (const { item } of building.buildCost ?? []) referenced.add(item);
     for (const item of building.extraction?.resources ?? [])
       referenced.add(item);
     for (const fuel of building.generation?.fuels ?? []) {
@@ -213,6 +230,9 @@ export const buildCatalog = (
   }
   for (const docsClass of group(en, 'FGResourceDescriptor'))
     referenced.add(docsClass.ClassName);
+  // Placed into buildings rather than consumed: build cost of overclock and amplification.
+  if (buildings.some((b) => b.somersloopSlots > 0)) referenced.add(SOMERSLOOP);
+  if (buildings.some((b) => b.maxClock > 1)) referenced.add(POWER_SHARD);
 
   const items: CatalogItem[] = [...referenced].map((id) => {
     const entry = itemClasses.get(id);
@@ -256,6 +276,9 @@ export const buildCatalog = (
     logistics: { belts: belts.sort(byId), pipes: pipes.sort(byId) },
   };
 };
+
+export const SOMERSLOOP = 'Desc_WAT1_C';
+export const POWER_SHARD = 'Desc_CrystalShard_C';
 
 const somersloopSlots = (docsClass: DocsClass): number => {
   if (!booleanField(docsClass, 'mCanChangeProductionBoost')) return 0;

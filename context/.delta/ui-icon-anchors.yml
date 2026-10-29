@@ -1,0 +1,18 @@
+summary: "иконки-якоря в полях и окне правки строки, свой Select с иконками игры; петлевик — интерфейсная иконка каталога"
+source: "намерения основной сессии 2026-10-28; просьба пользователя «не вижу визуальных якорей, что за объект правлю, что за петлевики… добавь иконки», «аналогично для выпадающих списков»"
+items:
+  - op: add
+    kind: rule
+    target: context/conventions/ui-select-icons.yml
+    summary: "выпадающие списки — свой компонент Select с иконками игры (предметы, здания, ресурсы, топливо, петлевики) и поиском от 10 вариантов; системный select картинки не показывает"
+    evidence: "src/ui/src/components/select.tsx (SEARCH_FROM = 10, иконки в опциях); add-row.tsx, edit-row.tsx — Select с GameIcon в опциях"
+  - op: add
+    kind: rule
+    target: context/conventions/ui-field-anchor-icons.yml
+    summary: "у полей — иконки-якоря: здание у «Зданий», энергомодуль у «Разгона», петлевик у «Петлевиков», предмет у выхода и запаса; окно правки строки открывается шапкой — иконка здания, рецепт с ALT, что делает одно здание"
+    evidence: "src/ui/src/components/edit-row.tsx (RowSummary: GameIcon здания, badge ALT, «рецепт на 1 здание при 100%»), add-row.tsx (иконки POWER_SHARD_ICON, SOMERSLOOP_ICON, предмет)"
+  - op: add
+    kind: fact
+    target: docs/entities/game-catalog.yml → icons
+    summary: "Desc_WAT1_C (Somersloop) качается вместе с иконками каталога как интерфейсная — в каталоге её нет, производственные рецепты её не используют"
+    evidence: "src/data/src/fetch-icons.ts (INTERFACE_ICONS); запуск data:icons 2026-10-28: 1 downloaded; data/icons/Desc_WAT1_C.png существует"

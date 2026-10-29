@@ -1,0 +1,8 @@
+summary: в шапке — логотип Satisfactory, фавиконка — значок «S»; исходники взяты из макета Penpot
+source: намерения основной сессии 2026-10-28 — просьба пользователя «в шапке не вижу иконку сатисфактори, как в дизайне» и «и фавиконку добавь»
+items:
+  - op: add
+    kind: rule
+    target: context/conventions/ui-brand-logo.yml
+    summary: в шапке — логотип Satisfactory (src/ui/src/assets/logo.webp, 407×80, ведёт на #/calc); фавиконка — значок «S» (src/ui/src/assets/favicon.png, 64×64, html.favicon в rsbuild.config.ts)
+    evidence: "src/ui/src/assets/logo.webp (407×80, webp), src/ui/src/assets/favicon.png (64×64, png), src/ui/src/App.tsx:37-38 (ссылка #/calc, img logo), src/ui/rsbuild.config.ts:45 (favicon); просьба пользователя 2026-10-28"

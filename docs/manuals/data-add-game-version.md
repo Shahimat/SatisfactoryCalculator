@@ -8,7 +8,7 @@
 2. Взять версию и сборку из `Engine/Binaries/Win64/FactoryGameSteam-Win64-Shipping.version` (поля `GameVersion`, `BuildId`).
 3. Записать `data/raw/<версия>/source.json`: `gameVersion`, `gameBuild`, `branch` (ветка игры) и `files` — sha256 каждого из двух файлов (`sha256sum en-US.json ru.json`).
 4. Из корня репозитория: `npm run data:catalog` → проверка: появился `data/catalog/<версия>.json`.
-5. Тесты пакета: `npm --prefix src/data test` → проверка: 15 тестов проходят.
+5. Тесты пакета: `npm --prefix src/data test` → проверка: все тесты проходят (сейчас 18).
 6. Если тесты или счётчики сломались на новых данных — см. особенности файлов в `docs/entities/game-catalog.yml` (`quirks_1_2`).
 
 ## Если что-то пошло не так

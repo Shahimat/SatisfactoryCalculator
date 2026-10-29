@@ -1,0 +1,28 @@
+id: data-exchange
+kind: behavior
+namespace: exchange
+entities: []
+title: обмен JSON — экспорт с транзитивными зависимостями, импорт по uuid, копии с новыми uuid или замена на месте
+scenarios:
+  - given: выбраны сущности для экспорта
+    when: экспорт
+    then: в файл входят транзитивные зависимости (цеха, расчёты заводов); для каждой указано, кому она нужна
+  - given: выбран файл, не созданный этим калькулятором
+    when: импорт
+    then: файл отклоняется
+  - given: при импорте uuid совпадает с уже существующей сущностью
+    when: импорт
+    then: сущность помечается как существующая
+  - given: импорт с режимом «копия»
+    when: импорт совпадений
+    then: совпадения добавляются с новыми uuid; ссылки внутри копий переписываются на копии
+  - given: импорт с режимом «заменить»
+    when: импорт совпадений
+    then: совпадения заменяют существующие версии на их месте
+  - given: план в формате старой версии
+    when: импорт
+    then: план переводится через migratePlan
+check: npm --prefix src/ui test
+verified: true
+verified_at: 2026-10-29
+verified_note: "npm --prefix src/ui test — 16/16 (2026-10-29), src/ui/tests/exchange.spec.ts: «pulls dependencies transitively and names who needs them», «builds a file with selection and dependencies only», «rejects foreign files», «marks entities that already exist by uuid», «adds matches as copies with new uuids and keeps references inside the copies», «replaces matches in place of the existing versions». Перевод старого формата (migratePlan) тестом не покрыт"

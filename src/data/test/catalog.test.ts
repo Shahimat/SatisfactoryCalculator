@@ -74,6 +74,28 @@ describe('catalog 1.2', () => {
     assert.equal(building('Build_GeneratorGeoThermal_C').maxClock, 1);
   });
 
+  it('has the build gun cost of every building', () => {
+    assert.deepEqual(building('Build_ConstructorMk1_C').buildCost, [
+      { item: 'Desc_IronPlateReinforced_C', amount: 2 },
+      { item: 'Desc_Cable_C', amount: 8 },
+    ]);
+    for (const b of catalog.buildings) assert.ok(b.buildCost?.length, b.id);
+    for (const b of catalog.buildings)
+      for (const { item } of b.buildCost ?? [])
+        assert.ok(
+          catalog.items.some((i) => i.id === item),
+          item,
+        );
+  });
+
+  it('lists Somersloops and power shards as items', () => {
+    for (const id of ['Desc_WAT1_C', 'Desc_CrystalShard_C'])
+      assert.ok(
+        catalog.items.some((i) => i.id === id),
+        id,
+      );
+  });
+
   it('has Somersloop slots as in game', () => {
     const slots = Object.fromEntries(
       catalog.buildings

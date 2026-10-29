@@ -1,14 +1,16 @@
 name: satisfactory-calculator
 summary: калькулятор производственных цепочек Satisfactory
-stack: [typescript, react, rsbuild, ag-grid, nestjs, typeorm, sqlite]
+stack: [typescript, react, rsbuild, ag-grid, node:test, jest, vitest]
 reality: [this-repo]
 preset: operational
 namespaces:
   catalog: справочник — рецепт, здание, предмет (docs/entities)
+  calc: расчёты — решатель плана, потоки строк, баланс, смена версии игры (docs/behavior)
+  exchange: обмен JSON — экспорт, импорт, копии (docs/behavior)
 external:
   penpot: дизайн UI — файл «Satisfactory», страница «Design System»; Page 1 — черновик из Figma, не источник
   icons: satisfactory.wiki.gg, Special:FilePath/<Name>.png
-  pages: GitHub Pages — статический сайт по пути /satisfactory-calculator/, публикация из CI
+  pages: GitHub Pages — статический сайт по пути /satisfactory-calculator/ (адрес требует переименования репозитория в satisfactory-calculator); публикация из CI .github/workflows/pages.yml на push в master; в Settings → Pages источник «GitHub Actions»
   game_data: data/raw/<версия>/ — файлы игры, кладутся вручную; правила — convention data-game-sources
 sync:
   index_source: https://raw.githubusercontent.com/Shahimat/ai-prompts/main/prompts/index.yml

@@ -1,0 +1,31 @@
+id: calc-row-flows
+kind: behavior
+namespace: calc
+entities: [recipe, building]
+title: потоки строки — группы зданий с петлевиками, переменная мощность, добыча по чистоте узла, генераторы, цехи и заводы
+scenarios:
+  - given: рецепт с группами зданий {count, clock, somersloops}
+    when: расчёт потоков строки
+    then: выход множится на петлевики; вход не растёт
+  - given: рецепт с переменной мощностью
+    when: расчёт мощности строки
+    then: средняя мощность = constant + factor / 2
+  - given: добыча из узла бедного, обычного или богатого качества
+    when: расчёт потоков строки
+    then: множитель узла 0.5, 1 или 2 соответственно; разгон учитывается
+  - given: генератор с заданным разгоном
+    when: расчёт потоков строки
+    then: мощность линейна по разгону; сжигает топливо и воду-добавку; даёт побочный продукт (ядерные отходы)
+  - given: цех с планом и числом копий
+    when: расчёт потоков строки
+    then: потоки плана цеха умножаются на число копий
+  - given: завод, ссылающийся на расчёт, и число копий
+    when: расчёт потоков строки
+    then: потоки расчёта умножаются на число копий
+  - given: завод, ссылающийся на расчёт, который ссылается обратно
+    when: расчёт
+    then: циклическая ссылка отклоняется
+check: npm --prefix src/engine test
+verified: true
+verified_at: 2026-10-29
+verified_note: "npm --prefix src/engine test — 29/29 (2026-10-29): «computes a recipe row with Somersloop groups», «uses the average power of variable-power recipes», «extracts by node purity», «burns fuel and water in generators», «counts generator byproducts», «multiplies a workshop by its copies», «includes another calculation as a plant», «rejects cyclic plants». Линейность генератора по разгону отдельным тестом не покрыта"

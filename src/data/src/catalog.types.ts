@@ -62,6 +62,8 @@ export type CatalogBuilding = {
   maxClock: number;
   somersloopSlots: number;
   somersloopPowerExponent: number;
+  /** What one building costs to build with the build gun. */
+  buildCost?: ItemAmount[];
   variablePowerMW?: { min: number; max: number };
   extraction?: {
     cycleSeconds: number;

@@ -1,0 +1,126 @@
+summary: "реализация статического сайта — исправление каталога, иконки, движок петлевиков, модель браузера, стек, закрытие целей"
+source: "намерения основной сессии 2026-10-28; ответы пользователя по плану переработки; npx ai check 2026-10-28"
+items:
+  - op: refine
+    kind: task
+    target: docs/entities/game-catalog.yml
+    summary: "raw_encoding взят в кавычки — значение с «: » ломало YAML; манул data-add-game-version снова учтён в manuals"
+    evidence: "npx ai check 2026-10-28 — «Nested mappings are not allowed in compact mappings at line 12»; после правки ai check по этой entity должен пройти"
+  - op: add
+    kind: fact
+    target: docs/entities/game-catalog.yml → icons
+    summary: "иконки — npm run data:icons; адреса превью 96 px через api.php вики пачками по 50, файлы по одному с паузой 300 мс; 429 без своего User-Agent — запросы с USER_AGENT калькулятора и ожидание Retry-After; имя файла — английское имя из игры с «_»; результат data/icons/<id>.png, скачанные не перекачиваются"
+    evidence: "src/data/src/wiki-icons.ts, src/data/src/fetch-icons.ts, src/data/test/icons.test.ts; запуск 2026-10-28: 191 downloaded, 0 missing"
+  - op: revise
+    kind: behavior-change
+    target: docs/entities/building.yml → engine.status
+    summary: "движок учитывает петлевики в мощности и выходе по power.formula; классы src/engine/src/classes — прототип, интерфейс их не использует"
+    evidence: "src/engine/src/calc/power.ts (amplification, buildingPowerMW); тест «scales power by Somersloops squared and clock^1.32» — npm --prefix src/engine test, 17/17"
+    was: "движок считает мощность только от разгона (powerFactor), петлевики не учитываются — расходится с power.formula, вопрос пользователю"
+    why: "петлевики учтены в calc/power.ts; расхождение снято, класс Factory.ts — прототип"
+  - op: revise
+    kind: behavior-change
+    target: docs/entities/building.yml → paths
+    summary: "путь кода сущности — src/engine/src/calc/power.ts вместо прототипа классов"
+    evidence: "src/engine/src/calc/power.ts; интерфейс импортирует calc, не classes"
+    was: "src/engine/src/classes/Factory.ts"
+    why: "код расчёта вынесен в чистые функции calc/, классы остались прототипом"
+  - op: revise
+    kind: behavior-change
+    target: docs/entities/recipe.yml → paths
+    summary: "путь кода сущности — src/engine/src/calc/types.ts (RecipeSpec) вместо прототипа классов"
+    evidence: "src/engine/src/calc/types.ts; классы src/engine/src/classes — прототип"
+    was: "src/engine/src/classes/Recipe.ts"
+    why: "рецепт в расчёте — тип RecipeSpec в calc/types.ts"
+  - op: add
+    kind: behavior-change
+    target: docs/behavior/building-power.yml
+    summary: "мощность здания по формуле power.formula — петлевики и разгон, дробная группа работает с пониженным разгоном; выход множится на петлевики"
+    evidence: "npm --prefix src/engine test — 17/17, в т.ч. «scales power by Somersloops squared and clock^1.32» и «amplifies output by filled share of slots»"
+  - op: add
+    kind: behavior-change
+    target: docs/entities/building.yml → behaviors
+    summary: "связь entity ↔ behavior — building ссылается на building-power"
+    evidence: "docs/behavior/building-power.yml → entities: [building]"
+  - op: refine
+    kind: behavior-change
+    target: docs/behavior/catalog-build.yml
+    summary: "сценарий тестов пакета — «все тесты пакета проходят» вместо фиксированного числа; проверка 18/18"
+    evidence: "npm --prefix src/data test — 18 pass, 0 fail (2026-10-28); verified_at сохранён, check тот же"
+  - op: refine
+    kind: manual
+    target: docs/manuals/data-add-game-version.md → шаг 5
+    summary: "проверка тестов — «все тесты проходят» (сейчас 18), без жёсткого числа"
+    evidence: "npm --prefix src/data test — 18 pass (2026-10-28)"
+  - op: revise
+    kind: decision
+    target: docs/scheme/model.puml
+    summary: "модель описывает хранение в браузере, а не серверную БД — каталог игры только для чтения (Item, Building, Recipe по id игры) и сущности пользователя с uuid — Calculation, Workshop; Row — recipe | extractor | generator | workshop | plant; цех — сущность Workshop, подключается строкой workshop; localStorage 'satisfactory-calculator/state' schema 1; файл экспорта format/schema/gameVersion/exportedAt/calculations/workshops"
+    evidence: "src/ui/src/model.ts, src/engine/src/calc/types.ts, src/ui/src/exchange.ts; решение 2026-10-28 о статическом сайте"
+    was: "серверная схема — item_type, item_category, icon, factory, scheme, scheme_item_link, calculation, calculation_link, calculation_scheme_link"
+    why: "серверная БД и src/srv, src/srv-nest удаляются; цели workshop-entity (model.puml с сущностью цеха)"
+  - op: revise
+    kind: decision
+    target: context/project.yml → stack
+    summary: "стек — typescript, react, rsbuild, ag-grid, node:test, jest, vitest; nestjs, typeorm, sqlite уходят"
+    evidence: "ответ пользователя 2026-10-28 «1 - да» на удаление src/srv и src/srv-nest; src/ui/package.json (ag-grid-react ^34.2.0) — но импортируют его только orphaned-файлы src/ui/src/ag-grid.tsx, formula-grid.tsx, stream-grid.tsx, ни один экран; ag-grid в стеке оставлен до решения пользователя (вопрос в отчёте)"
+    was: "[typescript, react, rsbuild, ag-grid, nestjs, typeorm, sqlite]"
+    why: "серверная часть удаляется (выполняет пользователь); ag-grid остаётся — используется в src/ui, в намерениях не удалялся"
+  - op: add
+    kind: manual
+    target: docs/manuals/publish-pages.md
+    summary: "публикация сайта — Settings → Pages «GitHub Actions», переименование репозитория для /satisfactory-calculator/, локальные data:catalog, data:icons и dev-сервер, push в master запускает pages.yml"
+    evidence: "package.json (data:catalog, data:icons); src/ui/rsbuild.config.ts PAGES_BASE; .github/workflows/pages.yml; ответ основной сессии 2026-10-28"
+  - op: add
+    kind: manual
+    target: docs/entities/game-catalog.yml → manuals
+    summary: "manual publish-pages привязан к game-catalog — его команды data:catalog и data:icons входят в процедуру публикации"
+    evidence: "docs/manuals/publish-pages.md шаги 3–4; game-catalog build.command, icons.command; ai check — manual без entity"
+  - op: refine
+    kind: fact
+    target: context/project.yml → external.pages
+    summary: "публикация — .github/workflows/pages.yml на push в master; в Settings → Pages источник «GitHub Actions»; адрес /satisfactory-calculator/ требует переименования репозитория"
+    evidence: ".github/workflows/pages.yml, src/ui/rsbuild.config.ts (PAGES_BASE)"
+  - op: refine
+    kind: rule
+    target: context/conventions/ui-factories-view.yml
+    summary: "в энергосеть входят собственные строки построенных расчётов ×built; строки-ссылки на завод (plant) внутри расчёта в сеть не добавляются"
+    evidence: "src/ui/src/screens/plants.tsx; проверка: ТЭС ×1 и расчёт со ссылкой на неё давали +600 МВт вместо +300"
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-belt-units.yml
+    summary: "уровень трубы для жидкостей берётся из уровня ленты — Mk.1 → труба Mk.1, Mk.2–Mk.6 → труба Mk.2; отдельного выбора нет"
+    evidence: "src/ui/src/calc.ts flowValue"
+    was: "жидкости — м³/мин ÷ пропускная способность трубы выбранного уровня"
+    why: "у труб два уровня, а не шесть; выбор уровня трубы отдельно не нужен"
+  - op: add
+    kind: rule
+    target: context/conventions/ui-calc-group-into-workshop.yml
+    summary: "выделенные строки расчёта кнопкой «В цех (N)» переносятся в новый цех; на их месте в расчёте появляется строка цеха ×1"
+    evidence: "src/ui/src/screens/calculations.tsx groupIntoWorkshop"
+  - op: add
+    kind: rule
+    target: context/conventions/ui-calc-add-tabs.yml
+    summary: "окно «Добавить» имеет вкладки «Добыча» и «Генератор» — добыча и генераторы добавляются в расчёт через них"
+    evidence: "src/ui/src/components/add-row.tsx"
+  - op: revise
+    kind: task
+    target: context/views/goal--data-icons.yaml, goal--engine-amplify-power.yaml, goal--workshop-entity.yaml
+    summary: "цели выполнены — файлы удаляются, строки убираются из goals.yaml (goal-done-remove)"
+    evidence: "src/data (icons), src/engine/src/calc, docs/scheme/model.puml, src/ui; ответ пользователя «как и все другие цели если они выполнены»"
+    was: "цели planned с задачами data-icons, engine-amplify-power, workshop-entity"
+    why: "полностью выполнены; история — в git и CHANGELOG"
+  - op: revise
+    kind: task
+    target: context/views/goal--ui-static-storage.yaml
+    summary: "в цели остаётся одна задача — повторить возможности src/ui-old и удалить его; зависимостей нет"
+    evidence: "src/ui (хранение, экспорт/импорт, пересчёт, петлевики группами); ответ пользователя"
+    was: "блокер «доработать экраны Penpot», высокие и средние задачи статического интерфейса; depends_on engine-amplify-power, data-icons"
+    why: "остальные задачи выполнены; зависимости — выполненные цели"
+  - op: revise
+    kind: task
+    target: context/views/goal--ci-pages-cleanup.yaml
+    summary: "в цели остаётся удаление src/srv и src/srv-nest — команду выполняет пользователь; CI уже есть"
+    evidence: ".github/workflows/pages.yml; ответ пользователя 2026-10-28"
+    was: "задачи CI публикации и удаления srv; depends_on ui-static-storage"
+    why: "CI сделан, блокер «после публикации из CI» снят"

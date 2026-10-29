@@ -1,0 +1,86 @@
+summary: решатель ставит целые здания с ровным разгоном; число зданий задаёт пользователь, разгон подстраивается; ресурсы на постройку с энергомодулями и петлевиками; здания к постройке — в колонке «Здания»
+source: намерения основной сессии 2026-10-29; просьбы пользователя 2026-10-29 («0.667 — это всё равно одно здание», «менять количество зданий, разгон уточняется», «не видны петлевики и энергомодули», «Итого занимает много места»); npm --prefix src/engine test — 33/33, затем 34/34 (пересмотр с петлевиками); npm --prefix src/data test — 20/20; браузер 2026-10-29
+items:
+  - op: revise
+    kind: behavior-change
+    target: docs/behavior/calc-plan-solver.yml
+    summary: при разгоне 100 % дробное решение даёт целые здания с ровным пониженным разгоном (2.5 → 3 здания по 83.33 %); заданный разгон не 100 % сохраняется, число зданий округляется
+    evidence: src/engine/src/calc/sizing.ts (plainGroup); npm --prefix src/engine test — 33/33, «builds whole buildings evenly underclocked…», «keeps a clock set on purpose…»
+    was: решение даёт дробное число зданий — последнее здание работает с пониженным разгоном
+    why: пользователь 2026-10-29 — «0.667 — это всё равно одно здание»
+  - op: revise
+    kind: behavior-change
+    target: docs/behavior/calc-plan-solver.yml
+    summary: при разгоне 100 % решатель уменьшает здания с петлевиками так же — целые здания с ровным пониженным разгоном, петлевики те же (0.667 → 1 здание на 66.7 %)
+    evidence: src/engine/src/calc/sizing.ts (wholeBoosted в rowForOutput); npm --prefix src/engine test — 34/34, «cuts Somersloop buildings to whole underclocked ones»
+    was: группа с петлевиками оставалась дробной — последнее здание группы с пониженным разгоном
+    why: пользователь 2026-10-29 — «очистительный завод не перерасчитался» (×0.667, 1/2)
+  - op: add
+    kind: behavior-change
+    target: docs/behavior/calc-plan-solver.yml
+    summary: подобранный разгон меньше 100 % менее чем на 1 % или выше на погрешность округления (до 0.01 %) считается 100 % (2.985 → 3 по 100 %); излишек до 1 % — профицит в «Итого»
+    evidence: src/engine/src/calc/sizing.ts (full); npm --prefix src/engine test — 35/35, «takes a clock less than 1 % under 100 % as 100 %»; пользователь 2026-10-30 — «отклонение 1% не учитывать», статор ×1 1.000001 в «Сверху вниз»
+  - op: add
+    kind: behavior-change
+    target: docs/behavior/calc-plan-solver.yml
+    summary: строка auto или с закреплённым выходом хранит buildings — число зданий без петлевиков от пользователя; разгон подстраивается под нужный выход до maxClock, сверх — нехватка
+    evidence: src/engine/src/calc/types.ts (buildings), sizing.ts (pinnedLimit, plainGroup pinned); тест «adapts the clock to a building count chosen by the user»; браузер 2026-10-29 — 4 здания → 45.83 %, выход 12.5 тот же
+  - op: revise
+    kind: behavior-change
+    target: docs/behavior/calc-plan-solver.yml
+    summary: строка с output, в окне правки задано число зданий — output сохраняется, здания записываются, разгон подстраивается под output; «Авто» снимает output и сбрасывает разгон на 100 %
+    evidence: src/ui/src/components/edit-row.tsx (PlainSizing, «Авто» — output undefined, clock 1); src/engine/src/calc/sizing.ts (pinnedLimit)
+    was: строка с output, в окне правки число зданий задано вручную — output снимается, строка закреплена по зданиям; разгон и петлевики сохраняются
+    why: пользователь 2026-10-29 — «менять количество зданий, разгон уточняется»; правка зданий снимала закреп выхода
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-row-order.yml
+    summary: в окне правки строки «Авто» и строка с закреплённым выходом показывают поле «Зданий» (пусто — подбор целыми зданиями, число — разгон подстраивается), разгон только показывается; «Авто» снимает закреп и сбрасывает разгон на 100 %; петлевики — отдельные группы
+    evidence: src/ui/src/components/edit-row.tsx (PlainSizing, GroupsEditor boosted, «Авто»); пользователь 2026-10-29
+    was: в окне правки строки число зданий снимает закреплённый выход продукта — строка закреплена по зданиям; «Авто» снимает закреп и возвращает строку решателю
+    why: пользователь 2026-10-29 — «менять количество зданий, разгон уточняется»
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-build-strip.yml
+    summary: здания к постройке — компактные чипы в колонке «Здания» карточки «Итого» (иконка и ×N, имя во всплывашке); цеха и заводы — значок, ×копий, имя; отдельной полосы «Построить» нет
+    evidence: src/ui/src/components/rows.tsx (BuildCell), styles.css (.build-cell); пользователь 2026-10-29
+    was: полоса «Построить» внутри «Итого» заменяет «N зданий · N строк» — здания по типам с иконкой и ×N, цеха и заводы с именем, копиями и ссылкой
+    why: пользователь 2026-10-29 — на маленьких экранах «Итого» занимает много места
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-build-cost.yml
+    summary: в ресурсы на постройку входят энергомодули (по одному на каждые 50 % сверх 100 % у здания, не больше трёх) и петлевики, вставленные в здания; заводы не входят
+    evidence: src/ui/src/calc.ts (placed, shardsFor, buildList); браузер 2026-10-29 — 2 здания на 150 % → 2 энергомодуля, группа 2/4 → 2 петлевика
+    was: buildCost всех целых зданий плана по каталогу, включая здания цехов × копии; заводы не входят
+    why: пользователь 2026-10-29 — «не видны петлевики и энергомодули»
+  - op: revise
+    kind: rule
+    target: context/conventions/ui-calc-row-card.yml
+    summary: название строки кликается только по тексту (inline, role=button); пустое место карточки рядом с перенесённым названием выделяет карточку
+    evidence: src/ui/src/components/rows.tsx (span.title-button), styles.css; скриншот 2026-10-29 — button.title-button 240×43
+    was: клик по названию строки открывает окно правки; кнопка занимала всю ширину колонки названия
+    why: пользователь 2026-10-29 — кнопка на всю колонку перехватывала клик по карточке
+  - op: refine
+    kind: fact
+    target: docs/entities/game-catalog.yml
+    summary: items всегда включают Desc_WAT1_C (Петлевик) и Desc_CrystalShard_C (Энергомодуль) — их вставляют в здания, они входят в стоимость постройки
+    evidence: src/data/src/catalog.ts (SOMERSLOOP, POWER_SHARD); npm --prefix src/data test — 20/20, «lists Somersloops and power shards as items»
+  - op: revise
+    kind: fact
+    target: docs/entities/game-catalog.yml
+    summary: Desc_WAT1_C — в каталоге как предмет (Петлевик) и как интерфейсная иконка; остальное без изменений
+    evidence: src/data/src/catalog.ts (SOMERSLOOP), src/data/src/fetch-icons.ts (INTERFACE_ICONS); npm --prefix src/data test — 20/20
+    was: Desc_WAT1_C (Somersloop) — не в каталоге, качается как интерфейсная иконка
+    why: каталог теперь включает Desc_WAT1_C как предмет — он входит в стоимость постройки зданий с петлевиками
+  - op: revise
+    kind: fact
+    target: docs/scheme/model.puml
+    summary: BuildingGroup.count у решателя — целое число зданий, ровный разгон у всех зданий группы; дробная мощность группы (groupPowerMW) остаётся как функция движка
+    evidence: docs/behavior/calc-plan-solver.yml (сценарий «решение при разгоне 100 % даёт дробное число зданий»); npm --prefix src/engine test — 33/33
+    was: count : number (дробное — последнее здание с пониженным разгоном)
+    why: решатель больше не оставляет последнее здание с пониженным разгоном — ставит целые здания с ровным разгоном
+  - op: add
+    kind: decision
+    target: CHANGELOG.md
+    summary: решатель ставит целые здания с ровным разгоном, число зданий задаёт пользователь — разгон подстраивается
+    evidence: просьба пользователя 2026-10-29 («0.667 — это всё равно одно здание», «менять количество зданий, разгон уточняется»); src/engine/src/calc/sizing.ts

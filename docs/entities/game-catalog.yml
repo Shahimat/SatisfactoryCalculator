@@ -9,7 +9,7 @@ game:
   build: "513885"
   branch: rel-main-anniversary-2026
   source: data/raw/<версия>/ — en-US.json, ru.json, source.json; файлы копируются из CommunityResources/Docs/, где 55 языков, берутся два
-  raw_encoding: data/raw/** хранится в git без перекодировки (.gitattributes: -text); файлы игры — UTF-16LE с CRLF
+  raw_encoding: "data/raw/** хранится в git без перекодировки (.gitattributes: -text); файлы игры — UTF-16LE с CRLF"
   version_from: Engine/Binaries/Win64/FactoryGameSteam-Win64-Shipping.version (GameVersion, BuildId)
 build:
   command: npm run data:catalog
@@ -22,10 +22,20 @@ format:
   ids: ClassName из игры
   amounts: количества за цикл; жидкости в м³
   recipes: только производимые в зданиях
-  items: только упомянутые в рецептах, добыче и топливе, плюс все ресурсы
+  items: упомянутые в рецептах, добыче и топливе, все ресурсы; всегда Desc_WAT1_C (Петлевик) и Desc_CrystalShard_C (Энергомодуль) — их вставляют в здания, они входят в стоимость постройки
   names: en/ru из en-US.json и ru.json; интерфейс берёт названия из каталога
   logistics: ленты — шт/мин; трубы — м³/мин
   counts_1_2: предметов 168, зданий 23, рецептов 291 (ALT 110)
+  buildings_build_cost: у здания — buildCost [{item, amount}] — стоимость постройки из рецептов BP_BuildGun_C (Desc_X_C → Build_X_C); есть у всех 23 зданий; предметы стоимости входят в items; конструктор — 2 усиленные пластины + 8 кабелей
+icons:
+  command: npm run data:icons
+  source: satisfactory.wiki.gg, api.php — адреса превью 96 px пачками по 50, затем файлы по одному
+  file_name: английское имя из игры, пробелы → «_» (Iron_Plate.png, Miner_Mk.1.png)
+  pacing: пауза 300 мс между файлами; 429 без своего User-Agent — запросы с USER_AGENT калькулятора, ожидание Retry-After
+  output: data/icons/<id>.png; уже скачанные не перекачиваются; data/icons/ в .gitignore
+  code: src/data/src/wiki-icons.ts, src/data/src/fetch-icons.ts; тесты src/data/test/icons.test.ts
+  result_2026_10_28: предметы и здания — найдено 191 из 191, 0 missing
+  interface_icons: Desc_WAT1_C (Somersloop) — предмет каталога (SOMERSLOOP в src/data/src/catalog.ts), качается вместе с иконками каталога как интерфейсная (INTERFACE_ICONS в src/data/src/fetch-icons.ts); производственные рецепты её не используют; запуск 2026-10-28 — 1 downloaded
 names_vs_penpot:
   note: русские названия игры отличаются от макета Penpot — Manufacturer → «Изготовитель», Miner → «Буровая установка ур. N», конвейер → «Конвейерная лента ур. N»
 quirks_1_2:
@@ -35,5 +45,5 @@ quirks_1_2:
   - жидкости в рецептах в файлах игры в литрах, в каталоге — м³
 features_enabled: []
 features_disabled: []
-manuals: [data-add-game-version]
-behaviors: [catalog-build]
+manuals: [data-add-game-version, publish-pages]
+behaviors: [catalog-build, recipe-version-change]
