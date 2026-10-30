@@ -1,0 +1,27 @@
+summary: репозиторий открыт под MIT, сайт опубликован на GitHub Pages без переименования репозитория
+source: задача пользователя 2026-10-30 — «давай лицензию MIT добавим и опубликуем»; проверки gh api и curl той же даты
+items:
+  - op: add
+    kind: decision
+    target: CHANGELOG.md
+    summary: веха — репозиторий открыт под MIT, сайт на GitHub Pages; причина — Pages на бесплатном тарифе только у публичных репозиториев
+    evidence: "gh api POST /pages — 422 «Your current plan does not support GitHub Pages for this repository» при приватном репозитории; LICENSE; решение пользователя 2026-10-30"
+  - op: revise
+    kind: fact
+    target: context/project.yml#external.pages
+    summary: "сайт https://shahimat.github.io/SatisfactoryCalculator/ — путь равен имени репозитория Shahimat/SatisfactoryCalculator (публичный, не переименован); переименование не нужно; Pages на бесплатном тарифе только у публичного репозитория"
+    evidence: "gh repo view — PUBLIC; gh api /pages — html_url https://shahimat.github.io/SatisfactoryCalculator/, build_type workflow; deploy запуска 40987619246 — success; curl — index и ресурсы 200; .github/workflows/pages.yml — PAGES_BASE из github.event.repository.name"
+    was: статический сайт по пути /satisfactory-calculator/, адрес требует переименования репозитория в satisfactory-calculator
+    why: репозиторий опубликован без переименования, CI подставляет путь из имени репозитория; стили от имени не зависят
+  - op: add
+    kind: fact
+    target: context/project.yml#license
+    summary: код — MIT (LICENSE, package.json); данные игры data/raw/ и иконки — Coffee Stain Studios, под MIT не входят
+    evidence: LICENSE; package.json license MIT; README.md раздел «Лицензия»
+  - op: revise
+    kind: manual
+    target: docs/manuals/publish-pages.md
+    summary: переименование репозитория больше не шаг; перед включением Pages — репозиторий публичный; «сайт без стилей» — только про локальную продакшен-сборку без PAGES_BASE
+    evidence: "pages.yml — PAGES_BASE из имени репозитория; rsbuild.config.ts — PAGES_BASE по умолчанию /satisfactory-calculator/, при production-сборке без переменной; gh api /pages — build_type workflow; шаг 1 выполнен через gh api"
+    was: "шаг 2 — переименовать репозиторий в satisfactory-calculator, чтобы адрес был /satisfactory-calculator/; сайт без стилей — неверный PAGES_BASE, имя репозитория должно совпадать с путём"
+    why: публикация уже идёт по адресу /SatisfactoryCalculator/ без переименования; Pages требуют публичный репозиторий на бесплатном тарифе

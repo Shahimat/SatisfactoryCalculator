@@ -10,7 +10,7 @@ const CATALOG_DIR = path.join(DATA_DIR, 'catalog');
 const ICONS_DIR = path.join(DATA_DIR, 'icons');
 
 /** GitHub Pages serves a project site under the repository name; CI passes it in. */
-const PAGES_BASE = process.env['PAGES_BASE'] ?? '/satisfactory-calculator/';
+const PAGES_BASE = process.env['PAGES_BASE'] ?? '/SatisfactoryCalculator/';
 
 export const latestCatalog = (): string => {
   const versions = existsSync(CATALOG_DIR)

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Satisfactory production chain calculator",
-  "license": "ISC",
+  "license": "MIT",
   "scripts": {
     "dev": "rsbuild dev --open",
     "build": "rsbuild build",

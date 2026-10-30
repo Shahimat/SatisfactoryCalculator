@@ -2,6 +2,7 @@
 
 Только принятые решения, свежее сверху. Подробности — в git log.
 
+- 2026-10-30 · [milestone] Открыт под MIT, сайт на GitHub Pages · Pages на бесплатном тарифе только у публичных
 - 2026-10-30 · [arch] Один npm-пакет: сайт src/, движок src/engine/, сборка scripts/catalog/ · рудименты удалены
 - 2026-10-30 · [stack] Интерфейс RU/EN на своих словарях и Intl, без библиотеки · Lingui — SWC-плагин, i18next ~20 kB
 - 2026-10-30 · [stack] UI на Preact (preact/compat), CSS Modules, ag-grid убран · рантайм 58→8 kB gzip, API React
