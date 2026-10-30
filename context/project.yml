@@ -8,10 +8,11 @@ namespaces:
   catalog: справочник — рецепт, здание, предмет (docs/entities)
   calc: расчёты — решатель плана, потоки строк, баланс, смена версии игры (docs/behavior)
   exchange: обмен JSON — экспорт, импорт, копии (docs/behavior)
+  site: статический сайт — сборка, визуальная проверка, публикация на GitHub Pages (docs/entities)
 external:
-  penpot: дизайн UI — файл «Satisfactory», страница «Design System»; Page 1 — черновик из Figma, не источник
+  penpot: дизайн UI — файл «Satisfactory», страница «Design System»; компонент lang-switch, в topbar всех экранов блок «Язык» после блока «Единицы»; Page 1 — черновик из Figma, не источник
   icons: satisfactory.wiki.gg, Special:FilePath/<Name>.png
-  pages: GitHub Pages — статический сайт https://shahimat.github.io/SatisfactoryCalculator/ (репозиторий Shahimat/SatisfactoryCalculator, публичный; путь — имя репозитория, PAGES_BASE в CI берётся из него; на бесплатном тарифе Pages только у публичного репозитория); публикация из CI .github/workflows/pages.yml на push в master; в CI каталог собирается до тестов (тестам интерфейса нужен каталог), @shahimat/* снимаются через npm pkg delete перед npm install, артефакт — dist/; в Settings → Pages источник «GitHub Actions»
+  pages: GitHub Pages — статический сайт https://shahimat.github.io/SatisfactoryCalculator/ (репозиторий Shahimat/SatisfactoryCalculator, публичный; на бесплатном тарифе Pages только у публичного репозитория); в Settings → Pages источник «GitHub Actions»; детали CI — docs/entities/site.yml
   game_data: data/raw/<версия>/ — файлы игры, кладутся вручную; правила — convention data-game-sources
 sync:
   index_source: https://raw.githubusercontent.com/Shahimat/ai-prompts/main/prompts/index.yml

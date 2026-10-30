@@ -49,5 +49,5 @@ quirks_1_2:
   - жидкости в рецептах в файлах игры в литрах, в каталоге — м³
 features_enabled: []
 features_disabled: []
-manuals: [data-add-game-version, publish-pages]
+manuals: [data-add-game-version]
 behaviors: [catalog-build, recipe-version-change]

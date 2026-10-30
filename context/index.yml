@@ -66,7 +66,6 @@ namespaces:
       catalog-build: сборка каталога из data/raw/<версия> — рецепты, здания, предметы, логистика; падает при несовпадении sha256
     manuals:
       data-add-game-version: Добавить новую версию игры в каталог
-      publish-pages: Опубликовать сайт калькулятора на GitHub Pages
   calc:
     description: расчёты — решатель плана, потоки строк, баланс, смена версии игры (docs/behavior)
     behaviors:
@@ -78,3 +77,10 @@ namespaces:
     description: обмен JSON — экспорт, импорт, копии (docs/behavior)
     behaviors:
       data-exchange: обмен JSON — экспорт с транзитивными зависимостями, импорт по uuid, копии с новыми uuid или замена на месте
+  site:
+    description: статический сайт — сборка, визуальная проверка, публикация на GitHub Pages (docs/entities)
+    entities:
+      site: статический сайт калькулятора — Preact на rsbuild, сборка в dist/, визуальная проверка скриншотами, публикация на GitHub Pages
+    manuals:
+      publish-pages: Опубликовать сайт калькулятора на GitHub Pages
+      visual-check: "Проверить визуальные изменения: эталон и сравнение скриншотов"

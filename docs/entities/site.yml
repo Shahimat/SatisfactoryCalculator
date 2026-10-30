@@ -1,0 +1,25 @@
+id: site
+kind: entity
+namespace: site
+summary: статический сайт калькулятора — Preact на rsbuild, сборка в dist/, визуальная проверка скриншотами, публикация на GitHub Pages
+paths: [src/**, rsbuild.config.ts, scripts/visual/**, .github/workflows/pages.yml]
+stack: Preact (API React через preact/compat), rsbuild, CSS Modules
+build:
+  command: npm run build
+  output: dist/
+  base: PAGES_BASE — путь сайта; по умолчанию /SatisfactoryCalculator/ (rsbuild.config.ts); в CI — /<имя репозитория>/; локально для корня — PAGES_BASE=/
+  dev: npm run dev
+publish:
+  workflow: .github/workflows/pages.yml — push в master; шаги Install, Game catalog, Test, Icons, Build site, deploy
+  order: Game catalog до Test — тестам интерфейса нужен каталог
+  install: npm pkg delete снимает @shahimat/* перед npm install — tarball'ы инструментов лежат только на машине разработчика
+  artifact: dist/ — загружается в upload-pages-artifact
+  address: адрес и условия Pages — external.pages в context/project.yml
+visual:
+  shots: npm run visual:shots -- <dist> <каталог> — PNG по экранам и report.json (scripts/visual/screenshots.ts)
+  compare: npm run visual:compare -- <эталон> <текущий> <diff> (scripts/visual/compare.ts)
+  locales: RU и EN снимаются отдельно (LOCALE=en), сравнивать одну локаль с такой же
+features_enabled: []
+features_disabled: []
+manuals: [publish-pages, visual-check]
+behaviors: []

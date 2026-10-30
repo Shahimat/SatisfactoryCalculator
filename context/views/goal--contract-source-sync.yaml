@@ -1,0 +1,15 @@
+key: contract-source-sync
+title: Синхронизировать контракт agent-operational-contract-v3 с источником
+status: planned
+why: индекс источника ai-prompts сменился (e532b42…), в проекте синхронизирован feaa897…; в источнике новые контракт, docs-keeper и workflow
+description: |
+  Пересинхронизация через skill source-sync: project.yml sync.index_sha и
+  sync.contract.parts (skills и agents) должны стать актуальными. Перед запуском
+  проверить, что незакоммиченные правки (package.json: visual:*) не затрутся.
+tasks:
+  blocker: []
+  high: []
+  medium:
+    - "прогнать source-sync: новые контракт, docs-keeper и workflow из индекса источника → chore(context)"
+  low: []
+depends_on: []

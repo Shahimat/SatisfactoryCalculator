@@ -1,0 +1,17 @@
+key: ci-node-actions
+title: Обновить actions в CI до версий на Node 24
+status: planned
+why: GitHub предупреждает, что Node.js 20 для действий устарел; в .github/workflows/pages.yml старые версии
+description: |
+  В pages.yml используются actions/checkout@v4, actions/setup-node@v4,
+  actions/cache@v4, actions/upload-pages-artifact@v3, actions/deploy-pages@v4.
+  Аннотация CI называет upload-artifact@v4, в файле — upload-pages-artifact@v3:
+  перед правкой сверить, какие действия реально помечены. Нужны версии на Node 24
+  и проверка прогона на master.
+tasks:
+  blocker: []
+  high:
+    - "поднять версии actions в pages.yml до версий на Node 24 и проверить прогон Pages → ci"
+  medium: []
+  low: []
+depends_on: []

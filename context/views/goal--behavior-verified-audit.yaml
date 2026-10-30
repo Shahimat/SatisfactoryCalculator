@@ -1,0 +1,17 @@
+key: behavior-verified-audit
+title: Вернуть verified в docs/behavior после переезда на vitest
+status: planned
+why: "после refactor(repo) 7812bd8 все семь сценариев docs/behavior помечены verified: false — тесты переехали на один vitest и за verify не прогнаны"
+description: |
+  Файлы: building-power, calc-balance, calc-plan-solver, calc-row-flows,
+  catalog-build, data-exchange, recipe-version-change. В каждом verified_note —
+  прежний прогон и пункты без теста. Прогнать npm test, сверить сценарии с тестами,
+  вернуть verified: true и verified_at. Пункты без теста остаются в verified_note.
+tasks:
+  blocker: []
+  high: []
+  medium:
+    - "прогнать npm test, сверить семь сценариев docs/behavior с тестами, вернуть verified: true → docs"
+    - "покрыть тестами пункты из verified_note без теста (calc-plan-solver, data-exchange migratePlan) → test"
+  low: []
+depends_on: []

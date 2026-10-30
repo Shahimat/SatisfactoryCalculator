@@ -1,2 +1,18 @@
 # Порядок записи = приоритет цели. Правила — skill goals.
-goals: []
+goals:
+  - key: ui-interaction-checks
+    file: goal--ui-interaction-checks.yaml
+    status: planned
+    one_liner: проверки клика, фокуса и ввода в браузере — регрессия autoFocus не поймали скриншоты
+  - key: ci-node-actions
+    file: goal--ci-node-actions.yaml
+    status: planned
+    one_liner: обновить actions в pages.yml — GitHub предупреждает, что Node.js 20 устарел
+  - key: behavior-verified-audit
+    file: goal--behavior-verified-audit.yaml
+    status: planned
+    one_liner: вернуть verified семи сценариям docs/behavior после переезда на vitest
+  - key: contract-source-sync
+    file: goal--contract-source-sync.yaml
+    status: planned
+    one_liner: синхронизировать контракт agent-operational-contract-v3 с источником (индекс e532b42…)

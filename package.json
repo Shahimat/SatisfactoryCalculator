@@ -14,7 +14,9 @@
     "lint": "eslint .",
     "format": "prettier --write src tests scripts \"*.{ts,mjs,json}\"",
     "data:catalog": "node scripts/catalog/build-catalog.ts",
-    "data:icons": "node scripts/catalog/fetch-icons.ts"
+    "data:icons": "node scripts/catalog/fetch-icons.ts",
+    "visual:shots": "node scripts/visual/screenshots.ts",
+    "visual:compare": "node scripts/visual/compare.ts"
   },
   "dependencies": {
     "preact": "^10.29.8"
