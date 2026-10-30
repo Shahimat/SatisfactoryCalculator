@@ -12,7 +12,7 @@ build:
 publish:
   workflow: .github/workflows/pages.yml — push в master; шаги Install, Game catalog, Test, Icons, Build site, deploy
   order: Game catalog до Test — тестам интерфейса нужен каталог
-  install: npm pkg delete снимает @shahimat/* перед npm install — tarball'ы инструментов лежат только на машине разработчика
+  install: npm ci --no-audit --no-fund; @shahimat/* приходят из npm по точным версиям — npm pkg delete не нужен
   artifact: dist/ — загружается в upload-pages-artifact
   address: адрес и условия Pages — external.pages в context/project.yml
 visual:

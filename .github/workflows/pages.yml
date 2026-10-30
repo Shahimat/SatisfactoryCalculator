@@ -24,12 +24,8 @@ jobs:
         with:
           node-version: 24
 
-      # The agent contract tools (@shahimat/*) are local tarballs on the
-      # developer machine: CI drops them and installs the rest from the lock.
       - name: Install
-        run: |
-          npm pkg delete devDependencies.@shahimat/ai-core devDependencies.@shahimat/cli devDependencies.@shahimat/harness
-          npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Game catalog
         run: npm run data:catalog

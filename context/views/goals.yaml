@@ -12,7 +12,3 @@ goals:
     file: goal--behavior-verified-audit.yaml
     status: planned
     one_liner: вернуть verified семи сценариям docs/behavior после переезда на vitest
-  - key: contract-source-sync
-    file: goal--contract-source-sync.yaml
-    status: planned
-    one_liner: синхронизировать контракт agent-operational-contract-v3 с источником (индекс e532b42…)

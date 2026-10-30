@@ -1,0 +1,33 @@
+{
+  "v": 1,
+  "items": [
+    {
+      "delta": "context/.delta/contract-sync-revise.yml",
+      "target": "context/project.yml#sync",
+      "summary": "sync: index_sha 658155…, synced_sha 78074547…, SHA частей skills и agents — из источника 4cf81d4; operator, oracle, researcher, reviewer в parts",
+      "was": "index_sha feaa897…, synced_sha 5b8d993…; в parts не было operator, oracle, researcher, reviewer",
+      "why": "синхронизация с источником 4cf81d4"
+    },
+    {
+      "delta": "context/.delta/contract-sync-revise.yml",
+      "target": "context/views/goal--contract-source-sync.yaml",
+      "summary": "цель contract-source-sync выполнена — файл цели и строка в goals.yaml удалены",
+      "was": "цель planned: прогнать source-sync → chore(context)",
+      "why": "цель полностью решена, правило goal-done-remove"
+    },
+    {
+      "delta": "context/.delta/contract-sync.yml",
+      "target": "docs/entities/site.yml#publish",
+      "summary": "CI ставит зависимости через npm ci, @shahimat/* приходят из npm — npm pkg delete не нужен",
+      "was": "install: npm pkg delete снимает @shahimat/* перед npm install — tarball'ы инструментов лежат только на машине разработчика",
+      "why": "пакеты установлены из npm-реестра по точным версиям, tarball'ы не нужны"
+    },
+    {
+      "delta": "context/.delta/contract-sync.yml",
+      "target": "context/views/goals.yaml",
+      "summary": "цель contract-source-sync выполнена — строка из goals.yaml и файл goal--contract-source-sync.yaml удалены",
+      "was": "очередь содержит contract-source-sync (planned), файл goal--contract-source-sync.yaml",
+      "why": "цель полностью решена, правило goal-done-remove"
+    }
+  ]
+}

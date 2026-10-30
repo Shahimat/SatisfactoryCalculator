@@ -16,18 +16,22 @@ external:
   game_data: data/raw/<версия>/ — файлы игры, кладутся вручную; правила — convention data-game-sources
 sync:
   index_source: https://raw.githubusercontent.com/Shahimat/ai-prompts/main/prompts/index.yml
-  index_sha: feaa897830c2cf4a8ebc68f180c8b82324b460e1796fe373948096b06d888c3f
+  index_sha: 658155262aa67dccfc227821d5933dac832a294ca6d9cdb000455da0ea89da08
   contract:
     key: agent-operational-contract-v3
-    synced_sha: 5b8d9932dde0c1472dcbe95707b6b2efe3663bf13a86b37a4e2e067f5a4c0306
+    synced_sha: 78074547efaeccdeb63706888274a345a349d12fef91c73e2ea351a6c52b733c
     parts:
       skills:
-        contract-setup: a47699dbe9991cfde4465060d96cb9e0c6380ba0835ffbc2fc1d928cf51d8f78
-        workflow: 2730e53737accb44f01d3b736586e81abd476b669cb396cc6791ac1cb14ef637
-        docs-keeper: 09cefc23d61856ab25c1b067e1142e610f6c703044e14119f75e6abaef6b0ebc
+        contract-setup: b8fd513c4bcb12e8789b592004cf1aa4c4090f1fa03ff95cfe338a344c212f8f
+        workflow: d06c4c1516f0536c6020a483c9d37904b49fed5f65c8fb0235801fbec9687fe6
+        docs-keeper: 4d340de8b5a7013ebbd84f20b9308cf1bb0d4c7b5e265a6c5376312398da1f75
         source-sync: 0a782aa2daf72475635d9df12eb454e7782acbd76944feb4541441ed8ae931e1
         source-feedback: 21f947ef089d50e86785afe98a867ee79aa09b9ff11ad1e1f470e32ebd577bae
-        cli: 22e7117c6ce3252cb582965688b4f02beffa561fabb3d81a33e60d3b45657101
+        cli: f4df74a5470ba3d3d66e8794faac2d4b49eb907cc43d1f987be16bfd1f771359
+        operator: 4947a83163ee8b28a1dfafc7eafd9bcfaaa259e172078dc1ab2c6f6d09ccaadb
       agents:
-        docs-keeper: e07463e44e6de4fab695972855cd0d384b3fd5c8e1f1db6a73ffdb887aba0dda
+        docs-keeper: 7bf250f044e07b0be6fc2faede28ea51a85e74b1aa21d63963b1f0c20059b162
         judge: 9106b2c03e0f4e9b51bd43a7d93d77ab05fd663609e197944ff63b866762b6ba
+        oracle: 10dba22c226d9dbfd759ec8b030a9246e24bf6cd03baadc077789477d53aa354
+        researcher: 2806d594e2b14afbca936d7e2e390a7d44c8ccdd1bda90ce25137efdc9298775
+        reviewer: 5d0677e9e36666fbd085a7705a50729d12db078a679be8d5f20bc6d7e7dd0466
