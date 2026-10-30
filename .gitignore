@@ -44,3 +44,7 @@ lerna-debug.log*
 # generated game catalog
 data/catalog/
 data/icons/
+
+# rsbuild
+.rspack-profile-*/
+*.local

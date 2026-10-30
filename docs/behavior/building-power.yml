@@ -19,7 +19,7 @@ scenarios:
   - given: один петлевик в двух слотах
     when: amplification(1, 2)
     then: 1.5 — выход множится на долю заполненных слотов
-check: npm --prefix src/engine test
-verified: true
+check: npm test
+verified: false
 verified_at: 2026-10-28
-verified_note: "npm --prefix src/engine test — 17/17 (jest), в т.ч. «scales power by Somersloops squared and clock^1.32» и «amplifies output by filled share of slots» (2026-10-28)"
+verified_note: "переезд на один vitest (npm test), прогон за verify; прежде: npm --prefix src/engine test — 17/17 (jest), в т.ч. «scales power by Somersloops squared and clock^1.32» и «amplifies output by filled share of slots» (2026-10-28)"

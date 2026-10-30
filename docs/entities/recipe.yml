@@ -2,7 +2,7 @@ id: recipe
 kind: entity
 namespace: catalog
 summary: рецепт — входы, выходы и длительность цикла; собственной энергии нет, энергия принадлежит зданию
-paths: [src/engine/src/calc/types.ts]
+paths: [src/engine/types.ts]
 inputs: предметы с количеством за цикл
 outputs: предметы с количеством за цикл
 cycle_seconds: number

@@ -2,7 +2,7 @@ id: building
 kind: entity
 namespace: catalog
 summary: производственное здание — мощность от разгона и усиления петлевиками; энергия принадлежит зданию, не рецепту
-paths: [src/engine/src/calc/power.ts]
+paths: [src/engine/power.ts]
 version: "1.2"
 power:
   formula: базовая × (1 + заполненные слоты петлевиков / всего слотов)^2 × (разгон / 100)^1.321928
@@ -25,8 +25,8 @@ somersloop:
     particle_accelerator: 4
     quantum_encoder: 4
 engine:
-  status: движок учитывает петлевики в мощности и выходе по power.formula; классы src/engine/src/classes — прототип, интерфейс их не использует
-  evidence: src/engine/src/calc/power.ts — amplification, buildingPowerMW; тест «scales power by Somersloops squared and clock^1.32» (2026-10-28)
+  status: движок учитывает петлевики в мощности и выходе по power.formula; старый прототип классов удалён вместе с прежним движком
+  evidence: src/engine/power.ts — amplification, buildingPowerMW; тест «scales power by Somersloops squared and clock^1.32» (2026-10-28)
 features_enabled: []
 features_disabled: []
 manuals: []

@@ -22,7 +22,7 @@ scenarios:
   - given: план в формате старой версии
     when: импорт
     then: план переводится через migratePlan
-check: npm --prefix src/ui test
-verified: true
+check: npm test
+verified: false
 verified_at: 2026-10-29
-verified_note: "npm --prefix src/ui test — 16/16 (2026-10-29), src/ui/tests/exchange.spec.ts: «pulls dependencies transitively and names who needs them», «builds a file with selection and dependencies only», «rejects foreign files», «marks entities that already exist by uuid», «adds matches as copies with new uuids and keeps references inside the copies», «replaces matches in place of the existing versions». Перевод старого формата (migratePlan) тестом не покрыт"
+verified_note: "переезд на один vitest (npm test), прогон за verify; прежде: npm --prefix src/ui test — 16/16 (2026-10-29), tests/exchange.spec.ts: «pulls dependencies transitively and names who needs them», «builds a file with selection and dependencies only», «rejects foreign files», «marks entities that already exist by uuid», «adds matches as copies with new uuids and keeps references inside the copies», «replaces matches in place of the existing versions». Перевод старого формата (migratePlan) тестом не покрыт"

@@ -25,7 +25,7 @@ scenarios:
   - given: завод, ссылающийся на расчёт, который ссылается обратно
     when: расчёт
     then: циклическая ссылка отклоняется
-check: npm --prefix src/engine test
-verified: true
+check: npm test
+verified: false
 verified_at: 2026-10-29
-verified_note: "npm --prefix src/engine test — 29/29 (2026-10-29): «computes a recipe row with Somersloop groups», «uses the average power of variable-power recipes», «extracts by node purity», «burns fuel and water in generators», «counts generator byproducts», «multiplies a workshop by its copies», «includes another calculation as a plant», «rejects cyclic plants». Линейность генератора по разгону отдельным тестом не покрыта"
+verified_note: "переезд на один vitest (npm test), прогон за verify; прежде: npm --prefix src/engine test — 29/29 (2026-10-29): «computes a recipe row with Somersloop groups», «uses the average power of variable-power recipes», «extracts by node purity», «burns fuel and water in generators», «counts generator byproducts», «multiplies a workshop by its copies», «includes another calculation as a plant», «rejects cyclic plants». Линейность генератора по разгону отдельным тестом не покрыта"

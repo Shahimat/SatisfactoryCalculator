@@ -40,14 +40,14 @@ conventions:
   ui-i18n-catalog-names: названия каталога на выбранном языке через localName, сортировка через compareNames; поиск справочника — по обоим языкам; имена расчётов и цехов пользователя не переводятся
   ui-i18n-english-terms: английская версия — термины из английских названий игры (Calculations, Workshops, Factories, Reference, Somersloop, Clock speed, Impure, Normal, Pure); русская — Заводы для Factories
   ui-i18n-locale-switch: переключатель RU/EN — в верхней панели рядом с «Единицами»; первый заход — язык браузера; выбор хранится в localStorage satisfactory-calculator/locale, не в состоянии и не в экспорте
-  ui-i18n-messages: строки интерфейса — только в src/ui/src/i18n/ru.ts (эталон, тип Messages) и en.ts; t читается при рендере, не в константах модуля; счётные слова — через countLabel и PluralForms
+  ui-i18n-messages: строки интерфейса — только в src/i18n/ru.ts (эталон, тип Messages) и en.ts; t читается при рендере, не в константах модуля; счётные слова — через countLabel и PluralForms
   ui-immutable-state: состояние UI иммутабельно — правки новыми объектами плана, цеха или расчёта; результат evaluate общий из кеша и не мутируется
   ui-import-conflicts: импорт показывает содержимое со статусами «Новый» и «Уже есть» (по uuid); для совпадений одно решение на весь импорт — «Добавить копией» или «Заменить существующие»
   ui-monospace-numbers: числа набираются моноширинным шрифтом
   ui-navigation-sections: навигация — четыре раздела (Расчёты, Цеха, Заводы, Справочник)
-  ui-no-autofocus: в src/ui не использовать autoFocus — фокус ставится ref-колбэком focusOnMount
+  ui-no-autofocus: в src/ не использовать autoFocus — фокус ставится ref-колбэком focusOnMount
   ui-no-text-selection: выделение текста в интерфейсе отключено — экран из карточек; в полях ввода выделение работает
-  ui-no-top-level-await: в src/ui без top-level await — Prefresh (HMR в dev) снимает $RefreshSig$ до продолжения модуля и падает
+  ui-no-top-level-await: в src без top-level await — Prefresh (HMR в dev) снимает $RefreshSig$ до продолжения модуля и падает
   ui-number-sign: у числа всегда виден знак (−30 / +30)
   ui-preact-hooks: в UI хуки и типы импортируются из 'react' (alias на preact/compat), не из preact/hooks; у событий читается event.currentTarget до колбэка обновления
   ui-reference-readonly: справочник (рецепты, здания, предметы) только для чтения — редакторов нет; в шапке версия данных игры и дата сборки; у зданий колонка «Петлевики»

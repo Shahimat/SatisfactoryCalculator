@@ -1,16 +1,3 @@
 {
-  "plugins": ["@trivago/prettier-plugin-sort-imports"],
-  "importOrder": [
-    "^components/core/(.*)$",
-    "^components/features/(.*)$",
-    "^components/shared/(.*)$",
-    "^[./]"
-  ],
-  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
-  "endOfLine": "lf",
-  "importOrderSeparation": true,
-  "importOrderCaseInsensitive": true,
-  "importOrderGroupNamespaceSpecifiers": true,
-  "importOrderSortSpecifiers": true,
   "singleQuote": true
 }

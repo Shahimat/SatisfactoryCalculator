@@ -1,29 +1,39 @@
 {
   "name": "satisfactory-calculator",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "data:catalog": "npm --prefix src/data run catalog",
-    "data:icons": "npm --prefix src/data run icons",
-    "format": "prettier --write ."
-  },
-  "author": "",
+  "private": true,
+  "type": "module",
+  "description": "Satisfactory production chain calculator",
   "license": "ISC",
+  "scripts": {
+    "dev": "rsbuild dev --open",
+    "build": "rsbuild build",
+    "preview": "rsbuild preview",
+    "test": "vitest",
+    "typecheck": "tsc -p tsconfig.ui.json && tsc -p tsconfig.test.json && tsc -p tsconfig.scripts.json",
+    "lint": "eslint .",
+    "format": "prettier --write src tests scripts \"*.{ts,mjs,json}\"",
+    "data:catalog": "node scripts/catalog/build-catalog.ts",
+    "data:icons": "node scripts/catalog/fetch-icons.ts"
+  },
+  "dependencies": {
+    "preact": "^10.29.8"
+  },
   "devDependencies": {
-    "@feature-sliced/eslint-config": "^0.1.1",
+    "@eslint/js": "^9.30.0",
+    "@rsbuild/core": "^1.7.6",
+    "@rsbuild/plugin-preact": "^1.7.3",
     "@shahimat/ai-core": "file:../../../../../home/gevorg/ai-gen/tgz/shahimat-ai-core-0.1.0.tgz",
     "@shahimat/cli": "file:../../../../../home/gevorg/ai-gen/tgz/shahimat-cli-0.1.0.tgz",
     "@shahimat/harness": "file:../../../../../home/gevorg/ai-gen/tgz/shahimat-harness-0.4.0.tgz",
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
-    "@types/node": "^24.1.0",
-    "eslint": "^9.32.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-boundaries": "^5.0.1",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-prettier": "^5.5.3",
+    "@types/node": "^24.19.2",
+    "eslint": "^9.30.0",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-unicorn": "^60.0.0",
-    "prettier": "^3.6.2"
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.2.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.1",
+    "vitest": "^4.1.12"
   }
 }

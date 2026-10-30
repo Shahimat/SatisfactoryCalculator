@@ -2,11 +2,11 @@ key: ui-i18n-catalog-names
 summary: названия каталога на выбранном языке через localName, сортировка через compareNames; поиск справочника — по обоим языкам; имена расчётов и цехов пользователя не переводятся
 rule: |
   Названия предметов, зданий и рецептов из каталога показываются на выбранном
-  языке через localName (src/ui/src/i18n/index.ts); имена предметов и зданий
-  собирают itemName и buildingName (src/ui/src/catalog.ts). Списки сортируются
+  языке через localName (src/i18n/index.ts); имена предметов и зданий
+  собирают itemName и buildingName (src/catalog.ts). Списки сортируются
   через compareNames, а не сравнением строк.
 
-  Поиск в справочнике (src/ui/src/screens/reference.tsx) ищет по name.ru и name.en:
+  Поиск в справочнике (src/screens/reference.tsx) ищет по name.ru и name.en:
   предмет находится на любом языке интерфейса.
 
   Имена расчётов, цехов и заводов, которые задал пользователь, не переводятся.

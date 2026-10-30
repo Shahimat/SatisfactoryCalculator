@@ -24,21 +24,22 @@ jobs:
         with:
           node-version: 24
 
+      # The agent contract tools (@shahimat/*) are local tarballs on the
+      # developer machine: CI drops them and installs the rest from the lock.
       - name: Install
         run: |
-          npm ci --prefix src/data
-          npm ci --prefix src/engine
-          npm ci --prefix src/ui
-
-      - name: Test
-        run: |
-          npm --prefix src/data test
-          npm --prefix src/data run typecheck
-          npm --prefix src/engine test
-          npm --prefix src/ui test -- --run
+          npm pkg delete devDependencies.@shahimat/ai-core devDependencies.@shahimat/cli devDependencies.@shahimat/harness
+          npm install --no-audit --no-fund
 
       - name: Game catalog
         run: npm run data:catalog
+
+      # UI tests read the built catalog.
+      - name: Test
+        run: |
+          npm test -- --run
+          npm run typecheck
+          npm run lint
 
       # wiki.gg rate-limits downloads; icons survive between runs and only new ones are fetched.
       - uses: actions/cache@v4
@@ -53,11 +54,11 @@ jobs:
       - name: Build site
         env:
           PAGES_BASE: /${{ github.event.repository.name }}/
-        run: npm --prefix src/ui run build
+        run: npm run build
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: src/ui/dist
+          path: dist
 
   deploy:
     needs: build

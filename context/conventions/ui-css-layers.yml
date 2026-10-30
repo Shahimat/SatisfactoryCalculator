@@ -1,14 +1,14 @@
 key: ui-css-layers
 summary: стили UI — глобальные в styles.css и utilities.css, компонентные — CSS Modules рядом с компонентом, классы склеиваются cx
 rule: |
-  Глобально — токены, reset, типографика и muted/secondary в src/ui/src/styles.css
+  Глобально — токены, reset, типографика и muted/secondary в src/styles.css
   (первым импортом в index.tsx). Layout-утилиты stack, hstack, spacer — в
-  src/ui/src/utilities.css; импорт последним в App.tsx, не в index.tsx: App —
+  src/utilities.css; импорт последним в App.tsx, не в index.tsx: App —
   отдельный чанк, иначе утилиты попадут в CSS раньше модулей и перебьют
   компонентные классы.
 
   Остальное — *.module.css рядом с компонентом (ui, chips, rows, select,
   screens/layout, App). Импорт под именем <модуль>Css, классы склеиваются cx
-  из src/ui/src/cx.ts.
+  из src/cx.ts.
 
   reason: при утилитах раньше модулей .list-item gap перебивал .stack и сдвигал строку правки на 6 px

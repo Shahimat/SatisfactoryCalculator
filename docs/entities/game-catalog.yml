@@ -2,7 +2,7 @@ id: game-catalog
 kind: entity
 namespace: catalog
 summary: каталог 1.2 — рецепты, здания, предметы и логистика из файлов игры; генерируется в data/catalog/<версия>.json, в git не хранится
-paths: [src/data/src/**, src/ui/src/catalog-fetch.ts]
+paths: [scripts/catalog/**, src/catalog-fetch.ts]
 version: "1.2"
 game:
   version: "1.2.4.1"
@@ -14,7 +14,7 @@ game:
 build:
   command: npm run data:catalog
   runtime: Node ≥24, TypeScript без сборки
-  tests: npm --prefix src/data test (node:test)
+  tests: npm test (vitest)
   integrity: sha256 каждого файла из source.json; несовпадение — сборка падает
   output: data/catalog/<версия>.json (schema 1), путь в .gitignore
 format:
@@ -29,17 +29,17 @@ format:
   buildings_build_cost: у здания — buildCost [{item, amount}] — стоимость постройки из рецептов BP_BuildGun_C (Desc_X_C → Build_X_C); есть у всех 23 зданий; предметы стоимости входят в items; конструктор — 2 усиленные пластины + 8 кабелей
 site:
   file: dist/catalog/<версия>.json?v=<sha256[:8]> — отдельный файл, не часть JS-бандла; кешируется отдельно от кода
-  load: loadCatalog() из src/ui/src/catalog-fetch.ts без top-level await (ui-no-top-level-await); src/ui/src/index.tsx грузит каталог, затем import('./App'); default @catalog — live binding; в index.html preload каталога и чанка app (JS и CSS) через rsbuild performance.preload по include app; справочник остаётся ленивым
-  tests: vitest — alias @catalog указывает на сам JSON каталога (latestCatalog() в src/ui/rsbuild.config.ts)
+  load: loadCatalog() из src/catalog-fetch.ts без top-level await (ui-no-top-level-await); src/index.tsx грузит каталог, затем import('./App'); default @catalog — live binding; в index.html preload каталога и чанка app (JS и CSS) через rsbuild performance.preload по include app; справочник остаётся ленивым
+  tests: vitest — alias @catalog указывает на сам JSON каталога (latestCatalog() в rsbuild.config.ts)
 icons:
   command: npm run data:icons
   source: satisfactory.wiki.gg, api.php — адреса превью 96 px пачками по 50, затем файлы по одному
   file_name: английское имя из игры, пробелы → «_» (Iron_Plate.png, Miner_Mk.1.png)
   pacing: пауза 300 мс между файлами; 429 без своего User-Agent — запросы с USER_AGENT калькулятора, ожидание Retry-After
   output: data/icons/<id>.png; уже скачанные не перекачиваются; data/icons/ в .gitignore
-  code: src/data/src/wiki-icons.ts, src/data/src/fetch-icons.ts; тесты src/data/test/icons.test.ts
+  code: scripts/catalog/wiki-icons.ts, scripts/catalog/fetch-icons.ts; тесты tests/icons.spec.ts
   result_2026_10_28: предметы и здания — найдено 191 из 191, 0 missing
-  interface_icons: Desc_WAT1_C (Somersloop) — предмет каталога (SOMERSLOOP в src/data/src/catalog.ts), качается вместе с иконками каталога как интерфейсная (INTERFACE_ICONS в src/data/src/fetch-icons.ts); производственные рецепты её не используют; запуск 2026-10-28 — 1 downloaded
+  interface_icons: Desc_WAT1_C (Somersloop) — предмет каталога (SOMERSLOOP в scripts/catalog/catalog.ts), качается вместе с иконками каталога как интерфейсная (INTERFACE_ICONS в scripts/catalog/fetch-icons.ts); производственные рецепты её не используют; запуск 2026-10-28 — 1 downloaded
 names_vs_penpot:
   note: русские названия игры отличаются от макета Penpot — Manufacturer → «Изготовитель», Miner → «Буровая установка ур. N», конвейер → «Конвейерная лента ур. N»
 quirks_1_2:

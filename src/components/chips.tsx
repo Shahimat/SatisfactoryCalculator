@@ -1,0 +1,342 @@
+import { type ReactNode, useRef, useState } from 'react';
+
+import type { BalanceEntry, BuildingGroup } from '../engine';
+import { buildings, isFluid, itemName } from '../catalog';
+import { flowValue, plain, signed } from '../calc';
+import type { Units } from '../model';
+import { Icon } from './icons';
+import { GameIcon } from './ui';
+import { cx } from '../cx';
+import chipsCss from './chips.module.css';
+import uiCss from './ui.module.css';
+import { localName, t } from '../i18n';
+
+export type PickItem = (item: string, perMinute: number) => void;
+
+/** Amount typed straight into a chip: a number is set, an empty field clears it. */
+export type AmountEdit = {
+  /** What the chip marks: a row locked at this output or a plan goal. */
+  mark?: 'lock' | 'goal';
+  /** Value the field starts from, per minute. */
+  initial: number;
+  onCommit: (perMinute: number | undefined) => void;
+  title: string;
+  /** What an empty field means, shown as its placeholder. */
+  empty: string;
+};
+
+/**
+ * Focuses an input once it mounts. Preact only sets the `autofocus` attribute,
+ * which browsers ignore on elements added after page load.
+ */
+const focusOnMount = (input: HTMLInputElement | null) => input?.focus();
+
+/**
+ * Inline field of an editable chip. A cleared field clears the amount on Enter
+ * or on leaving the field; a number is applied on Enter; Escape cancels.
+ */
+const AmountField = ({
+  item,
+  edit,
+  onDone,
+}: {
+  item: string;
+  edit: AmountEdit;
+  onDone: () => void;
+}) => {
+  const [text, setText] = useState(String(Number(plain(edit.initial, 3))));
+  const finished = useRef(false);
+  const finish = (commit?: () => void) => {
+    if (finished.current) return;
+    finished.current = true;
+    commit?.();
+    onDone();
+  };
+  const cleared = () => text.trim() === '';
+  return (
+    <span className={chipsCss.values}>
+      <input
+        className={cx(chipsCss.chipInput, 't-num')}
+        ref={focusOnMount}
+        inputMode="decimal"
+        placeholder={edit.empty}
+        value={text}
+        onFocus={(event) => event.currentTarget.select()}
+        onChange={(event) => setText(event.currentTarget.value)}
+        onBlur={() =>
+          finish(cleared() ? () => edit.onCommit(undefined) : undefined)
+        }
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            event.stopPropagation();
+            finish();
+          } else if (event.key === 'Enter') {
+            const value = Number(text.trim().replace(',', '.'));
+            if (cleared()) finish(() => edit.onCommit(undefined));
+            else if (Number.isFinite(value) && value >= 0)
+              finish(() => edit.onCommit(value));
+          }
+        }}
+      />
+      <span className={chipsCss.unit}>
+        {isFluid(item) ? t.units.fluid : t.units.ipm} · Enter
+      </span>
+    </span>
+  );
+};
+
+export const FlowChip = ({
+  item,
+  perMinute,
+  units,
+  onPick,
+  actionTitle = t.chips.pick,
+  edit,
+}: {
+  item: string;
+  perMinute: number;
+  units: Units;
+  onPick?: PickItem;
+  actionTitle?: string;
+  /** Click types the amount into the chip instead of picking. */
+  edit?: AmountEdit;
+}) => {
+  const [editing, setEditing] = useState(false);
+  const { value, unit } = flowValue(item, perMinute, units);
+  const direction = isFluid(item) ? 'fluid' : perMinute < 0 ? 'in' : 'out';
+  const mark = edit?.mark && (
+    <span className={chipsCss.chipMark} title={t.chips.mark[edit.mark]}>
+      <Icon name={edit.mark === 'lock' ? 'lock' : 'target'} size={12} />
+    </span>
+  );
+  const content = (
+    <>
+      <GameIcon id={item} />
+      <span className={chipsCss.values}>
+        <span className="t-num">{value}</span>
+        <span className={chipsCss.unit}>{unit}</span>
+      </span>
+      {mark}
+    </>
+  );
+  if (edit) {
+    return editing ? (
+      <span
+        className={cx(chipsCss.flowChip, chipsCss.editing, chipsCss[direction])}
+      >
+        <GameIcon id={item} />
+        <AmountField item={item} edit={edit} onDone={() => setEditing(false)} />
+        {mark}
+      </span>
+    ) : (
+      <button
+        type="button"
+        className={cx(
+          chipsCss.flowChip,
+          chipsCss.pickable,
+          chipsCss[direction],
+          edit.mark && chipsCss.marked,
+        )}
+        title={`${itemName(item)} — ${edit.title}`}
+        onClick={() => setEditing(true)}
+      >
+        {content}
+      </button>
+    );
+  }
+  return onPick ? (
+    <button
+      type="button"
+      className={cx(chipsCss.flowChip, chipsCss.pickable, chipsCss[direction])}
+      title={`${itemName(item)} — ${actionTitle}`}
+      onClick={() => onPick(item, Math.abs(perMinute))}
+    >
+      {content}
+    </button>
+  ) : (
+    <span
+      className={cx(chipsCss.flowChip, chipsCss[direction])}
+      title={itemName(item)}
+    >
+      {content}
+    </span>
+  );
+};
+
+export const PowerChip = ({ powerMW }: { powerMW: number }) => (
+  <span
+    className={cx(
+      chipsCss.flowChip,
+      powerMW > 0 ? chipsCss.powerOut : chipsCss.powerIn,
+    )}
+  >
+    <Icon name="bolt" size={22} color="var(--flow-power)" />
+    <span className={chipsCss.values}>
+      <span className="t-num">{signed(powerMW, 1)}</span>
+      <span className={chipsCss.unit}>{t.units.mw}</span>
+    </span>
+  </span>
+);
+
+export const FactoryChip = ({
+  building,
+  groups,
+  auto,
+  fixed,
+  title = t.chips.editBuildings,
+  onClick,
+}: {
+  building: string;
+  groups: BuildingGroup[];
+  /** The solver chooses the plain building count. */
+  auto?: boolean;
+  /** Counts are locked: the solver does not resize the row. */
+  fixed?: boolean;
+  title?: string;
+  onClick?: () => void;
+}) => {
+  const spec = buildings.get(building);
+  const slots = spec?.somersloopSlots ?? 0;
+  const single = groups.length === 1 && groups[0]!.somersloops === 0;
+  return (
+    <button
+      type="button"
+      className={chipsCss.factoryChip}
+      onClick={onClick}
+      title={title}
+    >
+      <GameIcon id={building} size="lg" />
+      <span className={chipsCss.groups}>
+        {groups.map((group, index) => (
+          <span className={chipsCss.group} key={index}>
+            <span className={cx(chipsCss.count, !single && chipsCss.sm)}>
+              ×{plain(group.count, 3)}
+            </span>
+            <span className={cx(uiCss.tag, group.clock !== 1 && uiCss.warn)}>
+              {single && <Icon name="gauge" size={12} />}
+              {plain(group.clock * 100, 2)}%
+            </span>
+            {group.somersloops > 0 && (
+              <span className={cx(uiCss.tag, uiCss.amplify)}>
+                <Icon name="somersloop" size={12} />
+                {group.somersloops}/{slots}
+              </span>
+            )}
+          </span>
+        ))}
+        <span className="hstack" style={{ gap: 6 }}>
+          <span className="t-body-sm muted">
+            {spec ? localName(spec) : building}
+          </span>
+          {auto && (
+            <span className={uiCss.tag} title={t.chips.autoTitle}>
+              {t.chips.auto}
+            </span>
+          )}
+          {fixed && (
+            <span
+              className={cx(uiCss.tag, uiCss.fixed)}
+              title={t.chips.fixedTitle}
+            >
+              <Icon name="lock" size={12} />
+              {t.chips.fixed}
+            </span>
+          )}
+        </span>
+      </span>
+    </button>
+  );
+};
+
+const BALANCE_BADGE: Record<BalanceEntry['status'], string | undefined> = {
+  target: uiCss.accent,
+  surplus: uiCss.ok,
+  raw: undefined,
+  deficit: uiCss.error,
+};
+
+export const BalanceChip = ({
+  entry,
+  units,
+  onPick,
+  edit,
+}: {
+  entry: BalanceEntry;
+  units: Units;
+  /** Consumed item: offer a recipe for it. */
+  onPick?: PickItem;
+  /** Produced item: type how much is needed on the output. */
+  edit?: AmountEdit;
+}) => {
+  const [editing, setEditing] = useState(false);
+  const { value, unit } = flowValue(entry.item, entry.perMinute, units);
+  const produced = entry.perMinute >= 0;
+  if (editing && edit) {
+    return (
+      <span
+        className={cx(
+          chipsCss.balanceChip,
+          chipsCss.editing,
+          chipsCss[entry.status],
+        )}
+      >
+        <GameIcon id={entry.item} />
+        <span className="stack" style={{ gap: 0 }}>
+          <span className="t-body-sm">{itemName(entry.item)}</span>
+          <AmountField
+            item={entry.item}
+            edit={edit}
+            onDone={() => setEditing(false)}
+          />
+        </span>
+      </span>
+    );
+  }
+  return (
+    <Clickable
+      className={cx(chipsCss.balanceChip, chipsCss[entry.status])}
+      title={produced ? (edit?.title ?? '') : t.chips.pickRecipe}
+      onClick={
+        produced
+          ? edit && (() => setEditing(true))
+          : onPick && (() => onPick(entry.item, Math.abs(entry.perMinute)))
+      }
+    >
+      <GameIcon id={entry.item} />
+      <span className="stack" style={{ gap: 0 }}>
+        <span className="t-body-sm">{itemName(entry.item)}</span>
+        <span>
+          <span className="t-num">{value}</span>{' '}
+          <span className="t-num-sm muted">{unit}</span>
+        </span>
+      </span>
+      <span className={cx(uiCss.badge, BALANCE_BADGE[entry.status])}>
+        {t.chips.balance[entry.status]}
+      </span>
+    </Clickable>
+  );
+};
+
+const Clickable = ({
+  className,
+  title,
+  onClick,
+  children,
+}: {
+  className: string;
+  title: string;
+  onClick?: () => void;
+  children: ReactNode;
+}) =>
+  onClick ? (
+    <button
+      type="button"
+      className={cx(className, chipsCss.pickable)}
+      title={title}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  ) : (
+    <span className={className}>{children}</span>
+  );

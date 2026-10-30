@@ -10,13 +10,13 @@ scenarios:
   - given: файл игры не совпадает с sha256 из source.json
     when: сборка каталога
     then: сборка падает с ошибкой «does not match source.json»
-  - given: исходники пакета src/data
-    when: npm --prefix src/data test
-    then: все тесты пакета проходят
+  - given: исходники сборки scripts/catalog
+    when: npm test
+    then: все тесты проходят
   - given: каталог собран
     when: чтение зданий каталога
     then: у каждого здания есть buildCost; конструктор — 2 усиленные пластины + 8 кабелей; предметы стоимости есть в items
-check: npm --prefix src/data test
-verified: true
+check: npm test
+verified: false
 verified_at: 2026-10-29
-verified_note: "npm --prefix src/data test — 20/20 (2026-10-29), в том числе «has the build gun cost of every building», «lists Somersloops and power shards as items»; data/catalog/1.2.json — 23 из 23, Build_ConstructorMk1_C; пересборка каталога с Desc_WAT1_C и Desc_CrystalShard_C в items не проверена"
+verified_note: "переезд на один vitest (npm test), прогон за verify; прежде: npm --prefix src/data test — 20/20 (2026-10-29), в том числе «has the build gun cost of every building», «lists Somersloops and power shards as items»; data/catalog/1.2.json — 23 из 23, Build_ConstructorMk1_C; пересборка каталога с Desc_WAT1_C и Desc_CrystalShard_C в items не проверена"

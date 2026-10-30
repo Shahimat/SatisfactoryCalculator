@@ -13,4 +13,4 @@ rule: |
   файла: `targets` становятся целями в том объёме, который давали строки;
   режим — «Сверху вниз». Новые расчёты и цеха — «Матрица».
 
-  reason: совместимость сохранённых расчётов и файлов обмена — src/ui/src/model.ts (Plan), src/ui/src/calc.ts (migratePlan, isAutoRow), src/ui/src/store.ts, src/ui/src/components/exchange-modals.tsx; закреп на уровне продукта — src/engine/src/calc/types.ts (LockedOutput, RecipeRow.output, ExtractorRow.output), решение 2026-10-29
+  reason: совместимость сохранённых расчётов и файлов обмена — src/model.ts (Plan), src/calc.ts (migratePlan, isAutoRow), src/store.ts, src/components/exchange-modals.tsx; закреп на уровне продукта — src/engine/types.ts (LockedOutput, RecipeRow.output, ExtractorRow.output), решение 2026-10-29

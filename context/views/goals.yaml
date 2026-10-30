@@ -1,10 +1,2 @@
 # Порядок записи = приоритет цели. Правила — skill goals.
-goals:
-  - key: ui-static-storage
-    file: goal--ui-static-storage.yaml
-    status: planned
-    one_liner: интерфейс построен — осталось повторить возможности src/ui-old и удалить его
-  - key: ci-pages-cleanup
-    file: goal--ci-pages-cleanup.yaml
-    status: planned
-    one_liner: удалить src/srv и src/srv-nest (команду выполняет пользователь)
+goals: []

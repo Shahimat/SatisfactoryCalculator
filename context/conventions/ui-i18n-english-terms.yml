@@ -3,7 +3,7 @@ summary: английская версия — термины из англий�
 rule: |
   В английской версии интерфейса термины берутся из английских названий игры:
   Calculations, Workshops, Factories, Reference; Somersloop, Clock speed,
-  Impure / Normal / Pure. Строки — в src/ui/src/i18n/en.ts.
+  Impure / Normal / Pure. Строки — в src/i18n/en.ts.
 
   В русской версии — русские названия тех же понятий, например «Заводы» для
   Factories.

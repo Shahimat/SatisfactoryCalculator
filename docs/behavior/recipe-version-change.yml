@@ -13,7 +13,7 @@ scenarios:
   - given: рецепт помечен changed или removed
     when: нажато «принять»
     then: текущая версия каталога становится базой для подписей
-check: npm --prefix src/engine test
-verified: true
+check: npm test
+verified: false
 verified_at: 2026-10-29
-verified_note: "npm --prefix src/engine test — 29/29 (2026-10-29): «detects changed and removed recipes». Сценарий «принять» (acknowledgeVersion в src/ui/src/calc.ts) и рамки в интерфейсе тестом не покрыты"
+verified_note: "переезд на один vitest (npm test), прогон за verify; прежде: npm --prefix src/engine test — 29/29 (2026-10-29): «detects changed and removed recipes». Сценарий «принять» (acknowledgeVersion в src/calc.ts) и рамки в интерфейсе тестом не покрыты"

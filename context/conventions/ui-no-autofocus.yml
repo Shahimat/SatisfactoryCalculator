@@ -1,5 +1,5 @@
 key: ui-no-autofocus
-summary: в src/ui не использовать autoFocus — фокус ставится ref-колбэком focusOnMount
+summary: в src/ не использовать autoFocus — фокус ставится ref-колбэком focusOnMount
 rule: |
   Не использовать autoFocus. Preact ставит только атрибут, а браузер не
   фокусирует элемент, добавленный позже страницы.

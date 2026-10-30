@@ -1,6 +1,6 @@
 name: satisfactory-calculator
 summary: калькулятор производственных цепочек Satisfactory
-stack: [typescript, preact (API React через preact/compat), rsbuild, css-modules, node:test, jest, vitest]
+stack: [typescript, preact (API React через preact/compat), rsbuild, css-modules, vitest]
 reality: [this-repo]
 preset: operational
 namespaces:
@@ -10,7 +10,7 @@ namespaces:
 external:
   penpot: дизайн UI — файл «Satisfactory», страница «Design System»; Page 1 — черновик из Figma, не источник
   icons: satisfactory.wiki.gg, Special:FilePath/<Name>.png
-  pages: GitHub Pages — статический сайт по пути /satisfactory-calculator/ (адрес требует переименования репозитория в satisfactory-calculator); публикация из CI .github/workflows/pages.yml на push в master; в Settings → Pages источник «GitHub Actions»
+  pages: GitHub Pages — статический сайт по пути /satisfactory-calculator/ (адрес требует переименования репозитория в satisfactory-calculator); публикация из CI .github/workflows/pages.yml на push в master; в CI каталог собирается до тестов (тестам интерфейса нужен каталог), @shahimat/* снимаются через npm pkg delete перед npm install, артефакт — dist/; в Settings → Pages источник «GitHub Actions»
   game_data: data/raw/<версия>/ — файлы игры, кладутся вручную; правила — convention data-game-sources
 sync:
   index_source: https://raw.githubusercontent.com/Shahimat/ai-prompts/main/prompts/index.yml

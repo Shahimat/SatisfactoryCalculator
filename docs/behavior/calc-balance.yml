@@ -22,7 +22,7 @@ scenarios:
   - given: поток в лентах или трубах и выбранный уровень
     when: расчёт баланса
     then: число лент или труб = |поток| / пропускная способность выбранного уровня; трубы Mk.1 при лентах Mk.1, у Mk.2 пропускная способность выше
-check: npm --prefix src/engine test
-verified: true
+check: npm test
+verified: false
 verified_at: 2026-10-29
-verified_note: "npm --prefix src/engine test — 29/29 (2026-10-29): «classifies the balance», «counts belts for a flow». Порог 1e-4 и трубы Mk.2 отдельным тестом не покрыты"
+verified_note: "переезд на один vitest (npm test), прогон за verify; прежде: npm --prefix src/engine test — 29/29 (2026-10-29): «classifies the balance», «counts belts for a flow». Порог 1e-4 и трубы Mk.2 отдельным тестом не покрыты"
