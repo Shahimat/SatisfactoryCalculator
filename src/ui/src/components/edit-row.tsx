@@ -28,6 +28,8 @@ import {
   NumberInput,
   Select,
 } from './ui';
+import { cx } from '../cx';
+import uiCss from './ui.module.css';
 
 const MAX_CLOCK_PERCENT = 250;
 
@@ -216,10 +218,10 @@ export const EditRowModal = ({
       {sizable && (
         <div className="stack">
           <span className="t-label muted">Объём</span>
-          <div className="segmented" style={{ alignSelf: 'flex-start' }}>
+          <div className={uiCss.segmented} style={{ alignSelf: 'flex-start' }}>
             <button
               type="button"
-              className={solverSized ? 'active' : ''}
+              className={solverSized ? uiCss.active : undefined}
               onClick={() =>
                 // Back to the default clock: the solver spreads it over whole buildings.
                 setDraft({
@@ -240,7 +242,7 @@ export const EditRowModal = ({
             </button>
             <button
               type="button"
-              className={solverSized ? '' : 'active'}
+              className={solverSized ? undefined : uiCss.active}
               onClick={() =>
                 // Fixing starts from what the solver built, not from the entered counts.
                 setDraft({
@@ -363,7 +365,7 @@ const PlainSizing = ({
         icon={<GameIcon id={POWER_SHARD_ICON} size="sm" />}
         width={140}
       >
-        <div className="input readonly">
+        <div className={cx(uiCss.input, uiCss.readonly)}>
           <span className="t-num">
             {solved ? `${plain(solved.clock * 100, 2)} %` : '—'}
           </span>
@@ -390,13 +392,13 @@ const RowSummary = ({ row }: { row: Row }) => {
         ? state.workshops.find((w) => w.id === row.workshop)?.name
         : state.calculations.find((c) => c.id === row.calculation)?.name;
     return (
-      <div className="list-item">
+      <div className={uiCss.listItem}>
         <Icon
           name={row.kind === 'workshop' ? 'chain' : 'factory'}
           size={28}
           color="var(--accent-primary)"
         />
-        <span className="grow stack" style={{ gap: 2 }}>
+        <span className={cx(uiCss.grow, 'stack')} style={{ gap: 2 }}>
           <span className="t-title">{name ?? '—'}</span>
           <span className="t-body-sm muted">
             {row.kind === 'workshop' ? 'Цех' : 'Завод — ссылка на расчёт'}
@@ -415,13 +417,18 @@ const RowSummary = ({ row }: { row: Row }) => {
         : buildingName(row.building);
   const perMinute = recipe ? 60 / recipe.cycleSeconds : 0;
   return (
-    <div className="list-item stack" style={{ alignItems: 'stretch' }}>
+    <div
+      className={cx(uiCss.listItem, 'stack')}
+      style={{ alignItems: 'stretch' }}
+    >
       <span className="hstack" style={{ flexWrap: 'nowrap' }}>
         <GameIcon id={building} size="lg" />
-        <span className="grow stack" style={{ gap: 2 }}>
+        <span className={cx(uiCss.grow, 'stack')} style={{ gap: 2 }}>
           <span className="hstack" style={{ gap: 6 }}>
             <span className="t-title">{title}</span>
-            {recipe?.alternate && <span className="badge alt">ALT</span>}
+            {recipe?.alternate && (
+              <span className={cx(uiCss.badge, uiCss.alt)}>ALT</span>
+            )}
           </span>
           <span className="t-body-sm muted">
             {buildingName(building)}
@@ -478,17 +485,17 @@ const CopiesSizing = ({
   return (
     <div className="stack">
       <span className="t-label muted">Копии</span>
-      <div className="segmented" style={{ alignSelf: 'flex-start' }}>
+      <div className={uiCss.segmented} style={{ alignSelf: 'flex-start' }}>
         <button
           type="button"
-          className={autoNow ? 'active' : ''}
+          className={autoNow ? uiCss.active : undefined}
           onClick={() => onChange({ ...draft, sizing: 'auto' })}
         >
           Авто
         </button>
         <button
           type="button"
-          className={autoNow ? '' : 'active'}
+          className={autoNow ? undefined : uiCss.active}
           onClick={() =>
             // Fixing starts from the whole copies the solver placed.
             onChange({

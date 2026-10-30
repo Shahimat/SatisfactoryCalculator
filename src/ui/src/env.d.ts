@@ -1,16 +1,6 @@
 /// <reference types="@rsbuild/core/types" />
 
-/**
- * Imports the SVG file as a React component.
- * @requires [@rsbuild/plugin-svgr](https://npmjs.com/package/@rsbuild/plugin-svgr)
- */
-declare module '*.svg?react' {
-  import type React from 'react';
-  const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-  export default ReactComponent;
-}
-
-/** Game catalog of the latest data version, aliased in rsbuild.config.ts. */
+/** Game catalog of the latest data version: fetched in the app, the JSON file in tests (aliases in rsbuild and vitest configs). */
 declare module '@catalog' {
   import type { Catalog } from '../../data/src/catalog.types.ts';
   const catalog: Catalog;
@@ -18,3 +8,5 @@ declare module '@catalog' {
 }
 
 declare const __BUILD_DATE__: string;
+/** Catalog file name with a content hash, served under `catalog/`. */
+declare const __CATALOG_FILE__: string;

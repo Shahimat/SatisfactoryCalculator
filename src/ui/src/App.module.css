@@ -1,0 +1,46 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+/* topbar */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: 64px;
+  padding: 0 24px;
+  background: var(--bg-chrome);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.logo {
+  display: flex;
+  flex: none;
+}
+.logo img {
+  display: block;
+  height: 40px;
+  width: auto;
+}
+.nav {
+  display: flex;
+  gap: 28px;
+}
+.nav a {
+  text-decoration: none;
+  font: 600 18px/1 var(--font-display);
+  color: var(--text-secondary);
+  padding: 20px 0 18px;
+  border-bottom: 2px solid transparent;
+}
+.nav a.active {
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+.units {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

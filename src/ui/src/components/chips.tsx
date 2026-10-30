@@ -6,6 +6,9 @@ import { flowValue, plain, signed } from '../calc';
 import type { Units } from '../model';
 import { Icon } from './icons';
 import { GameIcon } from './ui';
+import { cx } from '../cx';
+import chipsCss from './chips.module.css';
+import uiCss from './ui.module.css';
 
 export type PickItem = (item: string, perMinute: number) => void;
 
@@ -20,6 +23,12 @@ export type AmountEdit = {
   /** What an empty field means, shown as its placeholder. */
   empty: string;
 };
+
+/**
+ * Focuses an input once it mounts. Preact only sets the `autofocus` attribute,
+ * which browsers ignore on elements added after page load.
+ */
+const focusOnMount = (input: HTMLInputElement | null) => input?.focus();
 
 /**
  * Inline field of an editable chip. A cleared field clears the amount on Enter
@@ -44,15 +53,15 @@ const AmountField = ({
   };
   const cleared = () => text.trim() === '';
   return (
-    <span className="values">
+    <span className={chipsCss.values}>
       <input
-        className="chip-input t-num"
-        autoFocus
+        className={cx(chipsCss.chipInput, 't-num')}
+        ref={focusOnMount}
         inputMode="decimal"
         placeholder={edit.empty}
         value={text}
-        onFocus={(event) => event.target.select()}
-        onChange={(event) => setText(event.target.value)}
+        onFocus={(event) => event.currentTarget.select()}
+        onChange={(event) => setText(event.currentTarget.value)}
         onBlur={() =>
           finish(cleared() ? () => edit.onCommit(undefined) : undefined)
         }
@@ -68,7 +77,7 @@ const AmountField = ({
           }
         }}
       />
-      <span className="unit">
+      <span className={chipsCss.unit}>
         {isFluid(item) ? 'м³/мин' : 'шт/мин'} · Enter
       </span>
     </span>
@@ -100,23 +109,25 @@ export const FlowChip = ({
   const { value, unit } = flowValue(item, perMinute, units);
   const direction = isFluid(item) ? 'fluid' : perMinute < 0 ? 'in' : 'out';
   const mark = edit?.mark && (
-    <span className={`chip-mark ${edit.mark}`} title={MARK_TITLE[edit.mark]}>
+    <span className={chipsCss.chipMark} title={MARK_TITLE[edit.mark]}>
       <Icon name={edit.mark === 'lock' ? 'lock' : 'target'} size={12} />
     </span>
   );
   const content = (
     <>
       <GameIcon id={item} />
-      <span className="values">
+      <span className={chipsCss.values}>
         <span className="t-num">{value}</span>
-        <span className="unit">{unit}</span>
+        <span className={chipsCss.unit}>{unit}</span>
       </span>
       {mark}
     </>
   );
   if (edit) {
     return editing ? (
-      <span className={`flow-chip editing ${direction}`}>
+      <span
+        className={cx(chipsCss.flowChip, chipsCss.editing, chipsCss[direction])}
+      >
         <GameIcon id={item} />
         <AmountField item={item} edit={edit} onDone={() => setEditing(false)} />
         {mark}
@@ -124,7 +135,12 @@ export const FlowChip = ({
     ) : (
       <button
         type="button"
-        className={`flow-chip pickable ${direction} ${edit.mark ? 'marked' : ''}`}
+        className={cx(
+          chipsCss.flowChip,
+          chipsCss.pickable,
+          chipsCss[direction],
+          edit.mark && chipsCss.marked,
+        )}
         title={`${itemName(item)} — ${edit.title}`}
         onClick={() => setEditing(true)}
       >
@@ -135,25 +151,33 @@ export const FlowChip = ({
   return onPick ? (
     <button
       type="button"
-      className={`flow-chip pickable ${direction}`}
+      className={cx(chipsCss.flowChip, chipsCss.pickable, chipsCss[direction])}
       title={`${itemName(item)} — ${actionTitle}`}
       onClick={() => onPick(item, Math.abs(perMinute))}
     >
       {content}
     </button>
   ) : (
-    <span className={`flow-chip ${direction}`} title={itemName(item)}>
+    <span
+      className={cx(chipsCss.flowChip, chipsCss[direction])}
+      title={itemName(item)}
+    >
       {content}
     </span>
   );
 };
 
 export const PowerChip = ({ powerMW }: { powerMW: number }) => (
-  <span className={`flow-chip ${powerMW > 0 ? 'power-out' : 'power-in'}`}>
+  <span
+    className={cx(
+      chipsCss.flowChip,
+      powerMW > 0 ? chipsCss.powerOut : chipsCss.powerIn,
+    )}
+  >
     <Icon name="bolt" size={22} color="var(--flow-power)" />
-    <span className="values">
+    <span className={chipsCss.values}>
       <span className="t-num">{signed(powerMW, 1)}</span>
-      <span className="unit">МВт</span>
+      <span className={chipsCss.unit}>МВт</span>
     </span>
   </span>
 );
@@ -181,23 +205,23 @@ export const FactoryChip = ({
   return (
     <button
       type="button"
-      className="factory-chip"
+      className={chipsCss.factoryChip}
       onClick={onClick}
       title={title}
     >
       <GameIcon id={building} size="lg" />
-      <span className="groups">
+      <span className={chipsCss.groups}>
         {groups.map((group, index) => (
-          <span className="group" key={index}>
-            <span className={`count ${single ? '' : 'sm'}`}>
+          <span className={chipsCss.group} key={index}>
+            <span className={cx(chipsCss.count, !single && chipsCss.sm)}>
               ×{plain(group.count, 3)}
             </span>
-            <span className={`tag ${group.clock === 1 ? '' : 'warn'}`}>
+            <span className={cx(uiCss.tag, group.clock !== 1 && uiCss.warn)}>
               {single && <Icon name="gauge" size={12} />}
               {plain(group.clock * 100, 2)}%
             </span>
             {group.somersloops > 0 && (
-              <span className="tag amplify">
+              <span className={cx(uiCss.tag, uiCss.amplify)}>
                 <Icon name="somersloop" size={12} />
                 {group.somersloops}/{slots}
               </span>
@@ -207,13 +231,13 @@ export const FactoryChip = ({
         <span className="hstack" style={{ gap: 6 }}>
           <span className="t-body-sm muted">{spec?.name.ru ?? building}</span>
           {auto && (
-            <span className="tag" title="Число зданий подбирает решатель">
+            <span className={uiCss.tag} title="Число зданий подбирает решатель">
               авто
             </span>
           )}
           {fixed && (
             <span
-              className="tag fixed"
+              className={cx(uiCss.tag, uiCss.fixed)}
               title="Здания закреплены — пересчёт цепочки их не меняет"
             >
               <Icon name="lock" size={12} />
@@ -233,11 +257,11 @@ const BALANCE_LABEL: Record<BalanceEntry['status'], string> = {
   deficit: 'Дефицит',
 };
 
-const BALANCE_BADGE: Record<BalanceEntry['status'], string> = {
-  target: 'accent',
-  surplus: 'ok',
-  raw: '',
-  deficit: 'error',
+const BALANCE_BADGE: Record<BalanceEntry['status'], string | undefined> = {
+  target: uiCss.accent,
+  surplus: uiCss.ok,
+  raw: undefined,
+  deficit: uiCss.error,
 };
 
 export const BalanceChip = ({
@@ -258,7 +282,13 @@ export const BalanceChip = ({
   const produced = entry.perMinute >= 0;
   if (editing && edit) {
     return (
-      <span className={`balance-chip editing ${entry.status}`}>
+      <span
+        className={cx(
+          chipsCss.balanceChip,
+          chipsCss.editing,
+          chipsCss[entry.status],
+        )}
+      >
         <GameIcon id={entry.item} />
         <span className="stack" style={{ gap: 0 }}>
           <span className="t-body-sm">{itemName(entry.item)}</span>
@@ -273,7 +303,7 @@ export const BalanceChip = ({
   }
   return (
     <Clickable
-      className={`balance-chip ${entry.status}`}
+      className={cx(chipsCss.balanceChip, chipsCss[entry.status])}
       title={produced ? (edit?.title ?? '') : 'Подобрать рецепт'}
       onClick={
         produced
@@ -289,7 +319,7 @@ export const BalanceChip = ({
           <span className="t-num-sm muted">{unit}</span>
         </span>
       </span>
-      <span className={`badge ${BALANCE_BADGE[entry.status]}`}>
+      <span className={cx(uiCss.badge, BALANCE_BADGE[entry.status])}>
         {BALANCE_LABEL[entry.status]}
       </span>
     </Clickable>
@@ -310,7 +340,7 @@ const Clickable = ({
   onClick ? (
     <button
       type="button"
-      className={`${className} pickable`}
+      className={cx(className, chipsCss.pickable)}
       title={title}
       onClick={onClick}
     >

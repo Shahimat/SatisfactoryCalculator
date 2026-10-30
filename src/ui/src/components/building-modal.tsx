@@ -11,6 +11,9 @@ import { useAppState } from '../store';
 import { FlowChip, PowerChip } from './chips';
 import { Icon } from './icons';
 import { GameIcon, Modal } from './ui';
+import { cx } from '../cx';
+import chipsCss from './chips.module.css';
+import uiCss from './ui.module.css';
 
 const buildingOf = (row: Row): string =>
   row.kind === 'recipe'
@@ -43,9 +46,9 @@ export const BuildingModal = ({
   const total = splitFlows(flows.items);
   return (
     <Modal title="Здание" width={720} onClose={onClose}>
-      <div className="list-item">
+      <div className={uiCss.listItem}>
         <GameIcon id={building} size="lg" />
-        <span className="grow stack" style={{ gap: 2 }}>
+        <span className={cx(uiCss.grow, 'stack')} style={{ gap: 2 }}>
           <span className="t-title">{buildingName(building)}</span>
           <span className="t-body-sm muted">
             {subtitle} · построить {whole} · загрузка ×
@@ -87,7 +90,7 @@ export const BuildingModal = ({
                   </>
                 )}
               </span>
-              <div className="flows">
+              <div className={uiCss.flows}>
                 {inputs.map(([item, v]) => (
                   <FlowChip key={item} item={item} perMinute={v} units="ipm" />
                 ))}
@@ -102,7 +105,7 @@ export const BuildingModal = ({
         })}
 
       <span className="t-label muted">Вся строка</span>
-      <div className="flows">
+      <div className={uiCss.flows}>
         {total.inputs.map(([item, v]) => (
           <FlowChip key={item} item={item} perMinute={v} units="ipm" />
         ))}
@@ -117,9 +120,9 @@ export const BuildingModal = ({
           <span className="t-label muted">
             Постройка · одно здание / все {whole}
           </span>
-          <div className="balance">
+          <div className={chipsCss.balance}>
             {spec.buildCost.map(({ item, amount }) => (
-              <span className="build-chip" key={item}>
+              <span className={chipsCss.buildChip} key={item}>
                 <GameIcon id={item} />
                 <span className="stack" style={{ gap: 0 }}>
                   <span className="t-num">

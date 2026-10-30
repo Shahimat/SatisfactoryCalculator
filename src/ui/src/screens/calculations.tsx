@@ -38,6 +38,9 @@ import { Button, Field, GameIcon, NumberInput, Select } from '../components/ui';
 import { type Calculation, newId, type Workshop } from '../model';
 import { navigate } from '../router';
 import { setState, useAppState } from '../store';
+import { cx } from '../cx';
+import layoutCss from './layout.module.css';
+import uiCss from '../components/ui.module.css';
 
 type Dialog =
   | { kind: 'add'; item?: string; rate?: number; picked?: boolean }
@@ -76,15 +79,18 @@ export const CalculationsScreen = ({ id }: { id?: string }) => {
   const [dialog, setDialog] = useState<Dialog | null>(null);
   const close = () => setDialog(null);
   return (
-    <div className="page">
-      <aside className="sidebar">
+    <div className={layoutCss.page}>
+      <aside className={layoutCss.sidebar}>
         {state.calculations.map((c) => {
           const power = evaluate(c, state).total.powerMW;
           return (
             <a
               key={c.id}
               href={`#/calc/${c.id}`}
-              className={`side-item ${c.id === calc?.id ? 'active' : ''}`}
+              className={cx(
+                layoutCss.sideItem,
+                c.id === calc?.id && layoutCss.active,
+              )}
             >
               <span>{c.name}</span>
               <span className="t-num-sm muted">
@@ -101,11 +107,11 @@ export const CalculationsScreen = ({ id }: { id?: string }) => {
           </Button>
         </div>
       </aside>
-      <main className="content">
+      <main className={layoutCss.content}>
         {calc ? (
           <CalculationView calc={calc} openDialog={setDialog} />
         ) : (
-          <div className="empty">
+          <div className={layoutCss.empty}>
             <Icon name="factory" size={40} color="var(--accent-primary)" />
             <h2 className="t-heading">Расчётов пока нет</h2>
             <div className="hstack">
@@ -307,8 +313,8 @@ const CalculationView = ({
 
   return (
     <>
-      <div className="page-header" ref={stickHeader}>
-        <div className="heading">
+      <div className={layoutCss.pageHeader} ref={stickHeader}>
+        <div className={layoutCss.heading}>
           <input
             className="t-display"
             style={{
@@ -319,12 +325,10 @@ const CalculationView = ({
             }}
             value={calc.name}
             aria-label="Название расчёта"
-            onChange={(event) =>
-              updateCalculation(calc.id, (c) => ({
-                ...c,
-                name: event.target.value,
-              }))
-            }
+            onChange={(event) => {
+              const name = event.currentTarget.value;
+              updateCalculation(calc.id, (c) => ({ ...c, name }));
+            }}
           />
           <span className="secondary">{meta.join(' · ')}</span>
           <SolverToggle
@@ -334,7 +338,7 @@ const CalculationView = ({
             }
           />
         </div>
-        <div className="toolbar">
+        <div className={layoutCss.toolbar}>
           {selectedNested.length > 0 ? (
             <Button icon="chain" onClick={expandSelected}>
               Раскрыть ({selectedNested.length})
@@ -360,7 +364,7 @@ const CalculationView = ({
           </Button>
           <Button onClick={() => openDialog({ kind: 'workshop' })}>Цех</Button>
           <Button onClick={() => openDialog({ kind: 'plant' })}>Завод</Button>
-          <span className="divider-v" />
+          <span className={layoutCss.dividerV} />
           <Button
             variant="ghost"
             icon="arrowDown"
@@ -391,7 +395,7 @@ const CalculationView = ({
         </div>
       </div>
       {(outdated || changes.length > 0) && (
-        <div className="banner">
+        <div className={uiCss.banner}>
           <Icon name="alert" size={20} color="var(--status-warning)" />
           <span className="stack" style={{ gap: 2, flex: 1 }}>
             <span className="t-title">
@@ -453,7 +457,7 @@ const EmptyCalculation = ({
   const [item, setItem] = useState(DEFAULT_ITEM);
   const [rate, setRate] = useState(60);
   return (
-    <div className="empty">
+    <div className={layoutCss.empty}>
       <Icon name="factory" size={40} color="var(--accent-primary)" />
       <h2 className="t-heading">С чего начнём?</h2>
       <span className="secondary">
@@ -496,7 +500,7 @@ const EmptyCalculation = ({
         <Button onClick={() => openDialog({ kind: 'add' })}>Рецепт</Button>
         <Button onClick={() => openDialog({ kind: 'workshop' })}>Цех</Button>
         <Button onClick={() => openDialog({ kind: 'plant' })}>Завод</Button>
-        <span className="divider-v" />
+        <span className={layoutCss.dividerV} />
         <Button
           variant="ghost"
           icon="arrowDown"

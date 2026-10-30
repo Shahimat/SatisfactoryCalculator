@@ -1,0 +1,142 @@
+/* Column titles, «Итого» and its warnings stay under the page header. */
+.calc-head {
+  position: sticky;
+  top: calc(var(--page-header-height, 0px) - 24px);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 8px;
+  background: var(--bg-app);
+}
+/* calculation rows */
+.col-header {
+  display: grid;
+  grid-template-columns: var(--row-columns);
+  gap: 16px;
+  padding: 0 16px;
+  color: var(--text-muted);
+}
+.row {
+  display: grid;
+  grid-template-columns: var(--row-columns);
+  gap: 16px;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--bg-surface);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+}
+.row.selected {
+  border-color: var(--accent-primary);
+  background: #2e3338;
+}
+.row.changed {
+  border-color: var(--status-warning);
+}
+.row.removed {
+  border-color: var(--status-deficit);
+}
+.row.removed .dim {
+  opacity: 0.35;
+}
+.row.total {
+  background: var(--bg-chrome);
+  border-color: var(--accent-primary);
+}
+.row.nested {
+  margin-left: 40px;
+}
+.row.fixed {
+  box-shadow: inset 3px 0 0 var(--accent-primary);
+}
+.row.dragging {
+  opacity: 0.4;
+}
+.row.drop-before {
+  box-shadow: 0 -3px 0 var(--accent-primary);
+}
+.row.drop-after {
+  box-shadow: 0 3px 0 var(--accent-primary);
+}
+.grip {
+  display: inline-flex;
+  color: var(--text-muted);
+  cursor: grab;
+}
+.grip:hover {
+  color: var(--text-primary);
+}
+.row .lead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.row .name {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.row .name .title {
+  display: block;
+  font: 600 18px/1.2 var(--font-display);
+}
+.row .name .title > :not(.title-button) {
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.title-button {
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.title-button:hover,
+.title-button:focus-visible {
+  color: var(--accent-primary);
+  outline: none;
+}
+.title-button > * {
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.title-button > svg {
+  margin-top: -3px;
+}
+.row:not(.total) {
+  cursor: pointer;
+}
+.build-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+.build-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.row .name .meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.row .name .meta.warn {
+  color: var(--status-warning);
+}
+.row .name .meta.error {
+  color: var(--status-deficit);
+}
+.row .actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

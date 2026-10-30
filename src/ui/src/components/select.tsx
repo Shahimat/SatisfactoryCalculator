@@ -7,6 +7,9 @@ import {
 } from 'react';
 
 import { Icon } from './icons';
+import { cx } from '../cx';
+import selectCss from './select.module.css';
+import uiCss from './ui.module.css';
 
 export type SelectOption<T extends string> = {
   value: T;
@@ -15,6 +18,12 @@ export type SelectOption<T extends string> = {
   /** Secondary text on the right, e.g. a building or an amount. */
   hint?: string;
 };
+
+/**
+ * Focuses an input once it mounts. Preact only sets the `autofocus` attribute,
+ * which browsers ignore on elements added after page load.
+ */
+const focusOnMount = (input: HTMLInputElement | null) => input?.focus();
 
 /** Long lists get a search box; short ones are picked at a glance. */
 const SEARCH_FROM = 10;
@@ -68,7 +77,7 @@ export const Select = <T extends string>({
     onChange(option.value);
     setOpen(false);
   };
-  const onKeyDown = (event: KeyboardEvent) => {
+  const onKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     if (!open) {
       if (['ArrowDown', 'Enter', ' '].includes(event.key)) {
         event.preventDefault();
@@ -93,40 +102,40 @@ export const Select = <T extends string>({
   };
 
   return (
-    <div className="select" ref={root} onKeyDown={onKeyDown}>
+    <div className={selectCss.select} ref={root} onKeyDown={onKeyDown}>
       <button
         type="button"
-        className="input select-trigger"
+        className={cx(uiCss.input, selectCss.selectTrigger)}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => (open ? setOpen(false) : show())}
       >
         {selected?.icon}
-        <span className="select-label">{selected?.label ?? '—'}</span>
+        <span className={selectCss.selectLabel}>{selected?.label ?? '—'}</span>
         {selected?.hint && (
           <span className="t-num-sm muted">{selected.hint}</span>
         )}
         <Icon name="chevronDown" size={16} />
       </button>
       {open && (
-        <div className="select-popup">
+        <div className={selectCss.selectPopup}>
           {searchable && (
-            <div className="input select-search">
+            <div className={cx(uiCss.input, selectCss.selectSearch)}>
               <Icon name="search" size={16} color="var(--text-muted)" />
               <input
-                autoFocus
+                ref={focusOnMount}
                 placeholder="Поиск"
                 value={query}
                 onChange={(event) => {
-                  setQuery(event.target.value);
+                  setQuery(event.currentTarget.value);
                   setActive(0);
                 }}
               />
             </div>
           )}
-          <div className="select-list" role="listbox" ref={list}>
+          <div className={selectCss.selectList} role="listbox" ref={list}>
             {visible.length === 0 && (
-              <span className="select-empty muted t-body-sm">
+              <span className={cx(selectCss.selectEmpty, 'muted t-body-sm')}>
                 Ничего не нашлось
               </span>
             )}
@@ -137,18 +146,16 @@ export const Select = <T extends string>({
                 role="option"
                 aria-selected={option.value === value}
                 data-index={index}
-                className={[
-                  'select-option',
-                  option.value === value && 'selected',
-                  index === active && 'active',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
+                className={cx(
+                  selectCss.selectOption,
+                  option.value === value && selectCss.selected,
+                  index === active && selectCss.active,
+                )}
                 onMouseEnter={() => setActive(index)}
                 onClick={() => pick(option)}
               >
                 {option.icon}
-                <span className="select-label">{option.label}</span>
+                <span className={selectCss.selectLabel}>{option.label}</span>
                 {option.hint && (
                   <span className="t-num-sm muted">{option.hint}</span>
                 )}

@@ -2,7 +2,7 @@ id: game-catalog
 kind: entity
 namespace: catalog
 summary: каталог 1.2 — рецепты, здания, предметы и логистика из файлов игры; генерируется в data/catalog/<версия>.json, в git не хранится
-paths: [src/data/src/**]
+paths: [src/data/src/**, src/ui/src/catalog-fetch.ts]
 version: "1.2"
 game:
   version: "1.2.4.1"
@@ -27,6 +27,10 @@ format:
   logistics: ленты — шт/мин; трубы — м³/мин
   counts_1_2: предметов 168, зданий 23, рецептов 291 (ALT 110)
   buildings_build_cost: у здания — buildCost [{item, amount}] — стоимость постройки из рецептов BP_BuildGun_C (Desc_X_C → Build_X_C); есть у всех 23 зданий; предметы стоимости входят в items; конструктор — 2 усиленные пластины + 8 кабелей
+site:
+  file: dist/catalog/<версия>.json?v=<sha256[:8]> — отдельный файл, не часть JS-бандла; кешируется отдельно от кода
+  load: loadCatalog() из src/ui/src/catalog-fetch.ts без top-level await (ui-no-top-level-await); src/ui/src/index.tsx грузит каталог, затем import('./App'); default @catalog — live binding; в index.html preload каталога и чанка app (JS и CSS) через rsbuild performance.preload по include app; справочник остаётся ленивым
+  tests: vitest — alias @catalog указывает на сам JSON каталога (latestCatalog() в src/ui/rsbuild.config.ts)
 icons:
   command: npm run data:icons
   source: satisfactory.wiki.gg, api.php — адреса превью 96 px пачками по 50, затем файлы по одному

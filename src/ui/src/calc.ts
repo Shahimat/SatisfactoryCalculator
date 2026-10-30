@@ -52,12 +52,66 @@ export const isAutoRow = (row: Row, plan: Pick<Plan, 'goals'>): boolean => {
   return plan.goals.length > 0;
 };
 
-const solvePlan = (plan: Plan, ctx: CalcContext) => {
-  const valid = plan.rows.filter(isRowValid);
-  return solve(plan.solver, valid, ctx, plan.goals, (row) =>
-    isAutoRow(row, plan),
-  );
+/**
+ * Workshops and calculations a plan reads through its rows, transitively and
+ * in visit order. State is immutable, so a cached result stays valid while
+ * the plan and every entity here are the same objects.
+ */
+const dependencies = (plan: Plan, state: AppState): unknown[] => {
+  const found: unknown[] = [];
+  const seen = new Set<Plan>([plan]);
+  const visit = (entity: Plan): void => {
+    for (const row of entity.rows) {
+      let dep: Plan | undefined;
+      if (row.kind === 'workshop') {
+        dep = state.workshops.find((w) => w.id === row.workshop);
+      } else if (row.kind === 'plant') {
+        dep = state.calculations.find((c) => c.id === row.calculation);
+      } else {
+        continue;
+      }
+      found.push(dep);
+      if (dep && !seen.has(dep)) {
+        seen.add(dep);
+        visit(dep);
+      }
+    }
+  };
+  visit(plan);
+  return found;
 };
+
+type Cached<T> = { deps: unknown[]; value: T };
+
+/** Result for a plan, computed again only when the plan or its dependencies change. */
+const memoized = <T>(
+  cache: WeakMap<Plan, Cached<T>>,
+  plan: Plan,
+  state: AppState,
+  compute: () => T,
+): T => {
+  const deps = dependencies(plan, state);
+  const hit = cache.get(plan);
+  if (
+    hit &&
+    hit.deps.length === deps.length &&
+    hit.deps.every((dep, index) => dep === deps[index])
+  ) {
+    return hit.value;
+  }
+  const value = compute();
+  cache.set(plan, { deps, value });
+  return value;
+};
+
+const solved = new WeakMap<Plan, Cached<ReturnType<typeof solve>>>();
+
+const solvePlan = (plan: Plan, state: AppState, ctx: CalcContext) =>
+  memoized(solved, plan, state, () =>
+    solve(plan.solver, plan.rows.filter(isRowValid), ctx, plan.goals, (row) =>
+      isAutoRow(row, plan),
+    ),
+  );
 
 /** Engine context over the catalog and the user's entities; rows of removed recipes are skipped. */
 export const calcContext = (state: AppState): CalcContext => {
@@ -67,11 +121,11 @@ export const calcContext = (state: AppState): CalcContext => {
     item: (id) => items.get(id),
     workshopRows: (id) => {
       const workshop = state.workshops.find((w) => w.id === id);
-      return workshop && solvePlan(workshop, ctx).rows;
+      return workshop && solvePlan(workshop, state, ctx).rows;
     },
     calculationRows: (id) => {
       const calc = state.calculations.find((c) => c.id === id);
-      return calc && solvePlan(calc, ctx).rows;
+      return calc && solvePlan(calc, state, ctx).rows;
     },
   };
   return ctx;
@@ -95,7 +149,13 @@ export type Evaluation = {
   infeasible: boolean;
 };
 
-export const evaluate = (plan: Plan, state: AppState): Evaluation => {
+const evaluations = new WeakMap<Plan, Cached<Evaluation>>();
+
+/** Plan flows with solved building counts; cached, so callers must not mutate the result. */
+export const evaluate = (plan: Plan, state: AppState): Evaluation =>
+  memoized(evaluations, plan, state, () => compute(plan, state));
+
+const compute = (plan: Plan, state: AppState): Evaluation => {
   const ctx = calcContext(state);
   const total = emptyFlows();
   const isAuto = (row: Row) => isRowValid(row) && isAutoRow(row, plan);

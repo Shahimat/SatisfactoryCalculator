@@ -1,4 +1,5 @@
 import type { SolverMode } from '../../../engine/src/calc';
+import uiCss from './ui.module.css';
 
 const MODES: { value: SolverMode; label: string; title: string }[] = [
   {
@@ -23,13 +24,17 @@ export const SolverToggle = ({
 }) => (
   <span className="hstack" style={{ gap: 6 }}>
     <span className="t-label muted">Расчёт строк</span>
-    <span className="segmented" role="radiogroup" aria-label="Расчёт строк">
+    <span
+      className={uiCss.segmented}
+      role="radiogroup"
+      aria-label="Расчёт строк"
+    >
       {MODES.map((mode) => (
         <button
           key={mode.value}
           type="button"
           title={mode.title}
-          className={mode.value === value ? 'active' : ''}
+          className={mode.value === value ? uiCss.active : undefined}
           onClick={() => onChange(mode.value)}
         >
           {mode.label}

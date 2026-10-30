@@ -31,6 +31,10 @@ import { BuildingModal } from './building-modal';
 import { EditRowModal } from './edit-row';
 import { Icon } from './icons';
 import { GameIcon, IconButton } from './ui';
+import { cx } from '../cx';
+import chipsCss from './chips.module.css';
+import rowsCss from './rows.module.css';
+import uiCss from './ui.module.css';
 
 const PURITY_LABEL = {
   impure: 'бедное',
@@ -129,8 +133,8 @@ export const RowsView = ({
 
   return (
     <>
-      <div className="calc-head">
-        <div className="col-header t-label">
+      <div className={rowsCss.calcHead}>
+        <div className={cx(rowsCss.colHeader, 't-label')}>
           <span />
           <span>Рецепт</span>
           <span>Здания</span>
@@ -148,7 +152,7 @@ export const RowsView = ({
           edit={goalEdit}
         />
         {evaluation.infeasible && (
-          <div className="banner error">
+          <div className={cx(uiCss.banner, uiCss.error)}>
             <Icon name="alert" size={20} color="var(--status-deficit)" />
             <span className="t-body-sm">
               Цели не достигаются: петля теряет материал или нужные строки
@@ -157,7 +161,7 @@ export const RowsView = ({
           </div>
         )}
       </div>
-      <div className="rows">
+      <div className={rowsCss.rows}>
         {evaluation.rows.map((result) => (
           <Fragment key={result.row.id}>
             <RowView
@@ -241,7 +245,7 @@ const FlowsCell = ({
   onPick?: PickItem;
   edit?: ItemEdit;
 }) => (
-  <div className="flows dim">
+  <div className={cx(uiCss.flows, rowsCss.dim)}>
     {flows.map(([item, perMinute]) => (
       <FlowChip
         key={item}
@@ -340,19 +344,17 @@ const RowView = ({
     : undefined;
   return (
     <div
-      className={[
-        'row',
-        selected && 'selected',
-        fixed && 'fixed',
-        status,
-        dragging && 'dragging',
-        drop && (drop.after ? 'drop-after' : 'drop-before'),
-      ]
-        .filter(Boolean)
-        .join(' ')}
+      className={cx(
+        rowsCss.row,
+        selected && rowsCss.selected,
+        fixed && rowsCss.fixed,
+        status && rowsCss[status],
+        dragging && rowsCss.dragging,
+        drop && (drop.after ? rowsCss.dropAfter : rowsCss.dropBefore),
+      )}
       draggable={armed}
       onDragStart={(event) => {
-        event.dataTransfer.effectAllowed = 'move';
+        if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move';
         onDragStart();
       }}
       onDragOver={(event) => {
@@ -372,9 +374,9 @@ const RowView = ({
           onSelect();
       }}
     >
-      <div className="lead">
+      <div className={rowsCss.lead}>
         <span
-          className="grip"
+          className={rowsCss.grip}
           title="Перетащите, чтобы изменить порядок"
           onMouseDown={() => setArmed(true)}
           onMouseUp={() => setArmed(false)}
@@ -389,12 +391,12 @@ const RowView = ({
           />
         )}
       </div>
-      <div className="name">
-        <span className="title">
+      <div className={rowsCss.name}>
+        <span className={rowsCss.title}>
           <span
             role="button"
             tabIndex={0}
-            className="title-button"
+            className={rowsCss.titleButton}
             title="Настроить строку — разгон, петлевики, объём"
             onClick={onEdit}
             onKeyDown={(event) => {
@@ -412,7 +414,9 @@ const RowView = ({
               />
             )}
             {header.title}
-            {header.alt && <span className="badge alt">ALT</span>}
+            {header.alt && (
+              <span className={cx(uiCss.badge, uiCss.alt)}>ALT</span>
+            )}
           </span>
           {row.kind === 'plant' && (
             <a
@@ -425,26 +429,28 @@ const RowView = ({
           )}
         </span>
         {status === 'removed' ? (
-          <span className="meta error">
+          <span className={cx(rowsCss.meta, rowsCss.error)}>
             Удалён в игре {catalog.version} — замените
           </span>
         ) : status === 'changed' ? (
-          <span className="meta warn">
+          <span className={cx(rowsCss.meta, rowsCss.warn)}>
             Изменён в игре {catalog.version} — пересчитано
           </span>
         ) : result.error ? (
-          <span className="meta error">{result.error}</span>
+          <span className={cx(rowsCss.meta, rowsCss.error)}>
+            {result.error}
+          </span>
         ) : idle ? (
-          <span className="meta warn">
+          <span className={cx(rowsCss.meta, rowsCss.warn)}>
             {solver === 'sequential'
               ? 'Выше ничего не потребляет — перетащите ниже потребителей'
               : 'Продукт строки сейчас никому не нужен'}
           </span>
         ) : (
-          header.meta && <span className="meta">{header.meta}</span>
+          header.meta && <span className={rowsCss.meta}>{header.meta}</span>
         )}
       </div>
-      <div className="dim">
+      <div className={rowsCss.dim}>
         {row.kind === 'recipe' ||
         row.kind === 'extractor' ||
         row.kind === 'generator' ? (
@@ -463,16 +469,18 @@ const RowView = ({
         ) : (
           <button
             type="button"
-            className="factory-chip"
+            className={chipsCss.factoryChip}
             onClick={onEdit}
             title="Изменить копии"
           >
-            <span className="groups">
-              <span className="group">
-                <span className="count">×{placedCopies(row.copies)}</span>
+            <span className={chipsCss.groups}>
+              <span className={chipsCss.group}>
+                <span className={chipsCss.count}>
+                  ×{placedCopies(row.copies)}
+                </span>
                 {lastCopyLoad(row.copies) !== undefined && (
                   <span
-                    className="tag warn"
+                    className={cx(uiCss.tag, uiCss.warn)}
                     title="Последняя копия загружена не полностью"
                   >
                     <Icon name="gauge" size={12} />
@@ -485,12 +493,15 @@ const RowView = ({
                   {row.kind === 'workshop' ? 'копий цеха' : 'копий завода'}
                 </span>
                 {result.auto ? (
-                  <span className="tag" title="Число копий подбирает решатель">
+                  <span
+                    className={uiCss.tag}
+                    title="Число копий подбирает решатель"
+                  >
                     авто
                   </span>
                 ) : (
                   <span
-                    className="tag fixed"
+                    className={cx(uiCss.tag, uiCss.fixed)}
                     title="Копии закреплены — пересчёт цепочки их не меняет"
                   >
                     <Icon name="lock" size={12} />
@@ -505,10 +516,10 @@ const RowView = ({
       <FlowsCell flows={inputs} units={units} onPick={onPick} />
       <Icon name="arrowRight" size={20} color="var(--text-muted)" />
       <FlowsCell flows={outputs} units={units} edit={lockEdit} />
-      <div className="dim">
+      <div className={rowsCss.dim}>
         {flows.powerMW !== 0 && <PowerChip powerMW={flows.powerMW} />}
       </div>
-      <div className="actions">
+      <div className={rowsCss.actions}>
         <IconButton icon="copy" title="Дублировать" onClick={onDuplicate} />
         <IconButton icon="close" title="Удалить" onClick={onRemove} />
       </div>
@@ -575,14 +586,18 @@ const NestedRows = ({
         const { inputs, outputs } = splitFlows(scaled.items);
         const header = rowHeader(result.row, state);
         return (
-          <div className="row nested" key={result.row.id}>
-            <div className="lead" />
-            <div className="name">
-              <span className="title">
+          <div className={cx(rowsCss.row, rowsCss.nested)} key={result.row.id}>
+            <div className={rowsCss.lead} />
+            <div className={rowsCss.name}>
+              <span className={rowsCss.title}>
                 {header.title}
-                {header.alt && <span className="badge alt">ALT</span>}
+                {header.alt && (
+                  <span className={cx(uiCss.badge, uiCss.alt)}>ALT</span>
+                )}
               </span>
-              {header.meta && <span className="meta">{header.meta}</span>}
+              {header.meta && (
+                <span className={rowsCss.meta}>{header.meta}</span>
+              )}
             </div>
             <div>
               {'groups' in result.row && (
@@ -628,9 +643,9 @@ const TotalRow = ({
 }) => {
   const { inputs, outputs } = splitFlows(total.items);
   return (
-    <div className="row total">
+    <div className={cx(rowsCss.row, rowsCss.total)}>
       <div />
-      <div className="name">
+      <div className={rowsCss.name}>
         <span className="t-heading">Итого</span>
       </div>
       <BuildCell build={build} />
@@ -647,10 +662,10 @@ const TotalRow = ({
 const BuildCell = ({ build }: { build: BuildList }) => {
   const entries = [...build.buildings].sort(([, a], [, b]) => b - a);
   return (
-    <div className="build-cell">
+    <div className={rowsCss.buildCell}>
       {entries.map(([building, count]) => (
         <span
-          className="build-chip compact"
+          className={cx(chipsCss.buildChip, chipsCss.compact)}
           key={building}
           title={buildingName(building)}
         >
@@ -660,26 +675,30 @@ const BuildCell = ({ build }: { build: BuildList }) => {
       ))}
       {build.workshops.map((w) => (
         <a
-          className="build-chip compact"
+          className={cx(chipsCss.buildChip, chipsCss.compact)}
           key={w.id}
           href={`#/workshops/${w.id}`}
           title={`Цех · ${w.name}`}
         >
           <Icon name="chain" size={20} color="var(--accent-primary)" />
           <span className="t-num">×{plain(w.copies)}</span>
-          <span className="t-body-sm muted build-name">{w.name}</span>
+          <span className={cx(rowsCss.buildName, 't-body-sm muted')}>
+            {w.name}
+          </span>
         </a>
       ))}
       {build.plants.map((p) => (
         <a
-          className="build-chip compact"
+          className={cx(chipsCss.buildChip, chipsCss.compact)}
           key={p.id}
           href={`#/calc/${p.id}`}
           title={`Завод · ${p.name}`}
         >
           <Icon name="factory" size={20} color="var(--accent-primary)" />
           <span className="t-num">×{plain(p.copies)}</span>
-          <span className="t-body-sm muted build-name">{p.name}</span>
+          <span className={cx(rowsCss.buildName, 't-body-sm muted')}>
+            {p.name}
+          </span>
         </a>
       ))}
     </div>
@@ -693,9 +712,9 @@ const BuildCost = ({ cost }: { cost: Map<string, number> }) => {
   return (
     <div className="stack">
       <span className="t-label muted">Ресурсы на постройку</span>
-      <div className="balance">
+      <div className={chipsCss.balance}>
         {entries.map(([item, amount]) => (
-          <span className="build-chip" key={item}>
+          <span className={chipsCss.buildChip} key={item}>
             <GameIcon id={item} />
             <span className="stack" style={{ gap: 0 }}>
               <span className="t-num">{plain(amount)}</span>

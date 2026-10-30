@@ -1,0 +1,10 @@
+key: ui-preact-hooks
+summary: в UI хуки и типы импортируются из 'react' (alias на preact/compat), не из preact/hooks; у событий читается event.currentTarget до колбэка обновления
+rule: |
+  Хуки и типы импортируются из 'react': в сборке 'react' — alias на preact/compat.
+  Из preact/hooks напрямую не импортировать.
+
+  У событий брать event.currentTarget (в типах Preact target — EventTarget)
+  и читать значение до колбэка обновления.
+
+  reason: с compat имя расчёта сохраняется после одного нажатия без blur (headless Chrome); без compat не проверялось

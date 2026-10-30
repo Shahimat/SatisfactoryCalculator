@@ -1,6 +1,6 @@
 name: satisfactory-calculator
 summary: калькулятор производственных цепочек Satisfactory
-stack: [typescript, react, rsbuild, ag-grid, node:test, jest, vitest]
+stack: [typescript, preact (API React через preact/compat), rsbuild, css-modules, node:test, jest, vitest]
 reality: [this-repo]
 preset: operational
 namespaces:

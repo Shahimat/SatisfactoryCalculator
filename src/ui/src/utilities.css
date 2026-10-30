@@ -1,0 +1,15 @@
+/* Layout utilities: loaded after component modules, so they win ties as before. */
+.spacer {
+  flex: 1;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hstack {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}

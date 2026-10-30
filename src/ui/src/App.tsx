@@ -1,14 +1,21 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 
 import logo from './assets/logo.webp';
 import type { Units } from './model';
 import { navigate, useRoute } from './router';
 import { CalculationsScreen } from './screens/calculations';
 import { PlantsScreen } from './screens/plants';
-import { ReferenceScreen } from './screens/reference';
 import { WorkshopsScreen } from './screens/workshops';
 import { setState, useAppState } from './store';
-import './styles.css';
+import appCss from './App.module.css';
+import uiCss from './components/ui.module.css';
+// Last: component modules come first in the bundle, utilities override them.
+import './utilities.css';
+
+/** The reference is visited rarely, so its code loads on first visit. */
+const ReferenceScreen = lazy(() =>
+  import('./screens/reference').then((m) => ({ default: m.ReferenceScreen })),
+);
 
 const SECTIONS = [
   { path: 'calc', label: 'Расчёты' },
@@ -32,27 +39,31 @@ const App = () => {
     if (!section) navigate('/calc');
   }, [section]);
   return (
-    <div className="app">
-      <header className="topbar">
-        <a href="#/calc" className="logo" title="Калькулятор Satisfactory">
+    <div className={appCss.app}>
+      <header className={appCss.topbar}>
+        <a
+          href="#/calc"
+          className={appCss.logo}
+          title="Калькулятор Satisfactory"
+        >
           <img src={logo} alt="Satisfactory" height={40} />
         </a>
-        <nav className="nav">
+        <nav className={appCss.nav}>
           {SECTIONS.map((s) => (
             <a
               key={s.path}
               href={`#/${s.path}`}
-              className={section === s.path ? 'active' : ''}
+              className={section === s.path ? appCss.active : undefined}
             >
               {s.label}
             </a>
           ))}
         </nav>
         <span className="spacer" />
-        <div className="units">
+        <div className={appCss.units}>
           <span className="t-label muted">Единицы</span>
           <div
-            className="segmented"
+            className={uiCss.segmented}
             role="radiogroup"
             aria-label="Единицы потока"
           >
@@ -60,7 +71,7 @@ const App = () => {
               <button
                 key={u.value}
                 type="button"
-                className={state.units === u.value ? 'active' : ''}
+                className={state.units === u.value ? uiCss.active : undefined}
                 onClick={() => setState((s) => ({ ...s, units: u.value }))}
               >
                 {u.label}
@@ -74,7 +85,9 @@ const App = () => {
       ) : section === 'plants' ? (
         <PlantsScreen />
       ) : section === 'reference' ? (
-        <ReferenceScreen tab={param} />
+        <Suspense fallback={null}>
+          <ReferenceScreen tab={param} />
+        </Suspense>
       ) : (
         <CalculationsScreen id={param} />
       )}

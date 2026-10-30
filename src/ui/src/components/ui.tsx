@@ -2,6 +2,8 @@ import { type ReactNode, useEffect } from 'react';
 
 import { iconUrl } from '../catalog';
 import { Icon, type IconName } from './icons';
+import { cx } from '../cx';
+import uiCss from './ui.module.css';
 
 export const GameIcon = ({
   id,
@@ -11,7 +13,7 @@ export const GameIcon = ({
   size?: 'sm' | 'md' | 'lg';
 }) => (
   <img
-    className={`item-icon ${size === 'md' ? '' : size}`}
+    className={cx(uiCss.itemIcon, size !== 'md' && uiCss[size])}
     src={iconUrl(id)}
     alt=""
     loading="lazy"
@@ -40,7 +42,7 @@ export const Button = ({
 }: ButtonProps) => (
   <button
     type="button"
-    className={`btn btn-${variant}`}
+    className={cx(uiCss.btn, uiCss[`btn-${variant}`])}
     onClick={onClick}
     disabled={disabled}
     title={title}
@@ -61,7 +63,7 @@ export const IconButton = ({
 }) => (
   <button
     type="button"
-    className="icon-btn"
+    className={uiCss.iconBtn}
     title={title}
     aria-label={title}
     onClick={onClick}
@@ -92,21 +94,21 @@ export const Modal = ({
   }, [onClose]);
   return (
     <div
-      className="overlay"
+      className={uiCss.overlay}
       onMouseDown={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
-        className="modal"
+        className={uiCss.modal}
         style={{ maxWidth: width }}
         role="dialog"
         aria-label={title}
       >
-        <div className="modal-header">
+        <div className={uiCss.modalHeader}>
           <h2 className="t-heading">{title}</h2>
           <IconButton icon="close" title="Закрыть" onClick={onClose} />
         </div>
-        <div className="modal-body">{children}</div>
-        {footer && <div className="modal-footer">{footer}</div>}
+        <div className={uiCss.modalBody}>{children}</div>
+        {footer && <div className={uiCss.modalFooter}>{footer}</div>}
       </div>
     </div>
   );
@@ -124,8 +126,8 @@ export const Field = ({
   children: ReactNode;
   width?: number;
 }) => (
-  <div className="field" style={width ? { width } : { flex: 1 }}>
-    <span className="field-label t-label muted">
+  <div className={uiCss.field} style={width ? { width } : { flex: 1 }}>
+    <span className={cx(uiCss.fieldLabel, 't-label muted')}>
       {icon}
       {label}
     </span>
@@ -150,7 +152,7 @@ export const NumberInput = ({
   max?: number;
   step?: number;
 }) => (
-  <div className="input">
+  <div className={uiCss.input}>
     <input
       type="number"
       value={Number.isFinite(value) ? value : ''}
@@ -158,7 +160,7 @@ export const NumberInput = ({
       max={max}
       step={step}
       placeholder={placeholder}
-      onChange={(event) => onChange(event.target.valueAsNumber)}
+      onChange={(event) => onChange(event.currentTarget.valueAsNumber)}
     />
     {suffix && <span className="t-num-sm muted">{suffix}</span>}
   </div>

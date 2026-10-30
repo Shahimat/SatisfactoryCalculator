@@ -1,8 +1,0 @@
-summary: подбор рецепта по клику на потребление — чип в строке и «Итого», дефицит и добыча в балансе открывают «Добавить» с предметом
-source: намерения основной сессии 2026-10-28; просьба пользователя «не могу нажать на иконку потребления, чтобы добавить цепочку»
-items:
-  - op: add
-    kind: decision
-    target: context/conventions/ui-calc-pick-consumption.yml
-    summary: клик по чипу потребления в строке или «Итого» и по чипу «Дефицит» / «Добыча» в балансе открывает «Добавить» с предметом и количеством; сырьё — во вкладке «Добыча» с подходящим зданием и числом зданий; подобранный рецепт не становится целью, это промежуточный продукт
-    evidence: просьба пользователя 2026-10-28; src/ui/src/components/chips.tsx (onPick, BalanceChip), src/ui/src/components/add-row.tsx (initialItem → mode extractor/recipe), src/ui/src/screens/calculations.tsx (picked → addRow без target)

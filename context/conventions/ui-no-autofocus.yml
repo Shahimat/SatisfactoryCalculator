@@ -1,0 +1,10 @@
+key: ui-no-autofocus
+summary: в src/ui не использовать autoFocus — фокус ставится ref-колбэком focusOnMount
+rule: |
+  Не использовать autoFocus. Preact ставит только атрибут, а браузер не
+  фокусирует элемент, добавленный позже страницы.
+
+  Фокус — ref-колбэком: const focusOnMount = (input: HTMLInputElement | null) => input?.focus();
+  и ref={focusOnMount} на поле. См. chips.tsx, select.tsx.
+
+  reason: до замены чип выхода не получал фокус — число не выделялось, и правка не закрывалась без blur; с focusOnMount в headless Chrome фокус и выделение 0–2 как в React

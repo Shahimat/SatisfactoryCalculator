@@ -1,0 +1,7 @@
+key: ui-no-top-level-await
+summary: в src/ui без top-level await — Prefresh (HMR в dev) снимает $RefreshSig$ до продолжения модуля и падает
+rule: |
+  В модулях src/ui не использовать top-level await. Каталог и другие данные
+  грузятся промисом в точке входа: loadCatalog().then(() => import('./App')).
+
+  reason: Prefresh (HMR в dev) снимает $RefreshSig$ до продолжения модуля — падает «$RefreshSig$ is not a function»; воспроизведено в headless Chrome на rsbuild dev 2026-10-30

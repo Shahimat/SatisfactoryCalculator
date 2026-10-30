@@ -6,6 +6,9 @@ import { plain } from '../calc';
 import { FlowChip } from '../components/chips';
 import { Icon } from '../components/icons';
 import { GameIcon } from '../components/ui';
+import { cx } from '../cx';
+import layoutCss from './layout.module.css';
+import uiCss from '../components/ui.module.css';
 
 type Tab = 'recipes' | 'buildings' | 'items';
 
@@ -23,16 +26,16 @@ export const ReferenceScreen = ({ tab = 'recipes' }: { tab?: string }) => {
   const active = (TABS.find((t) => t.value === tab)?.value ?? 'recipes') as Tab;
   const [query, setQuery] = useState('');
   return (
-    <main className="content">
-      <div className="page-header">
-        <div className="heading">
+    <main className={layoutCss.content}>
+      <div className={layoutCss.pageHeader}>
+        <div className={layoutCss.heading}>
           <h1 className="t-display">Справочник</h1>
           <span className="secondary">
             Данные игры только для чтения — собираются из файлов игры при сборке
             сайта.
           </span>
         </div>
-        <span className="list-item">
+        <span className={uiCss.listItem}>
           <Icon name="check" size={14} color="var(--status-surplus)" />
           <span className="t-label secondary">
             Игра {catalog.game.version} · сборка {catalog.game.build}
@@ -40,23 +43,23 @@ export const ReferenceScreen = ({ tab = 'recipes' }: { tab?: string }) => {
           <span className="t-num-sm muted">собрано {__BUILD_DATE__}</span>
         </span>
       </div>
-      <nav className="tabs">
+      <nav className={layoutCss.tabs}>
         {TABS.map((t) => (
           <a
             key={t.value}
             href={`#/reference/${t.value}`}
-            className={t.value === active ? 'active' : ''}
+            className={t.value === active ? layoutCss.active : undefined}
           >
             {t.label}
           </a>
         ))}
       </nav>
-      <div className="input" style={{ maxWidth: 360 }}>
+      <div className={uiCss.input} style={{ maxWidth: 360 }}>
         <Icon name="search" size={16} color="var(--text-muted)" />
         <input
           placeholder="Поиск"
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => setQuery(event.currentTarget.value)}
         />
       </div>
       {active === 'recipes' && <RecipesTable query={query} />}
@@ -83,7 +86,10 @@ const RecipesTable = ({ query }: { query: string }) => {
           <button
             key={value}
             type="button"
-            className={`chip-filter ${alt === value ? 'active' : ''}`}
+            className={cx(
+              layoutCss.chipFilter,
+              alt === value && layoutCss.active,
+            )}
             onClick={() => setAlt(value)}
           >
             {{ all: 'Все', standard: 'Стандартные', alt: 'ALT' }[value]}
@@ -91,7 +97,7 @@ const RecipesTable = ({ query }: { query: string }) => {
         ))}
         <span className="t-body-sm muted">{list.length} шт.</span>
       </div>
-      <table className="table">
+      <table className={layoutCss.table}>
         <thead>
           <tr className="t-label">
             <th>Рецепт</th>
@@ -108,7 +114,9 @@ const RecipesTable = ({ query }: { query: string }) => {
                 <td>
                   <span className="hstack">
                     {r.name.ru}
-                    {r.alternate && <span className="badge alt">ALT</span>}
+                    {r.alternate && (
+                      <span className={cx(uiCss.badge, uiCss.alt)}>ALT</span>
+                    )}
                   </span>
                 </td>
                 <td>
@@ -118,7 +126,7 @@ const RecipesTable = ({ query }: { query: string }) => {
                   </span>
                 </td>
                 <td>
-                  <div className="flows">
+                  <div className={uiCss.flows}>
                     {r.inputs.map(({ item, amount }) => (
                       <FlowChip
                         key={item}
@@ -130,7 +138,7 @@ const RecipesTable = ({ query }: { query: string }) => {
                   </div>
                 </td>
                 <td>
-                  <div className="flows">
+                  <div className={uiCss.flows}>
                     {r.outputs.map(({ item, amount }) => (
                       <FlowChip
                         key={item}
@@ -176,7 +184,7 @@ const BuildingsTable = ({ query }: { query: string }) => {
         a.name.ru.localeCompare(b.name.ru, 'ru'),
     );
   return (
-    <table className="table">
+    <table className={layoutCss.table}>
       <thead>
         <tr className="t-label">
           <th>Здание</th>
@@ -198,7 +206,11 @@ const BuildingsTable = ({ query }: { query: string }) => {
             </td>
             <td>
               <span
-                className={`badge ${b.kind === 'generator' ? 'ok' : b.kind === 'extractor' ? 'warn' : ''}`}
+                className={cx(
+                  uiCss.badge,
+                  b.kind === 'generator' && uiCss.ok,
+                  b.kind === 'extractor' && uiCss.warn,
+                )}
               >
                 {KIND_LABEL[b.kind]}
               </span>
@@ -256,7 +268,10 @@ const ItemsGrid = ({ query }: { query: string }) => {
           <button
             key={f.value}
             type="button"
-            className={`chip-filter ${filter === f.value ? 'active' : ''}`}
+            className={cx(
+              layoutCss.chipFilter,
+              filter === f.value && layoutCss.active,
+            )}
             onClick={() => setFilter(f.value)}
           >
             {f.label}
@@ -265,15 +280,17 @@ const ItemsGrid = ({ query }: { query: string }) => {
         <span className="t-body-sm muted">{list.length} шт.</span>
       </div>
       <div
-        className="cards"
+        className={layoutCss.cards}
         style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))' }}
       >
         {list.map((i) => (
-          <div className="card" key={i.id}>
+          <div className={layoutCss.card} key={i.id}>
             <span className="hstack">
               <GameIcon id={i.id} size="lg" />
               <span className="spacer" />
-              <span className={`badge ${i.form === 'solid' ? '' : 'fluid'}`}>
+              <span
+                className={cx(uiCss.badge, i.form !== 'solid' && uiCss.fluid)}
+              >
                 {i.form === 'solid' ? 'шт' : 'м³'}
               </span>
             </span>

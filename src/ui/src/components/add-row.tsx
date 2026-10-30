@@ -25,6 +25,8 @@ import { FactoryChip, FlowChip, PowerChip } from './chips';
 import { GroupsEditor, PurityField } from './edit-row';
 import { Icon } from './icons';
 import { Button, Field, GameIcon, Modal, NumberInput, Select } from './ui';
+import { cx } from '../cx';
+import uiCss from './ui.module.css';
 
 type Mode = 'recipe' | 'extractor' | 'generator';
 
@@ -76,12 +78,12 @@ export const AddRowModal = ({
         </>
       }
     >
-      <div className="segmented" style={{ alignSelf: 'flex-start' }}>
+      <div className={uiCss.segmented} style={{ alignSelf: 'flex-start' }}>
         {MODES.map((m) => (
           <button
             key={m.value}
             type="button"
-            className={m.value === mode ? 'active' : ''}
+            className={m.value === mode ? uiCss.active : undefined}
             onClick={() => {
               setMode(m.value);
               setRow(null);
@@ -141,7 +143,8 @@ const Preview = ({ row }: { row: Row }) => {
   const state = useAppState();
   const result = evaluate(asPlan([row]), state).rows[0];
   if (!result) return null;
-  if (result.error) return <span className="error-text">{result.error}</span>;
+  if (result.error)
+    return <span className={uiCss.errorText}>{result.error}</span>;
   const { inputs, outputs } = splitFlows(result.flows.items);
   const building =
     row.kind === 'recipe'
@@ -151,20 +154,20 @@ const Preview = ({ row }: { row: Row }) => {
         : '';
   return (
     <div
-      className="list-item"
+      className={uiCss.listItem}
       style={{ background: 'var(--bg-chrome)', flexWrap: 'wrap' }}
     >
       <span className="t-label muted">Итог</span>
       {'groups' in row && (
         <FactoryChip building={building} groups={row.groups} />
       )}
-      <div className="flows">
+      <div className={uiCss.flows}>
         {inputs.map(([item, v]) => (
           <FlowChip key={item} item={item} perMinute={v} units={state.units} />
         ))}
       </div>
       <Icon name="arrowRight" size={20} color="var(--text-muted)" />
-      <div className="flows">
+      <div className={uiCss.flows}>
         {outputs.map(([item, v]) => (
           <FlowChip key={item} item={item} perMinute={v} units={state.units} />
         ))}
@@ -283,13 +286,18 @@ const RecipeForm = ({
             <button
               key={option.id}
               type="button"
-              className={`option ${option.id === recipe?.id ? 'active' : ''}`}
+              className={cx(
+                uiCss.option,
+                option.id === recipe?.id && uiCss.active,
+              )}
               onClick={() => setRecipeId(option.id)}
             >
               <span className="stack" style={{ width: 240, gap: 4 }}>
                 <span className="hstack">
                   <span className="t-title">{option.name.ru}</span>
-                  {option.alternate && <span className="badge alt">ALT</span>}
+                  {option.alternate && (
+                    <span className={cx(uiCss.badge, uiCss.alt)}>ALT</span>
+                  )}
                 </span>
                 <span className="hstack t-body-sm muted">
                   <GameIcon id={option.building} size="sm" />
@@ -297,7 +305,7 @@ const RecipeForm = ({
                   {optionBuilding?.powerMW || 'перем.'} МВт
                 </span>
               </span>
-              <span className="flows">
+              <span className={uiCss.flows}>
                 {option.inputs.map(({ item: i, amount }) => (
                   <FlowChip
                     key={i}
@@ -308,7 +316,7 @@ const RecipeForm = ({
                 ))}
               </span>
               <Icon name="arrowRight" size={18} color="var(--text-muted)" />
-              <span className="flows">
+              <span className={uiCss.flows}>
                 {option.outputs.map(({ item: i, amount }) => (
                   <FlowChip
                     key={i}

@@ -18,6 +18,8 @@ import { getState, setState, useAppState } from '../store';
 import { FlowChip } from './chips';
 import { Icon } from './icons';
 import { Button, Modal } from './ui';
+import { cx } from '../cx';
+import uiCss from './ui.module.css';
 
 export const ConnectModal = ({
   kind,
@@ -85,11 +87,14 @@ export const ConnectModal = ({
             <button
               key={option.id}
               type="button"
-              className={`option ${option.id === selected ? 'active' : ''}`}
+              className={cx(
+                uiCss.option,
+                option.id === selected && uiCss.active,
+              )}
               onClick={() => setSelected(option.id)}
             >
               <Icon name={kind === 'workshop' ? 'chain' : 'factory'} />
-              <span className="stack grow" style={{ gap: 6 }}>
+              <span className={cx(uiCss.grow, 'stack')} style={{ gap: 6 }}>
                 <span>{option.name}</span>
                 <span className="t-body-sm muted">
                   {countLabel(option.rows.length, 'строка', 'строки', 'строк')}
@@ -114,7 +119,7 @@ const PlanFlows = ({ plan }: { plan: Plan }) => {
   const { inputs, outputs } = splitFlows(evaluate(plan, state).total.items);
   if (inputs.length === 0 && outputs.length === 0) return null;
   return (
-    <span className="flows">
+    <span className={uiCss.flows}>
       {inputs.map(([item, v]) => (
         <FlowChip key={item} item={item} perMinute={v} units={state.units} />
       ))}
@@ -176,20 +181,20 @@ export const ExportModal = ({
     neededBy: string | undefined,
     onToggle: () => void,
   ) => (
-    <label className="list-item" key={id} style={{ cursor: 'pointer' }}>
+    <label className={uiCss.listItem} key={id} style={{ cursor: 'pointer' }}>
       <input
         type="checkbox"
-        className="checkbox"
+        className={uiCss.checkbox}
         checked={checked || Boolean(neededBy)}
         disabled={Boolean(neededBy) && !checked}
         onChange={onToggle}
       />
-      <span className="grow stack" style={{ gap: 2 }}>
+      <span className={cx(uiCss.grow, 'stack')} style={{ gap: 2 }}>
         <span>{name}</span>
         <span className="t-body-sm muted">{meta}</span>
       </span>
       {neededBy && !checked && (
-        <span className="tag">
+        <span className={uiCss.tag}>
           <Icon name="external" size={12} />
           нужен для «{neededBy}»
         </span>
@@ -219,7 +224,7 @@ export const ExportModal = ({
       <label className="hstack" style={{ cursor: 'pointer' }}>
         <input
           type="checkbox"
-          className="checkbox"
+          className={uiCss.checkbox}
           checked={allSelected}
           onChange={() => {
             if (allSelected) {
@@ -263,7 +268,7 @@ export const ExportModal = ({
         )}
       </div>
       <div
-        className="list-item t-num-sm secondary"
+        className={cx(uiCss.listItem, 't-num-sm secondary')}
         style={{ background: 'var(--bg-app)' }}
       >
         {exportFileName(now)} ·{' '}
@@ -330,9 +335,9 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
         </>
       }
     >
-      <div className="list-item" style={{ background: 'var(--bg-app)' }}>
+      <div className={uiCss.listItem} style={{ background: 'var(--bg-app)' }}>
         <Icon name="arrowDown" size={20} />
-        <span className="grow stack" style={{ gap: 2 }}>
+        <span className={cx(uiCss.grow, 'stack')} style={{ gap: 2 }}>
           <span className="t-num">{file?.name ?? 'Файл не выбран'}</span>
           {file && (
             <span className="t-body-sm muted">
@@ -346,9 +351,9 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
           {file ? 'Другой файл' : 'Выбрать файл'}
         </Button>
       </div>
-      {error && <span className="error-text">{error}</span>}
+      {error && <span className={uiCss.errorText}>{error}</span>}
       {file && file.data.gameVersion !== catalog.version && (
-        <div className="banner">
+        <div className={uiCss.banner}>
           <Icon name="alert" color="var(--status-warning)" />
           <span className="t-body-sm">
             Файл собран на игре {file.data.gameVersion}, сайт — на{' '}
@@ -361,12 +366,17 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
         <div className="stack">
           <span className="t-label muted">Содержимое файла</span>
           {entries.map((entry) => (
-            <div className="list-item" key={`${entry.kind}:${entry.id}`}>
+            <div className={uiCss.listItem} key={`${entry.kind}:${entry.id}`}>
               <Icon name={entry.kind === 'workshop' ? 'chain' : 'gauge'} />
-              <span className="grow">
+              <span className={uiCss.grow}>
                 {entry.kind === 'workshop' ? 'Цех' : 'Расчёт'} «{entry.name}»
               </span>
-              <span className={`badge ${entry.exists ? 'warn' : 'ok'}`}>
+              <span
+                className={cx(
+                  uiCss.badge,
+                  entry.exists ? uiCss.warn : uiCss.ok,
+                )}
+              >
                 {entry.exists ? 'Уже есть' : 'Новый'}
               </span>
             </div>
@@ -380,7 +390,7 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
           </span>
           <button
             type="button"
-            className={`option ${mode === 'copy' ? 'active' : ''}`}
+            className={cx(uiCss.option, mode === 'copy' && uiCss.active)}
             onClick={() => setMode('copy')}
           >
             <span className="stack" style={{ gap: 2 }}>
@@ -392,7 +402,7 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
           </button>
           <button
             type="button"
-            className={`option ${mode === 'replace' ? 'active' : ''}`}
+            className={cx(uiCss.option, mode === 'replace' && uiCss.active)}
             onClick={() => setMode('replace')}
           >
             <span className="stack" style={{ gap: 2 }}>

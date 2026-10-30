@@ -4,6 +4,9 @@ import { FlowChip, PowerChip } from '../components/chips';
 import { Icon } from '../components/icons';
 import { Button, NumberInput } from '../components/ui';
 import { setState, useAppState } from '../store';
+import { cx } from '../cx';
+import layoutCss from './layout.module.css';
+import uiCss from '../components/ui.module.css';
 
 const setBuilt = (id: string, built: number) =>
   setState((s) => ({
@@ -35,9 +38,9 @@ export const PlantsScreen = () => {
   const load = generation > 0 ? (consumption / generation) * 100 : 0;
   const output = splitFlows(grid.items).outputs;
   return (
-    <main className="content">
-      <div className="page-header">
-        <div className="heading">
+    <main className={layoutCss.content}>
+      <div className={layoutCss.pageHeader}>
+        <div className={layoutCss.heading}>
           <h1 className="t-display">Заводы</h1>
           <span className="secondary">
             Построенные расчёты образуют энергосеть. Черновики в неё не входят.
@@ -75,7 +78,7 @@ export const PlantsScreen = () => {
       {output.length > 0 && (
         <div className="stack">
           <span className="t-label muted">Выпуск всех заводов</span>
-          <div className="flows">
+          <div className={uiCss.flows}>
             {output.map(([item, v]) => (
               <FlowChip
                 key={item}
@@ -87,11 +90,11 @@ export const PlantsScreen = () => {
           </div>
         </div>
       )}
-      <div className="cards">
+      <div className={layoutCss.cards}>
         {evaluations.map(({ calc, evaluation }) => {
           const { outputs } = splitFlows(evaluation.total.items);
           return (
-            <div className="card" key={calc.id}>
+            <div className={layoutCss.card} key={calc.id}>
               <span className="hstack">
                 <Icon name="factory" color="var(--accent-primary)" />
                 <a
@@ -102,7 +105,7 @@ export const PlantsScreen = () => {
                   {calc.name}
                 </a>
                 <span className="spacer" />
-                <span className={`badge ${calc.built > 0 ? 'ok' : ''}`}>
+                <span className={cx(uiCss.badge, calc.built > 0 && uiCss.ok)}>
                   {calc.built > 0 ? `Построено ×${calc.built}` : 'Черновик'}
                 </span>
               </span>
@@ -115,7 +118,7 @@ export const PlantsScreen = () => {
                 )}{' '}
                 на копию
               </span>
-              <div className="flows">
+              <div className={uiCss.flows}>
                 {outputs.map(([item, v]) => (
                   <FlowChip
                     key={item}
@@ -163,7 +166,7 @@ export const PlantsScreen = () => {
         })}
       </div>
       {state.calculations.length === 0 && (
-        <div className="empty secondary">
+        <div className={cx(layoutCss.empty, 'secondary')}>
           Заводов пока нет — сначала соберите расчёт.
         </div>
       )}
@@ -182,9 +185,9 @@ const Stat = ({
   unit: string;
   color: string;
 }) => (
-  <div className="stat">
+  <div className={layoutCss.stat}>
     <span className="t-label muted">{label}</span>
-    <span className="value" style={{ color }}>
+    <span className={layoutCss.value} style={{ color }}>
       {value} <span className="t-num-sm muted">{unit}</span>
     </span>
   </div>

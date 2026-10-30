@@ -26,6 +26,9 @@ import { Button, Field, NumberInput } from '../components/ui';
 import { newId, type AppState, type Workshop } from '../model';
 import { navigate } from '../router';
 import { setState, useAppState } from '../store';
+import { cx } from '../cx';
+import layoutCss from './layout.module.css';
+import uiCss from '../components/ui.module.css';
 
 const updateWorkshop = (id: string, update: (w: Workshop) => Workshop) =>
   setState((s) => ({
@@ -84,9 +87,9 @@ export const WorkshopsScreen = ({ id }: { id?: string }) => {
     navigate(`/workshops/${created.id}`);
   };
   return (
-    <main className="content">
-      <div className="page-header">
-        <div className="heading">
+    <main className={layoutCss.content}>
+      <div className={layoutCss.pageHeader}>
+        <div className={layoutCss.heading}>
           <h1 className="t-display">Цеха</h1>
           <span className="secondary">
             Цех — готовая цепь рецептов, как чертёж: подключается в расчёт одним
@@ -98,7 +101,7 @@ export const WorkshopsScreen = ({ id }: { id?: string }) => {
         </Button>
       </div>
       {state.workshops.length === 0 ? (
-        <div className="empty">
+        <div className={layoutCss.empty}>
           <Icon name="chain" size={40} color="var(--accent-primary)" />
           <span className="secondary">
             Цехов пока нет. Создайте цех здесь или выделите строки в расчёте и
@@ -106,13 +109,17 @@ export const WorkshopsScreen = ({ id }: { id?: string }) => {
           </span>
         </div>
       ) : (
-        <div className="cards">
+        <div className={layoutCss.cards}>
           {state.workshops.map((w) => {
             const total = evaluate(w, state).total;
             const { inputs, outputs } = splitFlows(total.items);
             const used = usages(state, w.id);
             return (
-              <a key={w.id} className="card link" href={`#/workshops/${w.id}`}>
+              <a
+                key={w.id}
+                className={cx(layoutCss.card, layoutCss.link)}
+                href={`#/workshops/${w.id}`}
+              >
                 <span className="hstack">
                   <Icon name="chain" color="var(--accent-primary)" />
                   <span className="t-title">{w.name}</span>
@@ -121,7 +128,7 @@ export const WorkshopsScreen = ({ id }: { id?: string }) => {
                   {countLabel(w.rows.length, 'строка', 'строки', 'строк')} ·{' '}
                   {countLabel(total.buildings, 'здание', 'здания', 'зданий')}
                 </span>
-                <div className="flows">
+                <div className={uiCss.flows}>
                   {inputs.map(([item, v]) => (
                     <FlowChip
                       key={item}
@@ -131,7 +138,7 @@ export const WorkshopsScreen = ({ id }: { id?: string }) => {
                     />
                   ))}
                 </div>
-                <div className="flows">
+                <div className={uiCss.flows}>
                   {outputs.map(([item, v]) => (
                     <FlowChip
                       key={item}
@@ -187,10 +194,10 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
     close();
   };
   return (
-    <div className="page">
-      <main className="content">
-        <div className="page-header">
-          <div className="heading">
+    <div className={layoutCss.page}>
+      <main className={layoutCss.content}>
+        <div className={layoutCss.pageHeader}>
+          <div className={layoutCss.heading}>
             <a href="#/workshops" className="t-body-sm muted">
               ← Все цеха
             </a>
@@ -199,12 +206,10 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
               style={{ background: 'none', border: 0, outline: 'none' }}
               value={workshop.name}
               aria-label="Название цеха"
-              onChange={(event) =>
-                updateWorkshop(workshop.id, (w) => ({
-                  ...w,
-                  name: event.target.value,
-                }))
-              }
+              onChange={(event) => {
+                const name = event.currentTarget.value;
+                updateWorkshop(workshop.id, (w) => ({ ...w, name }));
+              }}
             />
             <SolverToggle
               value={workshop.solver}
@@ -213,7 +218,7 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
               }
             />
           </div>
-          <div className="toolbar">
+          <div className={layoutCss.toolbar}>
             <Button
               variant="primary"
               icon="plus"
@@ -222,7 +227,7 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
               Рецепт
             </Button>
             <Button onClick={() => setDialog({ kind: 'workshop' })}>Цех</Button>
-            <span className="divider-v" />
+            <span className={layoutCss.dividerV} />
             <Button
               variant="ghost"
               icon="arrowUp"
@@ -252,7 +257,7 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
           </div>
         </div>
         {workshop.gameVersion !== catalog.version && (
-          <div className="banner">
+          <div className={uiCss.banner}>
             <Icon name="alert" color="var(--status-warning)" />
             <span style={{ flex: 1 }}>
               Данные игры обновились: {workshop.gameVersion} → {catalog.version}
@@ -266,7 +271,7 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
           </div>
         )}
         {workshop.rows.length === 0 ? (
-          <div className="empty">
+          <div className={layoutCss.empty}>
             <span className="secondary">
               Добавьте рецепты цепи — интерфейс цеха посчитается сам.
             </span>
@@ -287,7 +292,7 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
           />
         )}
       </main>
-      <aside className="panel" style={{ margin: '24px 24px 0 0' }}>
+      <aside className={layoutCss.panel} style={{ margin: '24px 24px 0 0' }}>
         <span className="t-title">Интерфейс цеха</span>
         <Field label="Масштаб" width={140}>
           <NumberInput
@@ -299,7 +304,7 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
           />
         </Field>
         <span className="t-label muted">Вход</span>
-        <div className="flows">
+        <div className={uiCss.flows}>
           {inputs.length === 0 && <span className="muted t-body-sm">нет</span>}
           {inputs.map(([item, v]) => (
             <FlowChip
@@ -311,7 +316,7 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
           ))}
         </div>
         <span className="t-label muted">Выход</span>
-        <div className="flows">
+        <div className={uiCss.flows}>
           {outputs.length === 0 && <span className="muted t-body-sm">нет</span>}
           {outputs.map(([item, v]) => (
             <FlowChip
@@ -325,7 +330,7 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
         <span className="t-label muted">Энергия</span>
         <div>{<PowerChip powerMW={total.powerMW} />}</div>
         <span className="t-label muted">Внутренние потоки</span>
-        <div className="flows">
+        <div className={uiCss.flows}>
           {internal.length === 0 && (
             <span className="muted t-body-sm">нет</span>
           )}
