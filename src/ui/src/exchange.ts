@@ -7,6 +7,7 @@ import {
   referencedWorkshops,
   type Workshop,
 } from './model';
+import { t } from './i18n';
 
 export const EXPORT_FORMAT = 'satisfactory-calculator';
 
@@ -88,7 +89,7 @@ export const parseExport = (text: string): ExportFile => {
   try {
     data = JSON.parse(text);
   } catch {
-    throw new Error('Файл не похож на JSON');
+    throw new Error(t.exchange.notJson);
   }
   const file = data as Partial<ExportFile>;
   if (
@@ -97,7 +98,7 @@ export const parseExport = (text: string): ExportFile => {
     !Array.isArray(file.calculations) ||
     !Array.isArray(file.workshops)
   ) {
-    throw new Error('Это не файл экспорта калькулятора');
+    throw new Error(t.exchange.notExport);
   }
   return file as ExportFile;
 };
@@ -132,8 +133,6 @@ export const importEntries = (
     })),
   ];
 };
-
-const IMPORT_SUFFIX = ' (импорт)';
 
 /**
  * Merges the file into the state. Matching entities (same uuid) are either
@@ -171,7 +170,7 @@ export const applyImport = (
       ? {
           ...c,
           id: copyId,
-          name: c.name + IMPORT_SUFFIX,
+          name: c.name + t.exchange.importSuffix,
           rows: remapRows(c.rows),
         }
       : { ...c, rows: remapRows(c.rows) };
@@ -182,7 +181,7 @@ export const applyImport = (
       ? {
           ...w,
           id: copyId,
-          name: w.name + IMPORT_SUFFIX,
+          name: w.name + t.exchange.importSuffix,
           rows: remapRows(w.rows),
         }
       : { ...w, rows: remapRows(w.rows) };

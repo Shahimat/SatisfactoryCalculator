@@ -7,6 +7,7 @@ import { setState, useAppState } from '../store';
 import { cx } from '../cx';
 import layoutCss from './layout.module.css';
 import uiCss from '../components/ui.module.css';
+import { t } from '../i18n';
 
 const setBuilt = (id: string, built: number) =>
   setState((s) => ({
@@ -41,35 +42,33 @@ export const PlantsScreen = () => {
     <main className={layoutCss.content}>
       <div className={layoutCss.pageHeader}>
         <div className={layoutCss.heading}>
-          <h1 className="t-display">Заводы</h1>
-          <span className="secondary">
-            Построенные расчёты образуют энергосеть. Черновики в неё не входят.
-          </span>
+          <h1 className="t-display">{t.nav.plants}</h1>
+          <span className="secondary">{t.plants.lead}</span>
         </div>
       </div>
       <div className="hstack" style={{ alignItems: 'stretch' }}>
         <Stat
-          label="Генерация"
+          label={t.plants.generation}
           value={`+${plain(generation, 1)}`}
-          unit="МВт"
+          unit={t.units.mw}
           color="var(--flow-out)"
         />
         <Stat
-          label="Потребление"
+          label={t.plants.consumption}
           value={`−${plain(consumption, 1)}`}
-          unit="МВт"
+          unit={t.units.mw}
           color="var(--flow-in)"
         />
         <Stat
-          label="Запас"
+          label={t.plants.reserve}
           value={`${grid.powerMW >= 0 ? '+' : '−'}${plain(Math.abs(grid.powerMW), 1)}`}
-          unit="МВт"
+          unit={t.units.mw}
           color={
             grid.powerMW >= 0 ? 'var(--flow-out)' : 'var(--status-deficit)'
           }
         />
         <Stat
-          label="Загрузка"
+          label={t.plants.load}
           value={generation > 0 ? plain(load, 0) : '—'}
           unit="%"
           color={load > 100 ? 'var(--status-deficit)' : 'var(--text-primary)'}
@@ -77,7 +76,7 @@ export const PlantsScreen = () => {
       </div>
       {output.length > 0 && (
         <div className="stack">
-          <span className="t-label muted">Выпуск всех заводов</span>
+          <span className="t-label muted">{t.plants.output}</span>
           <div className={uiCss.flows}>
             {output.map(([item, v]) => (
               <FlowChip
@@ -106,17 +105,13 @@ export const PlantsScreen = () => {
                 </a>
                 <span className="spacer" />
                 <span className={cx(uiCss.badge, calc.built > 0 && uiCss.ok)}>
-                  {calc.built > 0 ? `Построено ×${calc.built}` : 'Черновик'}
+                  {calc.built > 0 ? t.plants.built(calc.built) : t.plants.draft}
                 </span>
               </span>
               <span className="t-body-sm muted">
-                {countLabel(
-                  evaluation.total.buildings,
-                  'здание',
-                  'здания',
-                  'зданий',
-                )}{' '}
-                на копию
+                {t.plants.perCopy(
+                  countLabel(evaluation.total.buildings, t.count.buildings),
+                )}
               </span>
               <div className={uiCss.flows}>
                 {outputs.map(([item, v]) => (
@@ -134,7 +129,9 @@ export const PlantsScreen = () => {
               <div className="hstack">
                 {calc.built > 0 ? (
                   <>
-                    <span className="t-body-sm muted">Построено копий</span>
+                    <span className="t-body-sm muted">
+                      {t.plants.builtCopies}
+                    </span>
                     <div style={{ width: 110 }}>
                       <NumberInput
                         value={calc.built}
@@ -149,7 +146,7 @@ export const PlantsScreen = () => {
                       variant="ghost"
                       onClick={() => setBuilt(calc.id, 0)}
                     >
-                      В черновик
+                      {t.plants.toDraft}
                     </Button>
                   </>
                 ) : (
@@ -157,7 +154,7 @@ export const PlantsScreen = () => {
                     variant="primary"
                     onClick={() => setBuilt(calc.id, 1)}
                   >
-                    Построен
+                    {t.plants.markBuilt}
                   </Button>
                 )}
               </div>
@@ -166,9 +163,7 @@ export const PlantsScreen = () => {
         })}
       </div>
       {state.calculations.length === 0 && (
-        <div className={cx(layoutCss.empty, 'secondary')}>
-          Заводов пока нет — сначала соберите расчёт.
-        </div>
+        <div className={cx(layoutCss.empty, 'secondary')}>{t.plants.empty}</div>
       )}
     </main>
   );

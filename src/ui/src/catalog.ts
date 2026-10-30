@@ -1,5 +1,6 @@
 import catalogJson from '@catalog';
 
+import { compareNames, localName } from './i18n';
 import type {
   Catalog,
   CatalogBuilding,
@@ -30,14 +31,15 @@ for (const list of recipesByOutput.values()) {
   list.sort((a, b) => Number(a.alternate) - Number(b.alternate));
 }
 
-/** Items that some recipe produces, sorted by name for pickers. */
-export const producibleItems = catalog.items
-  .filter((item) => recipesByOutput.has(item.id))
-  .sort((a, b) => a.name.ru.localeCompare(b.name.ru, 'ru'));
+const producible = catalog.items.filter((item) => recipesByOutput.has(item.id));
+
+/** Items that some recipe produces, sorted by name in the current language for pickers. */
+export const producibleItems = (): CatalogItem[] =>
+  [...producible].sort(compareNames);
 
 export const DEFAULT_ITEM = items.has('Desc_IronPlate_C')
   ? 'Desc_IronPlate_C'
-  : (producibleItems[0]?.id ?? '');
+  : (producible[0]?.id ?? '');
 
 /** Icons for interface anchors, fetched with the catalog icons. */
 export const SOMERSLOOP_ICON = 'Desc_WAT1_C';
@@ -46,10 +48,20 @@ export const POWER_SHARD_ICON = 'Desc_CrystalShard_C';
 export const iconUrl = (id: string): string =>
   `${import.meta.env.ASSET_PREFIX}/icons/${id}.png`;
 
-export const itemName = (id: string): string => items.get(id)?.name.ru ?? id;
+export const itemName = (id: string): string => {
+  const item = items.get(id);
+  return item ? localName(item) : id;
+};
 
-export const buildingName = (id: string): string =>
-  buildings.get(id)?.name.ru ?? id;
+export const recipeName = (id: string): string => {
+  const recipe = recipes.get(id);
+  return recipe ? localName(recipe) : id;
+};
+
+export const buildingName = (id: string): string => {
+  const building = buildings.get(id);
+  return building ? localName(building) : id;
+};
 
 export const isFluid = (id: string): boolean => {
   const form = items.get(id)?.form;

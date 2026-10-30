@@ -1,0 +1,11 @@
+key: ui-i18n-english-terms
+summary: английская версия — термины из английских названий игры (Calculations, Workshops, Factories, Reference, Somersloop, Clock speed, Impure, Normal, Pure); русская — Заводы для Factories
+rule: |
+  В английской версии интерфейса термины берутся из английских названий игры:
+  Calculations, Workshops, Factories, Reference; Somersloop, Clock speed,
+  Impure / Normal / Pure. Строки — в src/ui/src/i18n/en.ts.
+
+  В русской версии — русские названия тех же понятий, например «Заводы» для
+  Factories.
+
+  reason: пользователь (2026-10-30) выбрал термины из английских названий игры

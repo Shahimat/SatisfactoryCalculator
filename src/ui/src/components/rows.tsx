@@ -35,12 +35,7 @@ import { cx } from '../cx';
 import chipsCss from './chips.module.css';
 import rowsCss from './rows.module.css';
 import uiCss from './ui.module.css';
-
-const PURITY_LABEL = {
-  impure: 'бедное',
-  normal: 'обычное',
-  pure: 'богатое',
-} as const;
+import { localName, t } from '../i18n';
 
 type RowsViewProps = {
   plan: Plan;
@@ -74,8 +69,8 @@ export const RowsView = ({
     return {
       mark: goal ? 'goal' : rows.some(lockedOn) ? 'lock' : undefined,
       initial: goal?.perMinute ?? perMinute,
-      empty: 'без цели',
-      title: 'нужно на выходе: число и Enter — цель, пусто — без цели',
+      empty: t.rows.goalEmpty,
+      title: t.rows.goalTitle,
       onCommit: (value) => {
         if (rows.some(lockedOn)) {
           onChange(
@@ -136,12 +131,12 @@ export const RowsView = ({
       <div className={rowsCss.calcHead}>
         <div className={cx(rowsCss.colHeader, 't-label')}>
           <span />
-          <span>Рецепт</span>
-          <span>Здания</span>
-          <span>Потребление</span>
+          <span>{t.rows.columns.recipe}</span>
+          <span>{t.rows.columns.buildings}</span>
+          <span>{t.rows.columns.consumption}</span>
           <span />
-          <span>Производство</span>
-          <span>Энергия</span>
+          <span>{t.rows.columns.production}</span>
+          <span>{t.rows.columns.power}</span>
           <span />
         </div>
         <TotalRow
@@ -154,10 +149,7 @@ export const RowsView = ({
         {evaluation.infeasible && (
           <div className={cx(uiCss.banner, uiCss.error)}>
             <Icon name="alert" size={20} color="var(--status-deficit)" />
-            <span className="t-body-sm">
-              Цели не достигаются: петля теряет материал или нужные строки
-              зафиксированы. Показаны числа зданий как введены.
-            </span>
+            <span className="t-body-sm">{t.rows.infeasible}</span>
           </div>
         )}
       </div>
@@ -324,8 +316,8 @@ const RowView = ({
         return {
           mark: locked?.item === item ? 'lock' : goal ? 'goal' : undefined,
           initial: locked?.item === item ? locked.perMinute : perMinute,
-          empty: 'авто',
-          title: 'выход строки: число и Enter — закрепить, пусто — авто',
+          empty: t.chips.auto,
+          title: t.rows.lockTitle,
           onCommit: (value) => {
             if (value !== undefined) {
               onLock({
@@ -377,7 +369,7 @@ const RowView = ({
       <div className={rowsCss.lead}>
         <span
           className={rowsCss.grip}
-          title="Перетащите, чтобы изменить порядок"
+          title={t.rows.drag}
           onMouseDown={() => setArmed(true)}
           onMouseUp={() => setArmed(false)}
         >
@@ -386,7 +378,7 @@ const RowView = ({
         {row.kind === 'workshop' && (
           <IconButton
             icon={expanded ? 'chevronDown' : 'chevronRight'}
-            title={expanded ? 'Свернуть' : 'Развернуть'}
+            title={expanded ? t.rows.collapse : t.rows.expand}
             onClick={onExpand}
           />
         )}
@@ -397,7 +389,7 @@ const RowView = ({
             role="button"
             tabIndex={0}
             className={rowsCss.titleButton}
-            title="Настроить строку — разгон, петлевики, объём"
+            title={t.rows.configure}
             onClick={onEdit}
             onKeyDown={(event) => {
               if (event.key === 'Enter' || event.key === ' ') {
@@ -421,7 +413,7 @@ const RowView = ({
           {row.kind === 'plant' && (
             <a
               href={`#/calc/${row.calculation}`}
-              title="Открыть расчёт"
+              title={t.rows.openCalculation}
               className="muted"
             >
               <Icon name="external" size={14} />
@@ -430,11 +422,11 @@ const RowView = ({
         </span>
         {status === 'removed' ? (
           <span className={cx(rowsCss.meta, rowsCss.error)}>
-            Удалён в игре {catalog.version} — замените
+            {t.rows.removed(catalog.version)}
           </span>
         ) : status === 'changed' ? (
           <span className={cx(rowsCss.meta, rowsCss.warn)}>
-            Изменён в игре {catalog.version} — пересчитано
+            {t.rows.changed(catalog.version)}
           </span>
         ) : result.error ? (
           <span className={cx(rowsCss.meta, rowsCss.error)}>
@@ -442,9 +434,7 @@ const RowView = ({
           </span>
         ) : idle ? (
           <span className={cx(rowsCss.meta, rowsCss.warn)}>
-            {solver === 'sequential'
-              ? 'Выше ничего не потребляет — перетащите ниже потребителей'
-              : 'Продукт строки сейчас никому не нужен'}
+            {solver === 'sequential' ? t.rows.idleSequential : t.rows.idle}
           </span>
         ) : (
           header.meta && <span className={rowsCss.meta}>{header.meta}</span>
@@ -463,7 +453,7 @@ const RowView = ({
             groups={row.groups}
             auto={result.auto}
             fixed={fixed && !locked}
-            title="Что делают здания строки"
+            title={t.rows.buildingsTitle}
             onClick={onInspect}
           />
         ) : (
@@ -471,7 +461,7 @@ const RowView = ({
             type="button"
             className={chipsCss.factoryChip}
             onClick={onEdit}
-            title="Изменить копии"
+            title={t.rows.editCopies}
           >
             <span className={chipsCss.groups}>
               <span className={chipsCss.group}>
@@ -481,31 +471,30 @@ const RowView = ({
                 {lastCopyLoad(row.copies) !== undefined && (
                   <span
                     className={cx(uiCss.tag, uiCss.warn)}
-                    title="Последняя копия загружена не полностью"
+                    title={t.rows.lastCopyTitle}
                   >
                     <Icon name="gauge" size={12} />
-                    последняя {plain(lastCopyLoad(row.copies)! * 100, 2)}%
+                    {t.rows.lastCopy(plain(lastCopyLoad(row.copies)! * 100, 2))}
                   </span>
                 )}
               </span>
               <span className="hstack" style={{ gap: 6 }}>
                 <span className="t-body-sm muted">
-                  {row.kind === 'workshop' ? 'копий цеха' : 'копий завода'}
+                  {row.kind === 'workshop'
+                    ? t.rows.workshopCopies
+                    : t.rows.plantCopies}
                 </span>
                 {result.auto ? (
-                  <span
-                    className={uiCss.tag}
-                    title="Число копий подбирает решатель"
-                  >
-                    авто
+                  <span className={uiCss.tag} title={t.rows.autoCopiesTitle}>
+                    {t.chips.auto}
                   </span>
                 ) : (
                   <span
                     className={cx(uiCss.tag, uiCss.fixed)}
-                    title="Копии закреплены — пересчёт цепочки их не меняет"
+                    title={t.rows.fixedCopiesTitle}
                   >
                     <Icon name="lock" size={12} />
-                    закреплено
+                    {t.chips.fixed}
                   </span>
                 )}
               </span>
@@ -520,8 +509,12 @@ const RowView = ({
         {flows.powerMW !== 0 && <PowerChip powerMW={flows.powerMW} />}
       </div>
       <div className={rowsCss.actions}>
-        <IconButton icon="copy" title="Дублировать" onClick={onDuplicate} />
-        <IconButton icon="close" title="Удалить" onClick={onRemove} />
+        <IconButton
+          icon="copy"
+          title={t.rows.duplicate}
+          onClick={onDuplicate}
+        />
+        <IconButton icon="close" title={t.rows.remove} onClick={onRemove} />
       </div>
     </div>
   );
@@ -541,13 +534,13 @@ const rowHeader = (
     case 'recipe': {
       const recipe = recipes.get(row.recipe);
       return recipe
-        ? { title: recipe.name.ru, alt: recipe.alternate }
+        ? { title: localName(recipe), alt: recipe.alternate }
         : { title: row.recipe };
     }
     case 'extractor': {
       return {
         title: itemName(row.resource),
-        meta: `Узел ${PURITY_LABEL[row.purity]}`,
+        meta: t.rows.node(t.rows.purity[row.purity]),
       };
     }
     case 'generator': {
@@ -556,14 +549,17 @@ const rowHeader = (
     case 'workshop': {
       const workshop = state.workshops.find((w) => w.id === row.workshop);
       return {
-        title: workshop?.name ?? 'Цех удалён',
+        title: workshop?.name ?? t.rows.workshopRemoved,
         icon: 'chain',
-        meta: workshop ? undefined : 'Цеха нет в хранилище',
+        meta: workshop ? undefined : t.rows.workshopMissing,
       };
     }
     case 'plant': {
       const calc = state.calculations.find((c) => c.id === row.calculation);
-      return { title: calc?.name ?? 'Расчёт удалён', icon: 'factory' };
+      return {
+        title: calc?.name ?? t.rows.calculationRemoved,
+        icon: 'factory',
+      };
     }
   }
 };
@@ -646,7 +642,7 @@ const TotalRow = ({
     <div className={cx(rowsCss.row, rowsCss.total)}>
       <div />
       <div className={rowsCss.name}>
-        <span className="t-heading">Итого</span>
+        <span className="t-heading">{t.rows.total}</span>
       </div>
       <BuildCell build={build} />
       <FlowsCell flows={inputs} units={units} onPick={onPick} />
@@ -678,7 +674,7 @@ const BuildCell = ({ build }: { build: BuildList }) => {
           className={cx(chipsCss.buildChip, chipsCss.compact)}
           key={w.id}
           href={`#/workshops/${w.id}`}
-          title={`Цех · ${w.name}`}
+          title={t.rows.workshopChip(w.name)}
         >
           <Icon name="chain" size={20} color="var(--accent-primary)" />
           <span className="t-num">×{plain(w.copies)}</span>
@@ -692,7 +688,7 @@ const BuildCell = ({ build }: { build: BuildList }) => {
           className={cx(chipsCss.buildChip, chipsCss.compact)}
           key={p.id}
           href={`#/calc/${p.id}`}
-          title={`Завод · ${p.name}`}
+          title={t.rows.plantChip(p.name)}
         >
           <Icon name="factory" size={20} color="var(--accent-primary)" />
           <span className="t-num">×{plain(p.copies)}</span>
@@ -711,7 +707,7 @@ const BuildCost = ({ cost }: { cost: Map<string, number> }) => {
   const entries = [...cost].sort(([, a], [, b]) => b - a);
   return (
     <div className="stack">
-      <span className="t-label muted">Ресурсы на постройку</span>
+      <span className="t-label muted">{t.rows.buildCost}</span>
       <div className={chipsCss.balance}>
         {entries.map(([item, amount]) => (
           <span className={chipsCss.buildChip} key={item}>

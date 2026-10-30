@@ -20,6 +20,7 @@ import { Icon } from './icons';
 import { Button, Modal } from './ui';
 import { cx } from '../cx';
 import uiCss from './ui.module.css';
+import { formatDate, t } from '../i18n';
 
 export const ConnectModal = ({
   kind,
@@ -40,7 +41,8 @@ export const ConnectModal = ({
       ? state.workshops.filter((w) => w.id !== excludeWorkshop)
       : state.calculations.filter((c) => c.id !== excludeCalculation);
   const [selected, setSelected] = useState(options[0]?.id ?? '');
-  const title = kind === 'workshop' ? 'Подключить цех' : 'Подключить завод';
+  const title =
+    kind === 'workshop' ? t.exchange.connectWorkshop : t.exchange.connectPlant;
   return (
     <Modal
       title={title}
@@ -48,7 +50,7 @@ export const ConnectModal = ({
       onClose={onClose}
       footer={
         <>
-          <Button onClick={onClose}>Отмена</Button>
+          <Button onClick={onClose}>{t.common.cancel}</Button>
           <Button
             variant="primary"
             disabled={!selected}
@@ -70,7 +72,7 @@ export const ConnectModal = ({
               )
             }
           >
-            Подключить
+            {t.exchange.connect}
           </Button>
         </>
       }
@@ -78,8 +80,8 @@ export const ConnectModal = ({
       {options.length === 0 ? (
         <span className="muted">
           {kind === 'workshop'
-            ? 'Цехов пока нет — создайте цех в разделе «Цеха».'
-            : 'Других расчётов нет — завод ссылается на другой расчёт.'}
+            ? t.exchange.noWorkshops
+            : t.exchange.noCalculations}
         </span>
       ) : (
         <div className="stack">
@@ -97,8 +99,8 @@ export const ConnectModal = ({
               <span className={cx(uiCss.grow, 'stack')} style={{ gap: 6 }}>
                 <span>{option.name}</span>
                 <span className="t-body-sm muted">
-                  {countLabel(option.rows.length, 'строка', 'строки', 'строк')}
-                  {' · одна копия'}
+                  {countLabel(option.rows.length, t.count.rows)}
+                  {t.exchange.oneCopy}
                 </span>
                 <PlanFlows plan={option} />
               </span>
@@ -106,9 +108,7 @@ export const ConnectModal = ({
           ))}
         </div>
       )}
-      <span className="t-body-sm muted">
-        Число копий подбирает решатель по целям и потреблению строк.
-      </span>
+      <span className="t-body-sm muted">{t.exchange.copiesBySolver}</span>
     </Modal>
   );
 };
@@ -196,18 +196,18 @@ export const ExportModal = ({
       {neededBy && !checked && (
         <span className={uiCss.tag}>
           <Icon name="external" size={12} />
-          нужен для «{neededBy}»
+          {t.exchange.neededBy(neededBy)}
         </span>
       )}
     </label>
   );
   return (
     <Modal
-      title="Экспорт"
+      title={t.plan.export}
       onClose={onClose}
       footer={
         <>
-          <Button onClick={onClose}>Отмена</Button>
+          <Button onClick={onClose}>{t.common.cancel}</Button>
           <Button
             variant="primary"
             disabled={file.calculations.length + file.workshops.length === 0}
@@ -216,7 +216,7 @@ export const ExportModal = ({
               onClose();
             }}
           >
-            Скачать JSON
+            {t.exchange.download}
           </Button>
         </>
       }
@@ -236,15 +236,15 @@ export const ExportModal = ({
             }
           }}
         />
-        Выбрать всё — полный бэкап
+        {t.exchange.selectAll}
       </label>
       <div className="stack">
-        <span className="t-label muted">Расчёты</span>
+        <span className="t-label muted">{t.nav.calc}</span>
         {state.calculations.map((c) =>
           item(
             c.id,
             c.name,
-            `${countLabel(c.rows.length, 'строка', 'строки', 'строк')}${c.built > 0 ? ` · построено ×${c.built}` : ''}`,
+            `${countLabel(c.rows.length, t.count.rows)}${c.built > 0 ? t.exchange.built(c.built) : ''}`,
             calculations.has(c.id),
             deps.calculations.get(c.id),
             () => toggle(calculations, c.id, setCalculations),
@@ -252,15 +252,15 @@ export const ExportModal = ({
         )}
       </div>
       <div className="stack">
-        <span className="t-label muted">Цеха</span>
+        <span className="t-label muted">{t.nav.workshops}</span>
         {state.workshops.length === 0 && (
-          <span className="muted t-body-sm">нет</span>
+          <span className="muted t-body-sm">{t.workshops.none}</span>
         )}
         {state.workshops.map((w) =>
           item(
             w.id,
             w.name,
-            countLabel(w.rows.length, 'строка', 'строки', 'строк'),
+            countLabel(w.rows.length, t.count.rows),
             workshops.has(w.id),
             deps.workshops.get(w.id),
             () => toggle(workshops, w.id, setWorkshops),
@@ -272,9 +272,9 @@ export const ExportModal = ({
         style={{ background: 'var(--bg-app)' }}
       >
         {exportFileName(now)} ·{' '}
-        {countLabel(file.calculations.length, 'расчёт', 'расчёта', 'расчётов')},{' '}
-        {countLabel(file.workshops.length, 'цех', 'цеха', 'цехов')} · игра{' '}
-        {catalog.version}
+        {countLabel(file.calculations.length, t.count.calculations)},{' '}
+        {countLabel(file.workshops.length, t.count.workshops)} ·{' '}
+        {t.exchange.game(catalog.version)}
       </div>
     </Modal>
   );
@@ -316,11 +316,11 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
   };
   return (
     <Modal
-      title="Импорт"
+      title={t.plan.import}
       onClose={onClose}
       footer={
         <>
-          <Button onClick={onClose}>Отмена</Button>
+          <Button onClick={onClose}>{t.common.cancel}</Button>
           <Button
             variant="primary"
             disabled={!file}
@@ -330,7 +330,7 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
               onClose();
             }}
           >
-            Импортировать
+            {t.exchange.importAction}
           </Button>
         </>
       }
@@ -338,17 +338,19 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
       <div className={uiCss.listItem} style={{ background: 'var(--bg-app)' }}>
         <Icon name="arrowDown" size={20} />
         <span className={cx(uiCss.grow, 'stack')} style={{ gap: 2 }}>
-          <span className="t-num">{file?.name ?? 'Файл не выбран'}</span>
+          <span className="t-num">{file?.name ?? t.exchange.noFile}</span>
           {file && (
             <span className="t-body-sm muted">
-              игра {file.data.gameVersion} · экспорт{' '}
-              {new Date(file.data.exportedAt).toLocaleDateString('ru')} ·{' '}
-              {countLabel(entries.length, 'объект', 'объекта', 'объектов')}
+              {t.exchange.game(file.data.gameVersion)} ·{' '}
+              {t.exchange.exportedOn(
+                formatDate(new Date(file.data.exportedAt)),
+              )}{' '}
+              · {countLabel(entries.length, t.count.entries)}
             </span>
           )}
         </span>
         <Button variant="ghost" onClick={pick}>
-          {file ? 'Другой файл' : 'Выбрать файл'}
+          {file ? t.exchange.otherFile : t.exchange.chooseFile}
         </Button>
       </div>
       {error && <span className={uiCss.errorText}>{error}</span>}
@@ -356,20 +358,20 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
         <div className={uiCss.banner}>
           <Icon name="alert" color="var(--status-warning)" />
           <span className="t-body-sm">
-            Файл собран на игре {file.data.gameVersion}, сайт — на{' '}
-            {catalog.version}. После импорта расчёты пересчитаются по новым
-            данным, изменённые и удалённые рецепты будут подсвечены.
+            {t.exchange.versionMismatch(file.data.gameVersion, catalog.version)}
           </span>
         </div>
       )}
       {file && (
         <div className="stack">
-          <span className="t-label muted">Содержимое файла</span>
+          <span className="t-label muted">{t.exchange.contents}</span>
           {entries.map((entry) => (
             <div className={uiCss.listItem} key={`${entry.kind}:${entry.id}`}>
               <Icon name={entry.kind === 'workshop' ? 'chain' : 'gauge'} />
               <span className={uiCss.grow}>
-                {entry.kind === 'workshop' ? 'Цех' : 'Расчёт'} «{entry.name}»
+                {entry.kind === 'workshop'
+                  ? t.exchange.workshopEntry(entry.name)
+                  : t.exchange.calculationEntry(entry.name)}
               </span>
               <span
                 className={cx(
@@ -377,7 +379,7 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
                   entry.exists ? uiCss.warn : uiCss.ok,
                 )}
               >
-                {entry.exists ? 'Уже есть' : 'Новый'}
+                {entry.exists ? t.exchange.exists : t.exchange.isNew}
               </span>
             </div>
           ))}
@@ -386,7 +388,7 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
       {duplicates > 0 && (
         <div className="stack">
           <span className="t-label muted">
-            Совпадающие ({duplicates}) — одно решение на весь импорт
+            {t.exchange.duplicates(duplicates)}
           </span>
           <button
             type="button"
@@ -394,10 +396,8 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
             onClick={() => setMode('copy')}
           >
             <span className="stack" style={{ gap: 2 }}>
-              <span>Добавить копией</span>
-              <span className="t-body-sm muted">
-                существующие не трогаем, у копий новый uuid и пометка «(импорт)»
-              </span>
+              <span>{t.exchange.copy}</span>
+              <span className="t-body-sm muted">{t.exchange.copyHint}</span>
             </span>
           </button>
           <button
@@ -406,10 +406,8 @@ export const ImportModal = ({ onClose }: { onClose: () => void }) => {
             onClick={() => setMode('replace')}
           >
             <span className="stack" style={{ gap: 2 }}>
-              <span>Заменить существующие</span>
-              <span className="t-body-sm muted">
-                ваши версии будут перезаписаны версиями из файла
-              </span>
+              <span>{t.exchange.replace}</span>
+              <span className="t-body-sm muted">{t.exchange.replaceHint}</span>
             </span>
           </button>
         </div>

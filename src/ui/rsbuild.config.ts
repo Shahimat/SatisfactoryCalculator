@@ -44,7 +44,8 @@ export default defineConfig(({ envMode }) => {
     source: {
       tsconfigPath: './tsconfig.ui.json',
       define: {
-        __BUILD_DATE__: JSON.stringify(new Date().toLocaleDateString('ru')),
+        // ISO date: the app formats it in the chosen language.
+        __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)),
         __CATALOG_FILE__: JSON.stringify(served),
       },
     },

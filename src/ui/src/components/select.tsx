@@ -10,6 +10,7 @@ import { Icon } from './icons';
 import { cx } from '../cx';
 import selectCss from './select.module.css';
 import uiCss from './ui.module.css';
+import { t } from '../i18n';
 
 export type SelectOption<T extends string> = {
   value: T;
@@ -124,7 +125,7 @@ export const Select = <T extends string>({
               <Icon name="search" size={16} color="var(--text-muted)" />
               <input
                 ref={focusOnMount}
-                placeholder="Поиск"
+                placeholder={t.select.search}
                 value={query}
                 onChange={(event) => {
                   setQuery(event.currentTarget.value);
@@ -136,7 +137,7 @@ export const Select = <T extends string>({
           <div className={selectCss.selectList} role="listbox" ref={list}>
             {visible.length === 0 && (
               <span className={cx(selectCss.selectEmpty, 'muted t-body-sm')}>
-                Ничего не нашлось
+                {t.select.empty}
               </span>
             )}
             {visible.map((option, index) => (

@@ -29,6 +29,7 @@ import { setState, useAppState } from '../store';
 import { cx } from '../cx';
 import layoutCss from './layout.module.css';
 import uiCss from '../components/ui.module.css';
+import { t } from '../i18n';
 
 const updateWorkshop = (id: string, update: (w: Workshop) => Workshop) =>
   setState((s) => ({
@@ -47,7 +48,7 @@ const usages = (state: AppState, id: string): string[] => [
     .filter((w) =>
       w.rows.some((r) => r.kind === 'workshop' && r.workshop === id),
     )
-    .map((w) => `цех «${w.name}»`),
+    .map((w) => t.workshops.usedIn(w.name)),
 ];
 
 /** Items both produced and consumed inside the workshop — they never leave it. */
@@ -76,7 +77,7 @@ export const WorkshopsScreen = ({ id }: { id?: string }) => {
   const create = () => {
     const created: Workshop = {
       id: newId(),
-      name: 'Новый цех',
+      name: t.workshops.newName,
       rows: [],
       goals: [],
       solver: 'matrix',
@@ -90,23 +91,17 @@ export const WorkshopsScreen = ({ id }: { id?: string }) => {
     <main className={layoutCss.content}>
       <div className={layoutCss.pageHeader}>
         <div className={layoutCss.heading}>
-          <h1 className="t-display">Цеха</h1>
-          <span className="secondary">
-            Цех — готовая цепь рецептов, как чертёж: подключается в расчёт одним
-            блоком со своим входом, выходом и энергией.
-          </span>
+          <h1 className="t-display">{t.nav.workshops}</h1>
+          <span className="secondary">{t.workshops.lead}</span>
         </div>
         <Button variant="primary" icon="plus" onClick={create}>
-          Новый цех
+          {t.workshops.newName}
         </Button>
       </div>
       {state.workshops.length === 0 ? (
         <div className={layoutCss.empty}>
           <Icon name="chain" size={40} color="var(--accent-primary)" />
-          <span className="secondary">
-            Цехов пока нет. Создайте цех здесь или выделите строки в расчёте и
-            нажмите «В цех».
-          </span>
+          <span className="secondary">{t.workshops.empty}</span>
         </div>
       ) : (
         <div className={layoutCss.cards}>
@@ -125,8 +120,8 @@ export const WorkshopsScreen = ({ id }: { id?: string }) => {
                   <span className="t-title">{w.name}</span>
                 </span>
                 <span className="t-body-sm muted">
-                  {countLabel(w.rows.length, 'строка', 'строки', 'строк')} ·{' '}
-                  {countLabel(total.buildings, 'здание', 'здания', 'зданий')}
+                  {countLabel(w.rows.length, t.count.rows)} ·{' '}
+                  {countLabel(total.buildings, t.count.buildings)}
                 </span>
                 <div className={uiCss.flows}>
                   {inputs.map(([item, v]) => (
@@ -151,8 +146,8 @@ export const WorkshopsScreen = ({ id }: { id?: string }) => {
                 </div>
                 <span className="t-body-sm muted">
                   {used.length > 0
-                    ? `Используется: ${used.join(', ')}`
-                    : 'Пока нигде не используется'}
+                    ? t.workshops.used(used.join(', '))
+                    : t.workshops.unused}
                 </span>
               </a>
             );
@@ -199,13 +194,13 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
         <div className={layoutCss.pageHeader}>
           <div className={layoutCss.heading}>
             <a href="#/workshops" className="t-body-sm muted">
-              ← Все цеха
+              {t.workshops.back}
             </a>
             <input
               className="t-display"
               style={{ background: 'none', border: 0, outline: 'none' }}
               value={workshop.name}
-              aria-label="Название цеха"
+              aria-label={t.workshops.nameAria}
               onChange={(event) => {
                 const name = event.currentTarget.value;
                 updateWorkshop(workshop.id, (w) => ({ ...w, name }));
@@ -224,29 +219,30 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
               icon="plus"
               onClick={() => setDialog({ kind: 'add' })}
             >
-              Рецепт
+              {t.plan.recipe}
             </Button>
-            <Button onClick={() => setDialog({ kind: 'workshop' })}>Цех</Button>
+            <Button onClick={() => setDialog({ kind: 'workshop' })}>
+              {t.plan.workshop}
+            </Button>
             <span className={layoutCss.dividerV} />
             <Button
               variant="ghost"
               icon="arrowUp"
               onClick={() => setDialog({ kind: 'export' })}
             >
-              Экспорт
+              {t.plan.export}
             </Button>
             <Button
               variant="ghost"
               icon="trash"
-              title="Удалить цех"
+              title={t.workshops.delete}
               onClick={() => {
                 if (used.length > 0) {
-                  window.alert(
-                    `Цех используется: ${used.join(', ')}. Сначала уберите его оттуда.`,
-                  );
+                  window.alert(t.workshops.deleteUsed(used.join(', ')));
                   return;
                 }
-                if (!window.confirm(`Удалить цех «${workshop.name}»?`)) return;
+                if (!window.confirm(t.workshops.deleteConfirm(workshop.name)))
+                  return;
                 setState((s) => ({
                   ...s,
                   workshops: s.workshops.filter((w) => w.id !== workshop.id),
@@ -260,21 +256,21 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
           <div className={uiCss.banner}>
             <Icon name="alert" color="var(--status-warning)" />
             <span style={{ flex: 1 }}>
-              Данные игры обновились: {workshop.gameVersion} → {catalog.version}
-              . Изменённые и удалённые рецепты подсвечены.
+              {t.workshops.versionChanged(
+                workshop.gameVersion,
+                catalog.version,
+              )}
             </span>
             <Button
               onClick={() => updateWorkshop(workshop.id, acknowledgeVersion)}
             >
-              Понятно
+              {t.plan.acknowledge}
             </Button>
           </div>
         )}
         {workshop.rows.length === 0 ? (
           <div className={layoutCss.empty}>
-            <span className="secondary">
-              Добавьте рецепты цепи — интерфейс цеха посчитается сам.
-            </span>
+            <span className="secondary">{t.workshops.emptyRows}</span>
           </div>
         ) : (
           <RowsView
@@ -293,8 +289,8 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
         )}
       </main>
       <aside className={layoutCss.panel} style={{ margin: '24px 24px 0 0' }}>
-        <span className="t-title">Интерфейс цеха</span>
-        <Field label="Масштаб" width={140}>
+        <span className="t-title">{t.workshops.interface}</span>
+        <Field label={t.workshops.scale} width={140}>
           <NumberInput
             value={scale}
             min={1}
@@ -303,9 +299,11 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
             onChange={(v) => setScale(v || 1)}
           />
         </Field>
-        <span className="t-label muted">Вход</span>
+        <span className="t-label muted">{t.workshops.input}</span>
         <div className={uiCss.flows}>
-          {inputs.length === 0 && <span className="muted t-body-sm">нет</span>}
+          {inputs.length === 0 && (
+            <span className="muted t-body-sm">{t.workshops.none}</span>
+          )}
           {inputs.map(([item, v]) => (
             <FlowChip
               key={item}
@@ -315,9 +313,11 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
             />
           ))}
         </div>
-        <span className="t-label muted">Выход</span>
+        <span className="t-label muted">{t.workshops.output}</span>
         <div className={uiCss.flows}>
-          {outputs.length === 0 && <span className="muted t-body-sm">нет</span>}
+          {outputs.length === 0 && (
+            <span className="muted t-body-sm">{t.workshops.none}</span>
+          )}
           {outputs.map(([item, v]) => (
             <FlowChip
               key={item}
@@ -327,12 +327,12 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
             />
           ))}
         </div>
-        <span className="t-label muted">Энергия</span>
+        <span className="t-label muted">{t.workshops.power}</span>
         <div>{<PowerChip powerMW={total.powerMW} />}</div>
-        <span className="t-label muted">Внутренние потоки</span>
+        <span className="t-label muted">{t.workshops.internal}</span>
         <div className={uiCss.flows}>
           {internal.length === 0 && (
-            <span className="muted t-body-sm">нет</span>
+            <span className="muted t-body-sm">{t.workshops.none}</span>
           )}
           {internal.map(([item, v]) => (
             <FlowChip
@@ -343,9 +343,9 @@ const WorkshopEditor = ({ workshop }: { workshop: Workshop }) => {
             />
           ))}
         </div>
-        <span className="t-label muted">Где используется</span>
+        <span className="t-label muted">{t.workshops.usedWhere}</span>
         <span className="t-body-sm secondary">
-          {used.length > 0 ? used.join(', ') : 'нигде'}
+          {used.length > 0 ? used.join(', ') : t.workshops.nowhere}
         </span>
       </aside>
       {dialog?.kind === 'add' && (

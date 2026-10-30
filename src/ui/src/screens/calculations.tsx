@@ -41,6 +41,7 @@ import { setState, useAppState } from '../store';
 import { cx } from '../cx';
 import layoutCss from './layout.module.css';
 import uiCss from '../components/ui.module.css';
+import { localName, t } from '../i18n';
 
 type Dialog =
   | { kind: 'add'; item?: string; rate?: number; picked?: boolean }
@@ -67,7 +68,7 @@ const updateCalculation = (
   }));
 
 const createCalculation = () => {
-  const calc = newCalculation('Новый расчёт');
+  const calc = newCalculation(t.calc.newName);
   setState((s) => ({ ...s, calculations: [...s.calculations, calc] }));
   navigate(`/calc/${calc.id}`);
 };
@@ -95,15 +96,15 @@ export const CalculationsScreen = ({ id }: { id?: string }) => {
               <span>{c.name}</span>
               <span className="t-num-sm muted">
                 {c.rows.length === 0
-                  ? 'пусто'
-                  : `${countLabel(c.rows.length, 'строка', 'строки', 'строк')} · ${signed(power, 1)} МВт`}
+                  ? t.calc.emptyShort
+                  : `${countLabel(c.rows.length, t.count.rows)} · ${signed(power, 1)} ${t.units.mw}`}
               </span>
             </a>
           );
         })}
         <div>
           <Button variant="ghost" icon="plus" onClick={createCalculation}>
-            Новый расчёт
+            {t.calc.newName}
           </Button>
         </div>
       </aside>
@@ -113,17 +114,17 @@ export const CalculationsScreen = ({ id }: { id?: string }) => {
         ) : (
           <div className={layoutCss.empty}>
             <Icon name="factory" size={40} color="var(--accent-primary)" />
-            <h2 className="t-heading">Расчётов пока нет</h2>
+            <h2 className="t-heading">{t.calc.none}</h2>
             <div className="hstack">
               <Button variant="primary" icon="plus" onClick={createCalculation}>
-                Новый расчёт
+                {t.calc.newName}
               </Button>
               <Button
                 variant="ghost"
                 icon="arrowDown"
                 onClick={() => setDialog({ kind: 'import' })}
               >
-                Импорт из файла
+                {t.calc.importFile}
               </Button>
             </div>
           </div>
@@ -242,7 +243,10 @@ const CalculationView = ({
             ...s,
             workshops: [
               ...s.workshops,
-              { ...plan, name: `Цех из «${calc.name}»` } satisfies Workshop,
+              {
+                ...plan,
+                name: t.calc.workshopFrom(calc.name),
+              } satisfies Workshop,
             ],
             calculations,
           }
@@ -252,7 +256,7 @@ const CalculationView = ({
               ...calculations,
               {
                 ...plan,
-                name: `Завод из «${calc.name}»`,
+                name: t.calc.plantFrom(calc.name),
                 built: 0,
               } satisfies Calculation,
             ],
@@ -304,11 +308,9 @@ const CalculationView = ({
   }, []);
   const somersloops = build.cost.get(SOMERSLOOP_ICON) ?? 0;
   const meta = [
-    countLabel(calc.rows.length, 'строка', 'строки', 'строк'),
-    countLabel(build.placed, 'здание', 'здания', 'зданий'),
-    somersloops > 0
-      ? countLabel(somersloops, 'петлевик', 'петлевика', 'петлевиков')
-      : null,
+    countLabel(calc.rows.length, t.count.rows),
+    countLabel(build.placed, t.count.buildings),
+    somersloops > 0 ? countLabel(somersloops, t.count.somersloops) : null,
   ].filter(Boolean);
 
   return (
@@ -324,7 +326,7 @@ const CalculationView = ({
               minWidth: 0,
             }}
             value={calc.name}
-            aria-label="Название расчёта"
+            aria-label={t.calc.nameAria}
             onChange={(event) => {
               const name = event.currentTarget.value;
               updateCalculation(calc.id, (c) => ({ ...c, name }));
@@ -341,18 +343,18 @@ const CalculationView = ({
         <div className={layoutCss.toolbar}>
           {selectedNested.length > 0 ? (
             <Button icon="chain" onClick={expandSelected}>
-              Раскрыть ({selectedNested.length})
+              {t.calc.expand(selectedNested.length)}
             </Button>
           ) : (
             selected.size > 0 && (
               <Button icon="chain" onClick={() => groupSelected('workshop')}>
-                В цех ({selected.size})
+                {t.calc.toWorkshop(selected.size)}
               </Button>
             )
           )}
           {selected.size > 0 && (
             <Button icon="factory" onClick={() => groupSelected('plant')}>
-              В завод ({selected.size})
+              {t.calc.toPlant(selected.size)}
             </Button>
           )}
           <Button
@@ -360,31 +362,35 @@ const CalculationView = ({
             icon="plus"
             onClick={() => openDialog({ kind: 'add' })}
           >
-            Рецепт
+            {t.plan.recipe}
           </Button>
-          <Button onClick={() => openDialog({ kind: 'workshop' })}>Цех</Button>
-          <Button onClick={() => openDialog({ kind: 'plant' })}>Завод</Button>
+          <Button onClick={() => openDialog({ kind: 'workshop' })}>
+            {t.plan.workshop}
+          </Button>
+          <Button onClick={() => openDialog({ kind: 'plant' })}>
+            {t.plan.plant}
+          </Button>
           <span className={layoutCss.dividerV} />
           <Button
             variant="ghost"
             icon="arrowDown"
             onClick={() => openDialog({ kind: 'import' })}
           >
-            Импорт
+            {t.plan.import}
           </Button>
           <Button
             variant="ghost"
             icon="arrowUp"
             onClick={() => openDialog({ kind: 'export' })}
           >
-            Экспорт
+            {t.plan.export}
           </Button>
           <Button
             variant="ghost"
             icon="trash"
-            title="Удалить расчёт"
+            title={t.calc.delete}
             onClick={() => {
-              if (!window.confirm(`Удалить расчёт «${calc.name}»?`)) return;
+              if (!window.confirm(t.calc.deleteConfirm(calc.name))) return;
               setState((s) => ({
                 ...s,
                 calculations: s.calculations.filter((c) => c.id !== calc.id),
@@ -400,8 +406,8 @@ const CalculationView = ({
           <span className="stack" style={{ gap: 2, flex: 1 }}>
             <span className="t-title">
               {outdated
-                ? `Данные игры обновились: ${calc.gameVersion} → ${catalog.version}`
-                : 'Рецептов нет в текущих данных игры'}
+                ? t.calc.versionChanged(calc.gameVersion, catalog.version)
+                : t.calc.recipesMissing}
             </span>
             <span className="t-body-sm secondary">
               {changesSummary(changes)}
@@ -411,7 +417,7 @@ const CalculationView = ({
             <Button
               onClick={() => updateCalculation(calc.id, acknowledgeVersion)}
             >
-              Понятно
+              {t.plan.acknowledge}
             </Button>
           )}
         </div>
@@ -440,13 +446,12 @@ const CalculationView = ({
 const changesSummary = (changes: RecipeChange[]): string => {
   const changed = changes.filter((c) => c.status === 'changed').length;
   const removed = changes.filter((c) => c.status === 'removed').length;
-  if (changed + removed === 0)
-    return 'Расчёт пересчитан по новым данным, рецепты расчёта не изменились.';
+  if (changed + removed === 0) return t.calc.recalculatedSame;
   const parts = [
-    changed > 0 ? `изменилось рецептов: ${changed}` : null,
-    removed > 0 ? `удалено: ${removed}` : null,
+    changed > 0 ? t.calc.changedCount(changed) : null,
+    removed > 0 ? t.calc.removedCount(removed) : null,
   ].filter(Boolean);
-  return `Расчёт пересчитан по новым данным: ${parts.join(', ')} — строки подсвечены.`;
+  return t.calc.recalculated(parts.join(', '));
 };
 
 const EmptyCalculation = ({
@@ -459,31 +464,28 @@ const EmptyCalculation = ({
   return (
     <div className={layoutCss.empty}>
       <Icon name="factory" size={40} color="var(--accent-primary)" />
-      <h2 className="t-heading">С чего начнём?</h2>
-      <span className="secondary">
-        Укажите, что и сколько нужно производить, — подберём рецепт и число
-        зданий.
-      </span>
+      <h2 className="t-heading">{t.calc.start}</h2>
+      <span className="secondary">{t.calc.startLead}</span>
       <div
         className="hstack"
         style={{ alignItems: 'flex-end', width: 'min(100%, 720px)' }}
       >
-        <Field label="Что производим">
+        <Field label={t.addRow.product}>
           <Select
             value={item}
-            options={producibleItems.map((i) => ({
+            options={producibleItems().map((i) => ({
               value: i.id,
-              label: i.name.ru,
+              label: localName(i),
               icon: <GameIcon id={i.id} size="sm" />,
             }))}
             onChange={setItem}
           />
         </Field>
-        <Field label="Сколько" width={180}>
+        <Field label={t.calc.howMuch} width={180}>
           <NumberInput
             value={rate}
             min={0}
-            suffix={isFluid(item) ? 'м³/мин' : 'шт/мин'}
+            suffix={isFluid(item) ? t.units.fluid : t.units.ipm}
             onChange={setRate}
           />
         </Field>
@@ -492,21 +494,27 @@ const EmptyCalculation = ({
           icon="plus"
           onClick={() => openDialog({ kind: 'add', item, rate })}
         >
-          Подобрать
+          {t.calc.pick}
         </Button>
       </div>
       <div className="hstack">
-        <span className="t-body-sm muted">или добавьте</span>
-        <Button onClick={() => openDialog({ kind: 'add' })}>Рецепт</Button>
-        <Button onClick={() => openDialog({ kind: 'workshop' })}>Цех</Button>
-        <Button onClick={() => openDialog({ kind: 'plant' })}>Завод</Button>
+        <span className="t-body-sm muted">{t.calc.orAdd}</span>
+        <Button onClick={() => openDialog({ kind: 'add' })}>
+          {t.plan.recipe}
+        </Button>
+        <Button onClick={() => openDialog({ kind: 'workshop' })}>
+          {t.plan.workshop}
+        </Button>
+        <Button onClick={() => openDialog({ kind: 'plant' })}>
+          {t.plan.plant}
+        </Button>
         <span className={layoutCss.dividerV} />
         <Button
           variant="ghost"
           icon="arrowDown"
           onClick={() => openDialog({ kind: 'import' })}
         >
-          Импорт из файла
+          {t.calc.importFile}
         </Button>
       </div>
     </div>

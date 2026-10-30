@@ -27,14 +27,11 @@ import { Icon } from './icons';
 import { Button, Field, GameIcon, Modal, NumberInput, Select } from './ui';
 import { cx } from '../cx';
 import uiCss from './ui.module.css';
+import { localName, t } from '../i18n';
 
 type Mode = 'recipe' | 'extractor' | 'generator';
 
-const MODES: { value: Mode; label: string }[] = [
-  { value: 'recipe', label: 'Рецепт' },
-  { value: 'extractor', label: 'Добыча' },
-  { value: 'generator', label: 'Генератор' },
-];
+const MODES: Mode[] = ['recipe', 'extractor', 'generator'];
 
 export const AddRowModal = ({
   initialItem,
@@ -61,19 +58,19 @@ export const AddRowModal = ({
   const [target, setTarget] = useState<Goal | undefined>();
   return (
     <Modal
-      title="Добавить в расчёт"
+      title={t.addRow.title}
       width={900}
       onClose={onClose}
       footer={
         <>
-          <Button onClick={onClose}>Отмена</Button>
+          <Button onClick={onClose}>{t.common.cancel}</Button>
           <Button
             variant="primary"
             icon="plus"
             disabled={!row}
             onClick={() => row && onAdd(row, target)}
           >
-            Добавить в расчёт
+            {t.addRow.title}
           </Button>
         </>
       }
@@ -81,15 +78,15 @@ export const AddRowModal = ({
       <div className={uiCss.segmented} style={{ alignSelf: 'flex-start' }}>
         {MODES.map((m) => (
           <button
-            key={m.value}
+            key={m}
             type="button"
-            className={m.value === mode ? uiCss.active : undefined}
+            className={m === mode ? uiCss.active : undefined}
             onClick={() => {
-              setMode(m.value);
+              setMode(m);
               setRow(null);
             }}
           >
-            {m.label}
+            {t.addRow.modes[m]}
           </button>
         ))}
       </div>
@@ -157,7 +154,7 @@ const Preview = ({ row }: { row: Row }) => {
       className={uiCss.listItem}
       style={{ background: 'var(--bg-chrome)', flexWrap: 'wrap' }}
     >
-      <span className="t-label muted">Итог</span>
+      <span className="t-label muted">{t.addRow.result}</span>
       {'groups' in row && (
         <FactoryChip building={building} groups={row.groups} />
       )}
@@ -225,12 +222,12 @@ const RecipeForm = ({
   return (
     <>
       <div className="hstack" style={{ alignItems: 'flex-end' }}>
-        <Field label="Что производим">
+        <Field label={t.addRow.product}>
           <Select
             value={item}
-            options={producibleItems.map((i) => ({
+            options={producibleItems().map((i) => ({
               value: i.id,
-              label: i.name.ru,
+              label: localName(i),
               icon: <GameIcon id={i.id} size="sm" />,
             }))}
             onChange={(value) => {
@@ -240,19 +237,19 @@ const RecipeForm = ({
           />
         </Field>
         <Field
-          label="Сколько нужно"
+          label={t.addRow.amount}
           icon={<GameIcon id={item} size="sm" />}
           width={160}
         >
           <NumberInput
             value={rate}
             min={0}
-            suffix={isFluid(item) ? 'м³/мин' : 'шт/мин'}
+            suffix={isFluid(item) ? t.units.fluid : t.units.ipm}
             onChange={setRate}
           />
         </Field>
         <Field
-          label="Разгон"
+          label={t.addRow.clock}
           icon={<GameIcon id={POWER_SHARD_ICON} size="sm" />}
           width={110}
         >
@@ -265,19 +262,21 @@ const RecipeForm = ({
           />
         </Field>
         <Field
-          label={slots > 0 ? `Петлевики · ${slots}/зд.` : 'Петлевики'}
+          label={
+            slots > 0 ? t.addRow.somersloopsSlots(slots) : t.addRow.somersloops
+          }
           icon={<GameIcon id={SOMERSLOOP_ICON} size="sm" />}
           width={150}
         >
           <NumberInput
             value={slots > 0 ? amplified : 0}
             min={0}
-            suffix="зд."
+            suffix={t.addRow.perBuilding}
             onChange={(value) => setAmplified(slots > 0 ? value : 0)}
           />
         </Field>
       </div>
-      <span className="t-label muted">Рецепты · на 1 здание при 100%</span>
+      <span className="t-label muted">{t.addRow.recipes}</span>
       <div className="stack">
         {options.map((option) => {
           const optionBuilding = buildings.get(option.building);
@@ -294,15 +293,16 @@ const RecipeForm = ({
             >
               <span className="stack" style={{ width: 240, gap: 4 }}>
                 <span className="hstack">
-                  <span className="t-title">{option.name.ru}</span>
+                  <span className="t-title">{localName(option)}</span>
                   {option.alternate && (
                     <span className={cx(uiCss.badge, uiCss.alt)}>ALT</span>
                   )}
                 </span>
                 <span className="hstack t-body-sm muted">
                   <GameIcon id={option.building} size="sm" />
-                  {optionBuilding?.name.ru} ·{' '}
-                  {optionBuilding?.powerMW || 'перем.'} МВт
+                  {optionBuilding && localName(optionBuilding)} ·{' '}
+                  {optionBuilding?.powerMW || t.addRow.variablePower}{' '}
+                  {t.units.mw}
                 </span>
               </span>
               <span className={uiCss.flows}>
@@ -399,23 +399,23 @@ const ExtractorForm = ({
   return (
     <>
       <div className="hstack" style={{ alignItems: 'flex-end' }}>
-        <Field label="Здание">
+        <Field label={t.addRow.building}>
           <Select
             value={building}
             options={extractors.map((b) => ({
               value: b.id,
-              label: b.name.ru,
+              label: localName(b),
               icon: <GameIcon id={b.id} size="sm" />,
             }))}
             onChange={setBuilding}
           />
         </Field>
-        <Field label="Ресурс">
+        <Field label={t.addRow.resource}>
           <Select
             value={current}
             options={allowed.map((r) => ({
               value: r.id,
-              label: r.name.ru,
+              label: localName(r),
               icon: <GameIcon id={r.id} size="sm" />,
             }))}
             onChange={setResource}
@@ -453,19 +453,19 @@ const GeneratorForm = ({ onRow }: { onRow: (row: Row | null) => void }) => {
   return (
     <>
       <div className="hstack" style={{ alignItems: 'flex-end' }}>
-        <Field label="Генератор">
+        <Field label={t.addRow.modes.generator}>
           <Select
             value={building}
             options={generators.map((b) => ({
               value: b.id,
-              label: b.name.ru,
+              label: localName(b),
               icon: <GameIcon id={b.id} size="sm" />,
-              hint: `+${b.generation?.powerMW || '…'} МВт`,
+              hint: `+${b.generation?.powerMW || '…'} ${t.units.mw}`,
             }))}
             onChange={setBuilding}
           />
         </Field>
-        <Field label="Топливо">
+        <Field label={t.addRow.fuel}>
           <Select
             value={current}
             options={fuels.map((f) => ({

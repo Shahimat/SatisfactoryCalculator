@@ -4,6 +4,7 @@ import { iconUrl } from '../catalog';
 import { Icon, type IconName } from './icons';
 import { cx } from '../cx';
 import uiCss from './ui.module.css';
+import { t } from '../i18n';
 
 export const GameIcon = ({
   id,
@@ -105,7 +106,7 @@ export const Modal = ({
       >
         <div className={uiCss.modalHeader}>
           <h2 className="t-heading">{title}</h2>
-          <IconButton icon="close" title="Закрыть" onClick={onClose} />
+          <IconButton icon="close" title={t.common.close} onClick={onClose} />
         </div>
         <div className={uiCss.modalBody}>{children}</div>
         {footer && <div className={uiCss.modalFooter}>{footer}</div>}

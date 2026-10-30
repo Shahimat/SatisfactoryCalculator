@@ -9,6 +9,7 @@ import { GameIcon } from './ui';
 import { cx } from '../cx';
 import chipsCss from './chips.module.css';
 import uiCss from './ui.module.css';
+import { localName, t } from '../i18n';
 
 export type PickItem = (item: string, perMinute: number) => void;
 
@@ -78,23 +79,18 @@ const AmountField = ({
         }}
       />
       <span className={chipsCss.unit}>
-        {isFluid(item) ? 'м³/мин' : 'шт/мин'} · Enter
+        {isFluid(item) ? t.units.fluid : t.units.ipm} · Enter
       </span>
     </span>
   );
 };
-
-const MARK_TITLE = {
-  lock: 'выход строки закреплён',
-  goal: 'цель плана',
-} as const;
 
 export const FlowChip = ({
   item,
   perMinute,
   units,
   onPick,
-  actionTitle = 'подобрать рецепт',
+  actionTitle = t.chips.pick,
   edit,
 }: {
   item: string;
@@ -109,7 +105,7 @@ export const FlowChip = ({
   const { value, unit } = flowValue(item, perMinute, units);
   const direction = isFluid(item) ? 'fluid' : perMinute < 0 ? 'in' : 'out';
   const mark = edit?.mark && (
-    <span className={chipsCss.chipMark} title={MARK_TITLE[edit.mark]}>
+    <span className={chipsCss.chipMark} title={t.chips.mark[edit.mark]}>
       <Icon name={edit.mark === 'lock' ? 'lock' : 'target'} size={12} />
     </span>
   );
@@ -177,7 +173,7 @@ export const PowerChip = ({ powerMW }: { powerMW: number }) => (
     <Icon name="bolt" size={22} color="var(--flow-power)" />
     <span className={chipsCss.values}>
       <span className="t-num">{signed(powerMW, 1)}</span>
-      <span className={chipsCss.unit}>МВт</span>
+      <span className={chipsCss.unit}>{t.units.mw}</span>
     </span>
   </span>
 );
@@ -187,7 +183,7 @@ export const FactoryChip = ({
   groups,
   auto,
   fixed,
-  title = 'Изменить здания',
+  title = t.chips.editBuildings,
   onClick,
 }: {
   building: string;
@@ -229,32 +225,27 @@ export const FactoryChip = ({
           </span>
         ))}
         <span className="hstack" style={{ gap: 6 }}>
-          <span className="t-body-sm muted">{spec?.name.ru ?? building}</span>
+          <span className="t-body-sm muted">
+            {spec ? localName(spec) : building}
+          </span>
           {auto && (
-            <span className={uiCss.tag} title="Число зданий подбирает решатель">
-              авто
+            <span className={uiCss.tag} title={t.chips.autoTitle}>
+              {t.chips.auto}
             </span>
           )}
           {fixed && (
             <span
               className={cx(uiCss.tag, uiCss.fixed)}
-              title="Здания закреплены — пересчёт цепочки их не меняет"
+              title={t.chips.fixedTitle}
             >
               <Icon name="lock" size={12} />
-              закреплено
+              {t.chips.fixed}
             </span>
           )}
         </span>
       </span>
     </button>
   );
-};
-
-const BALANCE_LABEL: Record<BalanceEntry['status'], string> = {
-  target: 'Цель',
-  surplus: 'Излишек',
-  raw: 'Добыча',
-  deficit: 'Дефицит',
 };
 
 const BALANCE_BADGE: Record<BalanceEntry['status'], string | undefined> = {
@@ -304,7 +295,7 @@ export const BalanceChip = ({
   return (
     <Clickable
       className={cx(chipsCss.balanceChip, chipsCss[entry.status])}
-      title={produced ? (edit?.title ?? '') : 'Подобрать рецепт'}
+      title={produced ? (edit?.title ?? '') : t.chips.pickRecipe}
       onClick={
         produced
           ? edit && (() => setEditing(true))
@@ -320,7 +311,7 @@ export const BalanceChip = ({
         </span>
       </span>
       <span className={cx(uiCss.badge, BALANCE_BADGE[entry.status])}>
-        {BALANCE_LABEL[entry.status]}
+        {t.chips.balance[entry.status]}
       </span>
     </Clickable>
   );

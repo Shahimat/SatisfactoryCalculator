@@ -23,6 +23,7 @@ import {
   SOMERSLOOP_ICON,
 } from './catalog';
 import type { AppState, Calculation, Plan, Units, Workshop } from './model';
+import { plural, type PluralForms, t } from './i18n';
 
 const isRowValid = (row: Row): boolean => {
   switch (row.kind) {
@@ -237,7 +238,7 @@ export const lastCopyLoad = (copies: number): number | undefined => {
 
 export const copiesLabel = (copies: number): string => {
   const load = lastCopyLoad(copies);
-  return `×${placedCopies(copies)}${load === undefined ? '' : `, последняя на ${plain(load * 100)} %`}`;
+  return `×${placedCopies(copies)}${load === undefined ? '' : t.copies.lastLoad(plain(load * 100))}`;
 };
 
 export type BuildList = {
@@ -430,43 +431,29 @@ export const flowValue = (
 ): { value: string; unit: string } => {
   const fluid = isFluid(item);
   if (units === 'ipm') {
-    return { value: signed(perMinute), unit: fluid ? 'м³/мин' : 'шт/мин' };
+    return {
+      value: signed(perMinute),
+      unit: fluid ? t.units.fluid : t.units.ipm,
+    };
   }
   if (fluid) {
     const level = Math.min(units, PIPES.length);
     const sign = perMinute < 0 ? -1 : 1;
     return {
       value: signed(sign * carriers(perMinute, PIPES[level - 1]!)),
-      unit: `труб Mk.${level}`,
+      unit: t.units.pipes(level),
     };
   }
   const sign = perMinute < 0 ? -1 : 1;
   return {
     value: signed(sign * carriers(perMinute, BELTS[units - 1]!)),
-    unit: `лент Mk.${units}`,
+    unit: t.units.belts(units),
   };
 };
 
-export const plural = (
-  n: number,
-  one: string,
-  few: string,
-  many: string,
-): string => {
-  const mod10 = n % 10;
-  const mod100 = n % 100;
-  if (!Number.isInteger(n)) return few;
-  if (mod10 === 1 && mod100 !== 11) return one;
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
-  return many;
-};
-
-export const countLabel = (
-  n: number,
-  one: string,
-  few: string,
-  many: string,
-): string => `${plain(n)} ${plural(n, one, few, many)}`;
+/** A number with its counted word: `countLabel(3, t.count.rows)` → «3 строки». */
+export const countLabel = (n: number, forms: PluralForms): string =>
+  `${plain(n)} ${plural(n, forms)}`;
 
 /** Per-item flows split into consumed and produced, solids before fluids. */
 export const splitFlows = (flows: Map<string, number>) => {

@@ -3,6 +3,7 @@ import {
   buildings,
   buildingName,
   itemName,
+  recipeName,
   recipes,
   SOMERSLOOP_ICON,
 } from '../catalog';
@@ -14,6 +15,7 @@ import { GameIcon, Modal } from './ui';
 import { cx } from '../cx';
 import chipsCss from './chips.module.css';
 import uiCss from './ui.module.css';
+import { t } from '../i18n';
 
 const buildingOf = (row: Row): string =>
   row.kind === 'recipe'
@@ -39,19 +41,19 @@ export const BuildingModal = ({
   const whole = row.groups.reduce((sum, g) => sum + Math.ceil(g.count), 0);
   const subtitle =
     row.kind === 'recipe'
-      ? (recipes.get(row.recipe)?.name.ru ?? row.recipe)
+      ? recipeName(row.recipe)
       : row.kind === 'extractor'
         ? itemName(row.resource)
         : itemName(row.fuel);
   const total = splitFlows(flows.items);
   return (
-    <Modal title="Здание" width={720} onClose={onClose}>
+    <Modal title={t.building.title} width={720} onClose={onClose}>
       <div className={uiCss.listItem}>
         <GameIcon id={building} size="lg" />
         <span className={cx(uiCss.grow, 'stack')} style={{ gap: 2 }}>
           <span className="t-title">{buildingName(building)}</span>
           <span className="t-body-sm muted">
-            {subtitle} · построить {whole} · загрузка ×
+            {subtitle} · {t.building.build(whole)} · {t.building.load}
             {plain(
               row.groups.reduce((sum, g) => sum + g.count, 0),
               3,
@@ -61,7 +63,7 @@ export const BuildingModal = ({
         {flows.powerMW !== 0 && <PowerChip powerMW={flows.powerMW} />}
       </div>
 
-      <span className="t-label muted">Одно здание</span>
+      <span className="t-label muted">{t.building.one}</span>
       {row.groups
         .filter((g) => g.count > 0)
         .map((group, index) => {
@@ -104,7 +106,7 @@ export const BuildingModal = ({
           );
         })}
 
-      <span className="t-label muted">Вся строка</span>
+      <span className="t-label muted">{t.building.row}</span>
       <div className={uiCss.flows}>
         {total.inputs.map(([item, v]) => (
           <FlowChip key={item} item={item} perMinute={v} units="ipm" />
@@ -117,9 +119,7 @@ export const BuildingModal = ({
 
       {spec?.buildCost && (
         <>
-          <span className="t-label muted">
-            Постройка · одно здание / все {whole}
-          </span>
+          <span className="t-label muted">{t.building.cost(whole)}</span>
           <div className={chipsCss.balance}>
             {spec.buildCost.map(({ item, amount }) => (
               <span className={chipsCss.buildChip} key={item}>

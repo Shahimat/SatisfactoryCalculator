@@ -30,6 +30,7 @@ import {
 } from './ui';
 import { cx } from '../cx';
 import uiCss from './ui.module.css';
+import { localName, t } from '../i18n';
 
 const MAX_CLOCK_PERCENT = 250;
 
@@ -53,12 +54,12 @@ export const GroupsEditor = ({
   return (
     <div className="stack">
       <span className="t-label muted">
-        {boosted ? 'Здания с петлевиками' : 'Группы зданий'}
+        {boosted ? t.editRow.boostedGroups : t.editRow.groups}
       </span>
       {groups.map((group, index) => (
         <div className="hstack" key={index} style={{ alignItems: 'flex-end' }}>
           <Field
-            label="Зданий"
+            label={t.editRow.count}
             icon={<GameIcon id={building} size="sm" />}
             width={140}
           >
@@ -70,7 +71,7 @@ export const GroupsEditor = ({
             />
           </Field>
           <Field
-            label="Разгон"
+            label={t.addRow.clock}
             icon={<GameIcon id={POWER_SHARD_ICON} size="sm" />}
             width={140}
           >
@@ -84,7 +85,7 @@ export const GroupsEditor = ({
           </Field>
           {slots > 0 && (
             <Field
-              label={`Петлевики · слотов ${slots}`}
+              label={t.editRow.somersloopSlots(slots)}
               icon={<GameIcon id={SOMERSLOOP_ICON} size="sm" />}
               width={180}
             >
@@ -92,12 +93,15 @@ export const GroupsEditor = ({
                 value={String(group.somersloops)}
                 options={Array.from({ length: slots + 1 }, (_, n) => ({
                   value: String(n),
-                  label: n === 0 ? 'нет' : `${n}/${slots}`,
+                  label: n === 0 ? t.workshops.none : `${n}/${slots}`,
                   icon:
                     n === 0 ? undefined : (
                       <GameIcon id={SOMERSLOOP_ICON} size="sm" />
                     ),
-                  hint: n === 0 ? undefined : `×${plain(1 + n / slots)} выход`,
+                  hint:
+                    n === 0
+                      ? undefined
+                      : t.editRow.outputBoost(plain(1 + n / slots)),
                 }))}
                 onChange={(value) =>
                   update(index, { somersloops: Number(value) })
@@ -108,7 +112,7 @@ export const GroupsEditor = ({
           {(boosted || groups.length > 1) && (
             <IconButton
               icon="trash"
-              title="Удалить группу"
+              title={t.editRow.removeGroup}
               onClick={() => onChange(groups.filter((_, i) => i !== index))}
             />
           )}
@@ -122,24 +126,17 @@ export const GroupsEditor = ({
             onChange([...groups, { count: 1, clock: 1, somersloops: slots }])
           }
         >
-          {boosted ? 'Группа с петлевиками' : 'Группа с другим разгоном'}
+          {boosted ? t.editRow.addBoosted : t.editRow.addGroup}
         </Button>
       </div>
       {!boosted && groups.length === 1 && (
-        <span className="t-body-sm muted">
-          Группа — часть зданий строки со своим разгоном и петлевиками, например
-          8 зданий на 100 % и 2 разогнанных с петлевиками.
-        </span>
+        <span className="t-body-sm muted">{t.editRow.groupHint}</span>
       )}
     </div>
   );
 };
 
-const PURITY_OPTIONS: { value: Purity; label: string }[] = [
-  { value: 'impure', label: 'Бедное ×0.5' },
-  { value: 'normal', label: 'Обычное ×1' },
-  { value: 'pure', label: 'Богатое ×2' },
-];
+const PURITIES: Purity[] = ['impure', 'normal', 'pure'];
 
 export const PurityField = ({
   value,
@@ -148,8 +145,15 @@ export const PurityField = ({
   value: Purity;
   onChange: (value: Purity) => void;
 }) => (
-  <Field label="Узел" width={180}>
-    <Select value={value} options={PURITY_OPTIONS} onChange={onChange} />
+  <Field label={t.editRow.node} width={180}>
+    <Select
+      value={value}
+      options={PURITIES.map((p) => ({
+        value: p,
+        label: t.editRow.purityOptions[p],
+      }))}
+      onChange={onChange}
+    />
   </Field>
 );
 
@@ -199,17 +203,17 @@ export const EditRowModal = ({
   const slots = buildings.get(building)?.somersloopSlots ?? 0;
   return (
     <Modal
-      title="Изменить строку"
+      title={t.editRow.title}
       onClose={onClose}
       footer={
         <>
-          <Button onClick={onClose}>Отмена</Button>
+          <Button onClick={onClose}>{t.common.cancel}</Button>
           <Button
             variant="primary"
             disabled={!isValid(draft)}
             onClick={() => onSave(draft)}
           >
-            Сохранить
+            {t.common.save}
           </Button>
         </>
       }
@@ -217,7 +221,7 @@ export const EditRowModal = ({
       <RowSummary row={draft} />
       {sizable && (
         <div className="stack">
-          <span className="t-label muted">Объём</span>
+          <span className="t-label muted">{t.editRow.volume}</span>
           <div className={uiCss.segmented} style={{ alignSelf: 'flex-start' }}>
             <button
               type="button"
@@ -238,7 +242,7 @@ export const EditRowModal = ({
                 } as Row)
               }
             >
-              Авто
+              {t.editRow.auto}
             </button>
             <button
               type="button"
@@ -254,17 +258,17 @@ export const EditRowModal = ({
                 } as Row)
               }
             >
-              Зафиксировать здания
+              {t.editRow.fixBuildings}
             </button>
           </div>
           <span className="t-body-sm muted">
             {locked
-              ? `Закреплён выход: ${itemName(locked.item)} ${plain(locked.perMinute)} ${unitOf(locked.item)} — меняется в чипе выхода строки.`
+              ? t.editRow.locked(
+                  `${itemName(locked.item)} ${plain(locked.perMinute)} ${unitOf(locked.item)}`,
+                )
               : !autoNow
-                ? 'Здания закреплены как заданы ниже, остальные строки подстраиваются под них.'
-                : solver === 'sequential'
-                  ? 'Строка покрывает цели и то, чего не хватает строкам выше.'
-                  : 'Цели и потребности всех строк покрываются вместе, порядок строк не важен.'}
+                ? t.editRow.fixedHint
+                : t.editRow.autoHint[solver]}
           </span>
         </div>
       )}
@@ -307,8 +311,7 @@ export const EditRowModal = ({
             onChange={(groups) => setDraft({ ...draft, groups })}
           />
           <span className="t-body-sm muted">
-            <Icon name="gauge" size={12} /> Дробное число зданий — последнее
-            работает с пониженным разгоном.
+            <Icon name="gauge" size={12} /> {t.editRow.fractionHint}
           </span>
         </>
       ) : (
@@ -339,16 +342,16 @@ const PlainSizing = ({
   onChange: (buildings: number | undefined) => void;
 }) => (
   <div className="stack">
-    <span className="t-label muted">Здания</span>
+    <span className="t-label muted">{t.rows.columns.buildings}</span>
     <div className="hstack" style={{ alignItems: 'flex-end' }}>
       <Field
-        label="Зданий"
+        label={t.editRow.count}
         icon={<GameIcon id={building} size="sm" />}
         width={140}
       >
         <NumberInput
           value={pinned ?? Number.NaN}
-          placeholder={solved ? plain(solved.count, 3) : 'авто'}
+          placeholder={solved ? plain(solved.count, 3) : t.chips.auto}
           min={1}
           step={1}
           onChange={(value) =>
@@ -361,7 +364,7 @@ const PlainSizing = ({
         />
       </Field>
       <Field
-        label="Разгон"
+        label={t.addRow.clock}
         icon={<GameIcon id={POWER_SHARD_ICON} size="sm" />}
         width={140}
       >
@@ -373,15 +376,13 @@ const PlainSizing = ({
       </Field>
     </div>
     <span className="t-body-sm muted">
-      {pinned
-        ? 'Число зданий задано — разгон подстраивается под нужный выход (до максимума здания). Очистите поле, чтобы вернуть подбор.'
-        : 'Пусто — целые здания с ровным разгоном, без дробного последнего. Введите число — разгон подстроится под него.'}{' '}
-      Разгон обновится после сохранения.
+      {pinned ? t.editRow.pinnedHint : t.editRow.emptyHint}{' '}
+      {t.editRow.clockAfterSave}
     </span>
   </div>
 );
 
-const unitOf = (item: string) => (isFluid(item) ? 'м³/мин' : 'шт/мин');
+const unitOf = (item: string) => (isFluid(item) ? t.units.fluid : t.units.ipm);
 
 /** Which row is being edited: building, recipe and what one building does. */
 const RowSummary = ({ row }: { row: Row }) => {
@@ -401,7 +402,7 @@ const RowSummary = ({ row }: { row: Row }) => {
         <span className={cx(uiCss.grow, 'stack')} style={{ gap: 2 }}>
           <span className="t-title">{name ?? '—'}</span>
           <span className="t-body-sm muted">
-            {row.kind === 'workshop' ? 'Цех' : 'Завод — ссылка на расчёт'}
+            {row.kind === 'workshop' ? t.plan.workshop : t.editRow.plantLink}
           </span>
         </span>
       </div>
@@ -411,7 +412,9 @@ const RowSummary = ({ row }: { row: Row }) => {
   const building = recipe?.building ?? ('building' in row ? row.building : '');
   const title =
     row.kind === 'recipe'
-      ? (recipe?.name.ru ?? row.recipe)
+      ? recipe
+        ? localName(recipe)
+        : row.recipe
       : row.kind === 'extractor'
         ? itemName(row.resource)
         : buildingName(row.building);
@@ -432,8 +435,8 @@ const RowSummary = ({ row }: { row: Row }) => {
           </span>
           <span className="t-body-sm muted">
             {buildingName(building)}
-            {row.kind === 'generator' && ` · топливо: ${itemName(row.fuel)}`}
-            {recipe && ' · рецепт на 1 здание при 100%:'}
+            {row.kind === 'generator' && t.editRow.fuel(itemName(row.fuel))}
+            {recipe && t.editRow.perBuilding}
           </span>
         </span>
       </span>
@@ -481,17 +484,16 @@ const CopiesSizing = ({
 }) => {
   const autoNow = draft.sizing ? draft.sizing === 'auto' : auto;
   const solvedCopies = 'copies' in solved ? solved.copies : draft.copies;
-  const what = draft.kind === 'workshop' ? 'цеха' : 'завода';
   return (
     <div className="stack">
-      <span className="t-label muted">Копии</span>
+      <span className="t-label muted">{t.editRow.copies}</span>
       <div className={uiCss.segmented} style={{ alignSelf: 'flex-start' }}>
         <button
           type="button"
           className={autoNow ? uiCss.active : undefined}
           onClick={() => onChange({ ...draft, sizing: 'auto' })}
         >
-          Авто
+          {t.editRow.auto}
         </button>
         <button
           type="button"
@@ -505,17 +507,15 @@ const CopiesSizing = ({
             })
           }
         >
-          Зафиксировать копии
+          {t.editRow.fixCopies}
         </button>
       </div>
       {autoNow ? (
         <span className="t-body-sm muted">
-          Решатель подбирает целые копии {what} по целям и потреблению строк;
-          неполная последняя копия работает с пониженной загрузкой. Сейчас:{' '}
-          {copiesLabel(solvedCopies)}.
+          {t.editRow.copiesHint[draft.kind](copiesLabel(solvedCopies))}
         </span>
       ) : (
-        <Field label={`Копий ${what}`} width={200}>
+        <Field label={t.editRow.copiesField[draft.kind]} width={200}>
           <NumberInput
             value={draft.copies}
             min={1}

@@ -2,62 +2,60 @@ import { useState } from 'react';
 
 import type { CatalogBuilding, CatalogItem } from '../catalog';
 import { buildingName, catalog, recipesByOutput } from '../catalog';
-import { plain } from '../calc';
+import { countLabel, plain } from '../calc';
 import { FlowChip } from '../components/chips';
 import { Icon } from '../components/icons';
 import { GameIcon } from '../components/ui';
 import { cx } from '../cx';
 import layoutCss from './layout.module.css';
 import uiCss from '../components/ui.module.css';
+import { compareNames, formatDate, localName, type Messages, t } from '../i18n';
 
 type Tab = 'recipes' | 'buildings' | 'items';
 
-const TABS: { value: Tab; label: string }[] = [
-  { value: 'recipes', label: 'Рецепты' },
-  { value: 'buildings', label: 'Здания' },
-  { value: 'items', label: 'Предметы' },
-];
+const TABS: Tab[] = ['recipes', 'buildings', 'items'];
 
 const matches = (query: string, ...texts: string[]) =>
   query === '' ||
-  texts.some((t) => t.toLowerCase().includes(query.toLowerCase()));
+  texts.some((text) => text.toLowerCase().includes(query.toLowerCase()));
 
 export const ReferenceScreen = ({ tab = 'recipes' }: { tab?: string }) => {
-  const active = (TABS.find((t) => t.value === tab)?.value ?? 'recipes') as Tab;
+  const active = TABS.find((value) => value === tab) ?? 'recipes';
   const [query, setQuery] = useState('');
   return (
     <main className={layoutCss.content}>
       <div className={layoutCss.pageHeader}>
         <div className={layoutCss.heading}>
-          <h1 className="t-display">Справочник</h1>
-          <span className="secondary">
-            Данные игры только для чтения — собираются из файлов игры при сборке
-            сайта.
-          </span>
+          <h1 className="t-display">{t.nav.reference}</h1>
+          <span className="secondary">{t.reference.lead}</span>
         </div>
         <span className={uiCss.listItem}>
           <Icon name="check" size={14} color="var(--status-surplus)" />
           <span className="t-label secondary">
-            Игра {catalog.game.version} · сборка {catalog.game.build}
+            {t.reference.game(catalog.game.version, catalog.game.build)}
           </span>
-          <span className="t-num-sm muted">собрано {__BUILD_DATE__}</span>
+          <span className="t-num-sm muted">
+            {t.reference.builtOn(
+              formatDate(new Date(`${__BUILD_DATE__}T00:00`)),
+            )}
+          </span>
         </span>
       </div>
       <nav className={layoutCss.tabs}>
-        {TABS.map((t) => (
+        {TABS.map((value) => (
           <a
-            key={t.value}
-            href={`#/reference/${t.value}`}
-            className={t.value === active ? layoutCss.active : undefined}
+            key={value}
+            href={`#/reference/${value}`}
+            className={value === active ? layoutCss.active : undefined}
           >
-            {t.label}
+            {t.reference.tabs[value]}
           </a>
         ))}
       </nav>
       <div className={uiCss.input} style={{ maxWidth: 360 }}>
         <Icon name="search" size={16} color="var(--text-muted)" />
         <input
-          placeholder="Поиск"
+          placeholder={t.select.search}
           value={query}
           onChange={(event) => setQuery(event.currentTarget.value)}
         />
@@ -78,7 +76,7 @@ const RecipesTable = ({ query }: { query: string }) => {
     .filter((r) =>
       matches(query, r.name.ru, r.name.en, buildingName(r.building)),
     )
-    .sort((a, b) => a.name.ru.localeCompare(b.name.ru, 'ru'));
+    .sort(compareNames);
   return (
     <>
       <div className="hstack">
@@ -92,18 +90,20 @@ const RecipesTable = ({ query }: { query: string }) => {
             )}
             onClick={() => setAlt(value)}
           >
-            {{ all: 'Все', standard: 'Стандартные', alt: 'ALT' }[value]}
+            {t.reference.recipeFilters[value]}
           </button>
         ))}
-        <span className="t-body-sm muted">{list.length} шт.</span>
+        <span className="t-body-sm muted">
+          {t.reference.count(list.length)}
+        </span>
       </div>
       <table className={layoutCss.table}>
         <thead>
           <tr className="t-label">
-            <th>Рецепт</th>
-            <th>Здание</th>
-            <th>Вход · в минуту на здание</th>
-            <th>Выход</th>
+            <th>{t.reference.columns.recipe}</th>
+            <th>{t.reference.columns.building}</th>
+            <th>{t.reference.columns.input}</th>
+            <th>{t.reference.columns.output}</th>
           </tr>
         </thead>
         <tbody>
@@ -113,7 +113,7 @@ const RecipesTable = ({ query }: { query: string }) => {
               <tr key={r.id}>
                 <td>
                   <span className="hstack">
-                    {r.name.ru}
+                    {localName(r)}
                     {r.alternate && (
                       <span className={cx(uiCss.badge, uiCss.alt)}>ALT</span>
                     )}
@@ -158,18 +158,11 @@ const RecipesTable = ({ query }: { query: string }) => {
   );
 };
 
-const KIND_LABEL: Record<CatalogBuilding['kind'], string> = {
-  manufacturer: 'Производство',
-  extractor: 'Добыча',
-  generator: 'Генерация',
-  support: 'Вспомогательное',
-};
-
 const buildingPower = (b: CatalogBuilding): string => {
   if (b.generation)
     return b.generation.powerMW > 0
       ? `+${plain(b.generation.powerMW)}`
-      : 'по узлу';
+      : t.reference.byNode;
   if (b.variablePowerMW)
     return `−${b.variablePowerMW.min}…${b.variablePowerMW.max}`;
   return b.powerMW > 0 ? `−${plain(b.powerMW)}` : '—';
@@ -178,21 +171,17 @@ const buildingPower = (b: CatalogBuilding): string => {
 const BuildingsTable = ({ query }: { query: string }) => {
   const list = catalog.buildings
     .filter((b) => matches(query, b.name.ru, b.name.en))
-    .sort(
-      (a, b) =>
-        a.kind.localeCompare(b.kind) ||
-        a.name.ru.localeCompare(b.name.ru, 'ru'),
-    );
+    .sort((a, b) => a.kind.localeCompare(b.kind) || compareNames(a, b));
   return (
     <table className={layoutCss.table}>
       <thead>
         <tr className="t-label">
-          <th>Здание</th>
-          <th>Тип</th>
-          <th>Энергия, МВт</th>
-          <th>Разгон</th>
-          <th>Петлевики</th>
-          <th>Рецептов</th>
+          <th>{t.reference.columns.building}</th>
+          <th>{t.reference.columns.kind}</th>
+          <th>{t.reference.columns.power}</th>
+          <th>{t.reference.columns.clock}</th>
+          <th>{t.reference.columns.somersloops}</th>
+          <th>{t.reference.columns.recipes}</th>
         </tr>
       </thead>
       <tbody>
@@ -201,7 +190,7 @@ const BuildingsTable = ({ query }: { query: string }) => {
             <td>
               <span className="hstack">
                 <GameIcon id={b.id} />
-                {b.name.ru}
+                {localName(b)}
               </span>
             </td>
             <td>
@@ -212,7 +201,7 @@ const BuildingsTable = ({ query }: { query: string }) => {
                   b.kind === 'extractor' && uiCss.warn,
                 )}
               >
-                {KIND_LABEL[b.kind]}
+                {t.reference.kinds[b.kind]}
               </span>
             </td>
             <td
@@ -223,7 +212,9 @@ const BuildingsTable = ({ query }: { query: string }) => {
             >
               {buildingPower(b)}
             </td>
-            <td className="t-num">до {plain(b.maxClock * 100)}%</td>
+            <td className="t-num">
+              {t.reference.upTo(plain(b.maxClock * 100))}
+            </td>
             <td className="t-num">
               {b.somersloopSlots > 0 ? b.somersloopSlots : '—'}
             </td>
@@ -237,30 +228,25 @@ const BuildingsTable = ({ query }: { query: string }) => {
   );
 };
 
-const ITEM_FILTERS: {
-  value: string;
-  label: string;
-  test: (i: CatalogItem) => boolean;
-}[] = [
-  { value: 'all', label: 'Все', test: () => true },
-  { value: 'resource', label: 'Ресурсы', test: (i) => i.kind === 'resource' },
-  {
-    value: 'part',
-    label: 'Компоненты',
-    test: (i) => i.kind === 'part' && i.form === 'solid',
-  },
-  { value: 'fluid', label: 'Жидкости и газы', test: (i) => i.form !== 'solid' },
-  { value: 'fuel', label: 'Топливо', test: (i) => i.energyMJ > 0 },
-];
+type ItemFilter = keyof Messages['reference']['itemFilters'];
+
+const ITEM_FILTERS: { value: ItemFilter; test: (i: CatalogItem) => boolean }[] =
+  [
+    { value: 'all', test: () => true },
+    { value: 'resource', test: (i) => i.kind === 'resource' },
+    { value: 'part', test: (i) => i.kind === 'part' && i.form === 'solid' },
+    { value: 'fluid', test: (i) => i.form !== 'solid' },
+    { value: 'fuel', test: (i) => i.energyMJ > 0 },
+  ];
 
 const ItemsGrid = ({ query }: { query: string }) => {
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState<ItemFilter>('all');
   const test =
     ITEM_FILTERS.find((f) => f.value === filter)?.test ?? (() => true);
   const list = catalog.items
     .filter(test)
     .filter((i) => matches(query, i.name.ru, i.name.en))
-    .sort((a, b) => a.name.ru.localeCompare(b.name.ru, 'ru'));
+    .sort(compareNames);
   return (
     <>
       <div className="hstack">
@@ -274,10 +260,12 @@ const ItemsGrid = ({ query }: { query: string }) => {
             )}
             onClick={() => setFilter(f.value)}
           >
-            {f.label}
+            {t.reference.itemFilters[f.value]}
           </button>
         ))}
-        <span className="t-body-sm muted">{list.length} шт.</span>
+        <span className="t-body-sm muted">
+          {t.reference.count(list.length)}
+        </span>
       </div>
       <div
         className={layoutCss.cards}
@@ -291,14 +279,19 @@ const ItemsGrid = ({ query }: { query: string }) => {
               <span
                 className={cx(uiCss.badge, i.form !== 'solid' && uiCss.fluid)}
               >
-                {i.form === 'solid' ? 'шт' : 'м³'}
+                {i.form === 'solid' ? t.reference.pieces : t.reference.cubic}
               </span>
             </span>
-            <span className="t-title">{i.name.ru}</span>
+            <span className="t-title">{localName(i)}</span>
             <span className="t-body-sm muted">
-              {recipesByOutput.get(i.id)?.length ?? 0} рецепт(ов)
-              {i.energyMJ > 0 ? ` · ${plain(i.energyMJ)} МДж` : ''}
-              {i.sinkPoints > 0 ? ` · ${i.sinkPoints} очк.` : ''}
+              {countLabel(
+                recipesByOutput.get(i.id)?.length ?? 0,
+                t.count.recipes,
+              )}
+              {i.energyMJ > 0
+                ? ` · ${t.reference.energy(plain(i.energyMJ))}`
+                : ''}
+              {i.sinkPoints > 0 ? ` · ${t.reference.points(i.sinkPoints)}` : ''}
             </span>
           </div>
         ))}

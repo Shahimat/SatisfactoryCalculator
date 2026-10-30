@@ -7,6 +7,7 @@ declare module '@catalog' {
   export default catalog;
 }
 
+/** Build date, ISO `YYYY-MM-DD`; parse as local time to show the same day. */
 declare const __BUILD_DATE__: string;
 /** Catalog file name with a content hash, served under `catalog/`. */
 declare const __CATALOG_FILE__: string;

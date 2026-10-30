@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react';
 
 import logo from './assets/logo.webp';
 import type { Units } from './model';
+import { LOCALES, setLocale, t, useLocale } from './i18n';
 import { navigate, useRoute } from './router';
 import { CalculationsScreen } from './screens/calculations';
 import { PlantsScreen } from './screens/plants';
@@ -17,64 +18,69 @@ const ReferenceScreen = lazy(() =>
   import('./screens/reference').then((m) => ({ default: m.ReferenceScreen })),
 );
 
-const SECTIONS = [
-  { path: 'calc', label: 'Расчёты' },
-  { path: 'workshops', label: 'Цеха' },
-  { path: 'plants', label: 'Заводы' },
-  { path: 'reference', label: 'Справочник' },
-] as const;
+const SECTIONS = ['calc', 'workshops', 'plants', 'reference'] as const;
 
-const UNITS: { value: Units; label: string }[] = [
-  { value: 'ipm', label: 'шт/мин' },
-  ...([1, 2, 3, 4, 5, 6] as const).map((mk) => ({
-    value: mk,
-    label: `Mk.${mk}`,
-  })),
-];
+const UNITS: Units[] = ['ipm', 1, 2, 3, 4, 5, 6];
 
 const App = () => {
   const [section, param] = useRoute();
   const state = useAppState();
+  const locale = useLocale();
   useEffect(() => {
     if (!section) navigate('/calc');
   }, [section]);
   return (
     <div className={appCss.app}>
       <header className={appCss.topbar}>
-        <a
-          href="#/calc"
-          className={appCss.logo}
-          title="Калькулятор Satisfactory"
-        >
+        <a href="#/calc" className={appCss.logo} title={t.app.home}>
           <img src={logo} alt="Satisfactory" height={40} />
         </a>
         <nav className={appCss.nav}>
-          {SECTIONS.map((s) => (
+          {SECTIONS.map((path) => (
             <a
-              key={s.path}
-              href={`#/${s.path}`}
-              className={section === s.path ? appCss.active : undefined}
+              key={path}
+              href={`#/${path}`}
+              className={section === path ? appCss.active : undefined}
             >
-              {s.label}
+              {t.nav[path]}
             </a>
           ))}
         </nav>
         <span className="spacer" />
         <div className={appCss.units}>
-          <span className="t-label muted">Единицы</span>
+          <span className="t-label muted">{t.app.units}</span>
           <div
             className={uiCss.segmented}
             role="radiogroup"
-            aria-label="Единицы потока"
+            aria-label={t.app.unitsAria}
           >
             {UNITS.map((u) => (
               <button
-                key={u.value}
+                key={u}
                 type="button"
-                className={state.units === u.value ? uiCss.active : undefined}
-                onClick={() => setState((s) => ({ ...s, units: u.value }))}
+                className={state.units === u ? uiCss.active : undefined}
+                onClick={() => setState((s) => ({ ...s, units: u }))}
               >
-                {u.label}
+                {u === 'ipm' ? t.units.ipm : `Mk.${u}`}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className={appCss.units}>
+          <span className="t-label muted">{t.app.language}</span>
+          <div
+            className={uiCss.segmented}
+            role="radiogroup"
+            aria-label={t.app.language}
+          >
+            {LOCALES.map((l) => (
+              <button
+                key={l.value}
+                type="button"
+                className={locale === l.value ? uiCss.active : undefined}
+                onClick={() => void setLocale(l.value)}
+              >
+                {l.label}
               </button>
             ))}
           </div>

@@ -1,18 +1,8 @@
 import type { SolverMode } from '../../../engine/src/calc';
 import uiCss from './ui.module.css';
+import { t } from '../i18n';
 
-const MODES: { value: SolverMode; label: string; title: string }[] = [
-  {
-    value: 'sequential',
-    label: 'Сверху вниз',
-    title: 'Строка покрывает цели и строки выше — порядок строк важен',
-  },
-  {
-    value: 'matrix',
-    label: 'Матрица',
-    title: 'Все строки решаются вместе — порядок не важен, петли сходятся',
-  },
-];
+const MODES: SolverMode[] = ['sequential', 'matrix'];
 
 /** How auto rows are sized, like the solver choice of a Helmod block. */
 export const SolverToggle = ({
@@ -23,21 +13,21 @@ export const SolverToggle = ({
   onChange: (value: SolverMode) => void;
 }) => (
   <span className="hstack" style={{ gap: 6 }}>
-    <span className="t-label muted">Расчёт строк</span>
+    <span className="t-label muted">{t.solver.label}</span>
     <span
       className={uiCss.segmented}
       role="radiogroup"
-      aria-label="Расчёт строк"
+      aria-label={t.solver.label}
     >
       {MODES.map((mode) => (
         <button
-          key={mode.value}
+          key={mode}
           type="button"
-          title={mode.title}
-          className={mode.value === value ? uiCss.active : undefined}
-          onClick={() => onChange(mode.value)}
+          title={t.solver[mode].title}
+          className={mode === value ? uiCss.active : undefined}
+          onClick={() => onChange(mode)}
         >
-          {mode.label}
+          {t.solver[mode].label}
         </button>
       ))}
     </span>
